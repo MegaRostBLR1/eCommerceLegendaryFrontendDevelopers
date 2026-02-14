@@ -5,9 +5,9 @@ import os from 'node:os';
 import { ConfigFactory } from './config/config-factory';
 import { setAuthorizationsHeaders } from './middlewares/auth/set-auth-headers.middleware';
 import path from 'node:path';
-// import { errorHandler } from './exceptions/handler';
 import { isEqual } from 'lodash';
-import router from './routes/validators/routers';
+import { errorHandler } from './exceptions/handler';
+import router from './routes/router';
 
 const config = ConfigFactory();
 
@@ -16,7 +16,7 @@ const app = express();
 
 app.use(
     cors({
-        origin: ['http://localhost:8080', 'http://127.0.0.1:3000'],
+        origin: ['http://localhost:5137', 'http://127.0.0.1:5137'],
     }),
 );
 
@@ -25,11 +25,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
     `/api/${config.mediaFolder}`,
-    express.static(path.join(__dirname, !isEqual(config.namespace, 'devlocal') ? `../../${config.mediaFolder}` : `../${config.mediaFolder}`)),
+    express.static(path.join(__dirname, !isEqual(config.namespace, 'local') ? `../../${config.mediaFolder}` : `../${config.mediaFolder}`)),
 );
 app.use(`/${config.appPrefix}`, router);
 app.use(router);
-// app.use(errorHandler);
+app.use(errorHandler);
 
 async function run() {
     try {

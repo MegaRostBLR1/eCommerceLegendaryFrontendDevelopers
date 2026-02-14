@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement()) @db.Integer
+  email      String   @unique @db.VarChar(255)
+  password   String   @db.VarChar(1024)
+  role       String   @default("user") @db.VarChar(255)
+  firstName  String?  @map(name: "first_name") @db.VarChar(255)
+  lastName   String?  @map(name: "last_name") @db.VarChar(255)
+  patronymic String?  @db.VarChar(255)
+  visible    Boolean  @default(true)
+  date       DateTime @default(now())
+
+  @@unique([email, visible], name: "unique_user_email")
+  @@map(name: "users")
+}
