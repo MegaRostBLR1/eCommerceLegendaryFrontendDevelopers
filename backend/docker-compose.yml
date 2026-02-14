@@ -1,7 +1,7 @@
 version: '3'
 services:
-  app_prod:
-    container_name: app_prod
+  app_prod_tandem:
+    container_name: app_prod_tandem
     build: .
     image: app_prod_image:01
     volumes:
