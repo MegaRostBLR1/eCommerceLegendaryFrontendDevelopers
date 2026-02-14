@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpException } from '../exceptions/exception';
 import { userService } from '../services/user.service';
+import { UsersQuery } from '../models/query/user-query.model';
 
 export const usersController = {
-    allUsers: async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+    allUsers: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            res.status(200).json(await userService.getAllUsers());
+            res.status(200).json(await userService.getAllUsers(req.query as unknown as UsersQuery));
         } catch (e) {
             console.log('ERROR', e);
             next(HttpException.internalError(JSON.stringify(e)));

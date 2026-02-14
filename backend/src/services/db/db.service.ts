@@ -25,8 +25,12 @@ export const dbService = {
         return await db.user.findFirst({ where: { email, visible }, select: USER_SELECT });
     },
 
-    allUsers: async (): Promise<UserResponse[]> => {
-        return await db.user.findMany({ where: { visible: true }, select: USER_SELECT });
+    allUsers: async (page: number, count: number): Promise<UserResponse[]> => {
+        return await db.user.findMany({ where: { visible: true }, select: USER_SELECT, take: count, skip: (page - 1) * count });
+    },
+
+    usersCount: async (): Promise<number> => {
+        return await db.user.count({ where: { visible: true } });
     },
 
     getUserById: async (id: number, visible?: boolean): Promise<UserResponse | null> => {

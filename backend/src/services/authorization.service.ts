@@ -31,7 +31,7 @@ export const compareHashEssence = async (current: string, stored: string): Promi
     return await bcrypt.compare(current, stored);
 };
 
-const hashEssence = async (data: string): Promise<string> => {
+export const hashEssence = async (data: string): Promise<string> => {
     return await bcrypt.hash(data, 10);
 };
 
@@ -50,8 +50,6 @@ export const authorizationService = {
     },
 
     signInSignUp: async (dto: ReqBody): Promise<SignResponse> => {
-        console.log('BODY', dto);
-
         const { password, email } = dto;
         let candidate = await userService.getCandidate(email, true);
 

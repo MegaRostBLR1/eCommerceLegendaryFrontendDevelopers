@@ -8,6 +8,7 @@ import { authMiddleware } from '../middlewares/auth/authorization.middleware';
 import { usersController } from '../controllers/users.controllers';
 import { permissionMiddleware } from '../middlewares/auth/check-role.middleware';
 import { userValidators } from './validators/user.validators';
+import { queryValidators } from './validators/query.validators';
 
 export const router = express.Router();
 
@@ -19,11 +20,14 @@ router.get('/', async (_req: Request, res: Response) => {
 });
 
 router.route('/login').post(...validators.login, validateErrors, authController.signInSignUp);
-router.route('/users').get(permissionMiddleware, usersController.allUsers).post(permissionMiddleware, usersController.createUser);
+router
+    .route('/users')
+    .get(permissionMiddleware, queryValidators.query, validateErrors, usersController.allUsers)
+    .post(permissionMiddleware, validators.login, userValidators.userUpdate, validateErrors, usersController.createUser);
 router
     .route('/users/:id')
     .get(userValidators.userId, validateErrors, usersController.getUserById)
-    .patch(userValidators.userId, validateErrors, usersController.updateUser)
+    .patch(userValidators.userId, userValidators.userUpdate, validateErrors, usersController.updateUser)
     .delete(userValidators.userId, validateErrors, permissionMiddleware, usersController.removeUser);
 
 export default router;

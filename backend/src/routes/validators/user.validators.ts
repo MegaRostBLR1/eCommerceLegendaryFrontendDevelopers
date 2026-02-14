@@ -13,5 +13,17 @@ export const userValidators = {
             })
             .withMessage('Not exist user'),
     ],
-    userBody: [body('firstName').optional().isString(), body('lastName').optional().isString(), body('patronymic').optional().isString()],
+    userUpdate: [
+        body('firstName').optional().isString(),
+        body('lastName').optional().isString(),
+        body('patronymic').optional().isString(),
+        body('role')
+            .optional()
+            .isString()
+            .custom(async (role) => {
+                if (['admin', 'user'].includes(role)) return true;
+                else throw new HttpException(400, 'Bad role');
+            })
+            .withMessage('Bad user role'),
+    ],
 };
