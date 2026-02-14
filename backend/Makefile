@@ -7,12 +7,12 @@ run_dev:
 update_dev:
 		git pull
 		npm run build
-		docker restart app_dev
+		docker restart app_dev_tandem
 
 update_prod:
 		git pull
 		npm run build
-		docker restart app_prod
+		docker restart app_prod_tandem
 
 
 logs_dev:
