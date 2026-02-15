@@ -9,11 +9,17 @@ import { usersController } from '../controllers/users.controllers';
 import { permissionMiddleware } from '../middlewares/auth/check-role.middleware';
 import { userValidators } from './validators/user.validators';
 import { queryValidators } from './validators/query.validators';
+import { categoriesController } from '../controllers/categories.controller';
+import { categoriesValidators } from './validators/categories.validator';
+import { servicesController } from '../controllers/services.controller';
+import { servicesValidators } from './validators/services.validators';
 
 export const router = express.Router();
+const middlewaresRoutes: string[] = ['/users', '/users/:id', '/categories', '/categories/:id', '/services', '/services/:id'];
+const middlewaresRoutesAuth: string[] = ['/users', '/users/:id', '/categories', '/categories/:id', '/services/:id'];
 
-router.all(['/users', '/users/:id'], loggerMiddleware, disconnectDbMiddleware);
-router.all(['/users', '/users/:id'], authMiddleware);
+router.all(middlewaresRoutesAuth, authMiddleware);
+router.all(middlewaresRoutes, loggerMiddleware, authMiddleware, disconnectDbMiddleware);
 
 router.get('/', async (_req: Request, res: Response) => {
     res.status(200).send(`<h1 style="text-align: center">Base app route</h1>`);
@@ -29,5 +35,29 @@ router
     .get(userValidators.userId, validateErrors, usersController.getUserById)
     .patch(userValidators.userId, userValidators.userUpdate, validateErrors, usersController.updateUser)
     .delete(userValidators.userId, validateErrors, permissionMiddleware, usersController.removeUser);
+router
+    .route('/categories')
+    .get(categoriesController.allCategories)
+    .post(categoriesValidators.categoryCrate, validateErrors, permissionMiddleware, categoriesController.createCategory);
+router
+    .route('/categories/:id')
+    .get(categoriesValidators.categoryId, validateErrors, categoriesController.categoryById)
+    .patch(
+        categoriesValidators.categoryId,
+        categoriesValidators.categoryUpdate,
+        validateErrors,
+        permissionMiddleware,
+        categoriesController.updateCategory,
+    )
+    .delete(categoriesValidators.categoryId, validateErrors, permissionMiddleware, categoriesController.removeCategory);
+router
+    .route('/services')
+    .get(servicesController.allServices)
+    .post(servicesValidators.serviceCreate, validateErrors, permissionMiddleware, servicesController.createService);
+router
+    .route('/services/:id')
+    .get(servicesValidators.serviceId, validateErrors, categoriesController.categoryById)
+    .patch(servicesValidators.serviceId, servicesValidators.serviceUpdate, validateErrors, permissionMiddleware, servicesController.updateService)
+    .delete(servicesValidators.serviceId, validateErrors, permissionMiddleware, servicesController.removeService);
 
 export default router;

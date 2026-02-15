@@ -3,8 +3,8 @@ import { UserResponse } from '../models/users/user-response.model';
 import { CreateUser } from '../models/users/create-user.model';
 import { UpdateUser } from '../models/users/update-user.model';
 import { hashEssence } from './authorization.service';
-import { UsersQuery } from '../models/query/user-query.model';
 import { UsersResponse } from '../models/users/users-many-response.model';
+import { PageCountQuery } from '../models/query/user-query.model';
 
 export const userService = {
     getCandidate: async (email: string, visible?: boolean): Promise<UserResponse | null> => {
@@ -14,7 +14,7 @@ export const userService = {
     getUserById: async (id: number): Promise<UserResponse | null> => {
         return await dbService.getUserById(id);
     },
-    getAllUsers: async ({ page: p, count: c }: UsersQuery): Promise<UsersResponse> => {
+    getAllUsers: async ({ page: p, count: c }: PageCountQuery): Promise<UsersResponse> => {
         const page = p ? Number(p) : 1;
         const count = c ? Number(c) : 10;
         const usersCount = await dbService.usersCount();

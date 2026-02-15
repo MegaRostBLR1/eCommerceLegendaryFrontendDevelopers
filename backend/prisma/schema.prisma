@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   id         Int      @id @default(autoincrement()) @db.Integer
-  email      String   @unique @db.VarChar(255)
+  email      String   @db.VarChar(255)
   password   String   @db.VarChar(1024)
   role       String   @default("user") @db.VarChar(255)
   firstName  String?  @map(name: "first_name") @db.VarChar(255)
@@ -18,6 +18,66 @@ model User {
   visible    Boolean  @default(true)
   date       DateTime @default(now())
 
+  orders Order[]
+
   @@unique([email, visible], name: "unique_user_email")
   @@map(name: "users")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement()) @db.Integer
+  name        String   @db.VarChar(255)
+  description String?  @db.VarChar(755)
+  visible     Boolean  @default(true)
+  date        DateTime @default(now())
+
+  servicesCategories ServicesCategories[]
+
+  @@unique([name, visible], name: "unique_category")
+  @@map(name: "categories")
+}
+
+model Service {
+  id           Int      @id @default(autoincrement()) @db.Integer
+  name         String   @unique @db.VarChar(255)
+  discount     Float?   @db.DoublePrecision
+  amount       Float    @db.DoublePrecision
+  workersCount Int      @map(name: "workers_count") @db.Integer
+  duration     Int      @db.Integer
+  description  String?  @db.VarChar(755)
+  visible      Boolean  @default(true)
+  date         DateTime @default(now())
+
+  orders             Order[]
+  servicesCategories ServicesCategories[]
+
+  @@map(name: "services")
+}
+
+model Order {
+  id          Int      @id @default(autoincrement()) @db.Integer
+  serviceId   Int      @map(name: "service_id") @db.Integer
+  userId      Int      @map(name: "user_id") @db.Integer
+  quantity    Int      @db.Integer
+  status      Int      @default(1) @db.SmallInt
+  visible     Boolean  @default(true)
+  startDate   DateTime @map(name: "start_date")
+  date        DateTime @default(now())
+  description String?  @db.VarChar(2755)
+
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map(name: "orders")
+}
+
+model ServicesCategories {
+  serviceId  Int @map(name: "service_id") @db.Integer
+  categoryId Int @map(name: "category_id") @db.Integer
+
+  service  Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([serviceId, categoryId], name: "services_categories_unique")
+  @@map(name: "services_categories")
 }

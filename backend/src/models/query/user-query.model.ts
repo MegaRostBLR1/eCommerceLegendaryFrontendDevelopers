@@ -1,4 +1,4 @@
-export type UsersQuery = {
+export type PageCountQuery = {
     page: number;
     count: number;
 };

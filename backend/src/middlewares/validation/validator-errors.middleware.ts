@@ -10,7 +10,7 @@ export const validateErrors = (req: Request, res: Response, next: NextFunction):
         const { method, url, ip } = req;
         console.log(chalk.red(`${LoggerLevel.ERROR}: ${new Date().toISOString()} ${method} ${url} ${ip} => ${JSON.stringify(validResult.array())}`));
 
-        return res.status(403).json({ errors: validResult.array() });
+        return res.status(400).json({ errors: validResult.array() });
     }
 
     next();
