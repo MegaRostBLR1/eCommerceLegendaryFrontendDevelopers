@@ -1,0 +1,126 @@
+.title-wrapper {
+  min-height: 600px;
+  padding-right: 80px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  background: linear-gradient(181deg, #9c9c9d 0%, #fefaf6 50.96%, #d4d4d4 100%);
+}
+
+.title-logo {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+}
+
+.title-section-title {
+  font-weight: 900;
+  font-size: 96px;
+  color: #074733;
+  text-shadow: 2px 6px 6px rgba(4, 22, 14, 0.5);
+}
+
+.bestseller {
+  margin-top: 170px;
+  margin-bottom: 120px;
+}
+
+.bestseller-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid #ab9988;
+  padding-bottom: 10px;
+
+  .bestseller-arrow-right {
+    font-size: 20px;
+    color: #063526;
+  }
+}
+
+.bestseller-title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 85px;
+  line-height: 140%;
+  text-transform: uppercase;
+  color: #063526;
+}
+
+.bestseller-link {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 140%;
+  text-transform: uppercase;
+  color: #24221f;
+  text-decoration: none;
+}
+
+.bestseller-wrapper {
+  display: grid;
+  margin-top: 30px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+
+.bestseller-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  height: 100%;
+  background: linear-gradient(181deg, #9c9c9d 0%, #fefaf6 50.96%, #d4d4d4 100%);
+}
+
+.bestseller-card-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.bestseller-card-title {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 140%;
+  color: #24221f;
+}
+
+.bestseller-card-price {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 140%;
+  color: #063526;
+}
+
+.bestseller-card-description {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 140%;
+  color: #7b7b7b;
+}
+
+.bestseller-card-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  margin-top: auto;
+
+  .bestseller-card-button-text {
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 140%;
+    text-transform: uppercase;
+    color: #24221f;
+  }
+  .bestseller-arrow-right {
+    font-size: 20px;
+    color: #063526;
+  }
+}
