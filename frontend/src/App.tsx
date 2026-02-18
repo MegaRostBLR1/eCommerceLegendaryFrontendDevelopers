@@ -1,10 +1,10 @@
 import './App.css';
-import Button from '@mui/material/Button';
+import Header from './components/header';
 
 function App() {
   return (
     <>
-      <Button variant="contained">Hello world</Button>
+       <Header /> 
     </>
   );
 }
