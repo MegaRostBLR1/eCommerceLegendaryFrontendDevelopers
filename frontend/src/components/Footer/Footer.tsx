@@ -35,18 +35,18 @@ function Footer() {
     <footer>
       <div className={'logo-container'}>
         <img src={logo} alt={'logo'}></img>
-        <span className={'team-name lato-regular'}>
+        <span className={'team-name'}>
           Legendary <br /> Frontend
         </span>
       </div>
       <div className={'developers-container'}>
-        <span className={'developers-header lato-regular'}>Developers</span>
+        <span className={'developers-header'}>Developers</span>
         <div className={'developers-list'}>
           {developers.map((developer: Developer) => (
             <a
               target={'_blank'}
               href={developer.ghLink}
-              className={'developer-link montserrat-regular'}
+              className={'developer-link'}
             >
               {developer.name}
             </a>
@@ -55,11 +55,7 @@ function Footer() {
       </div>
       <div className={'information-links-container'}>
         {informationLinks.map((link: InformationLink) => (
-          <a
-            target={'_blank'}
-            href={link.link}
-            className={'information-link montserrat-regular'}
-          >
+          <a target={'_blank'} href={link.link} className={'information-link'}>
             {link.linkName}
           </a>
         ))}

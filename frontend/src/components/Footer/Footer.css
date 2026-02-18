@@ -1,3 +1,5 @@
+@import '../../assets/styles/fonts.css';
+
 footer {
   position: fixed;
   left: 50%;
@@ -11,19 +13,7 @@ footer {
   bottom: 40px;
   display: flex;
   align-items: center;
-}
-
-.lato-regular {
-  font-family: 'Lato', sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.montserrat-regular {
-  font-family: 'Montserrat', sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
+  background-color: #fff8f0;
 }
 
 .logo-container {
@@ -40,6 +30,7 @@ footer {
 .team-name {
   font-size: 40px;
   color: #063526;
+  font-family: 'Lato-Regular', sans-serif;
 }
 
 .developers-container {
@@ -59,6 +50,7 @@ footer {
   text-align: left;
   color: #24221f;
   text-transform: uppercase;
+  font-family: 'Lato-Regular', sans-serif;
 }
 
 .developers-list {
@@ -74,6 +66,7 @@ footer {
   text-decoration: none;
   font-size: 16px;
   color: #24221f;
+  font-family: Montserrat-Regular, sans-serif;
 }
 
 .information-links-container {
