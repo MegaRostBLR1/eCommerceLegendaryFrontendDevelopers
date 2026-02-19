@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import logo from '../assets/logo.svg';
+import logo from '../../assets/logo.svg';
 import styles from './header.module.css';
 
 type Role = 'admin' | 'user';
@@ -27,7 +27,6 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
   user: [
     { title: 'Profile', path: '/profile' },
     { title: 'Statistics', path: '/stats' },
-    { title: 'Services', path: '/services' },
     { title: 'Orders', path: '/orders' },
     { title: 'Logout', isExit: true },
   ],
@@ -36,7 +35,7 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
 const Header = () => {
   const navigate = useNavigate();
 
-  // Пока сочтояния локалные 
+  // Пока сочтояния локальные 
   const isAuth = true;
   const isAdmin = true;
 
@@ -90,7 +89,7 @@ const Header = () => {
             <IconButton
               aria-label="Login"
               onClick={() => console.log('Open login modal')}
-              sx={{ color: '#1a3e2b' }}
+              className={styles.profileIconButton}
             >
               <LoginIcon />
             </IconButton>
@@ -102,7 +101,7 @@ const Header = () => {
                 aria-haspopup="true"
                 aria-expanded={isMenuOpen ? 'true' : undefined}
                 onClick={handleOpenMenu}
-                sx={{ color: '#1a3e2b' }}
+                className={styles.profileIconButton}
               >
                 <PersonOutlineIcon />
               </IconButton>
@@ -112,15 +111,13 @@ const Header = () => {
                 anchorEl={anchorEl}
                 open={isMenuOpen}
                 onClose={handleCloseMenu}
+                PaperProps={{ className: styles.profileMenu }}
               >
                 {currentMenuItems.map((item) => (
                   <MenuItem
                     key={item.isExit ? 'logout' : item.path}
                     onClick={() => handleMenuItemClick(item)}
-                    sx={{
-                      color: item.isExit ? 'error.main' : 'inherit',
-                      fontWeight: item.isExit ? 600 : 400,
-                    }}
+                    className={`${styles.profileMenuItem} ${item.isExit ? styles.profileMenuItemExit : ''}`}
                   >
                     {item.title}
                   </MenuItem>
