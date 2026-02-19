@@ -1,12 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpException } from '../exceptions/exception';
 import { servicesService } from '../services/services.service';
-import { PageCountQuery } from '../models/query/user-query.model';
+import { QueryServices } from '../models/query/query-services.model';
 
 export const servicesController = {
+    mostUsed: async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            res.status(200).json(await servicesService.mostUsedServices());
+        } catch (e) {
+            console.log('ERROR', e);
+            next(HttpException.internalError(JSON.stringify(e)));
+        }
+    },
     allServices: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            res.status(200).json(await servicesService.getAllServices(req.query as unknown as PageCountQuery));
+            res.status(200).json(await servicesService.getAllServices(req.query as unknown as QueryServices));
         } catch (e) {
             console.log('ERROR', e);
             next(HttpException.internalError(JSON.stringify(e)));

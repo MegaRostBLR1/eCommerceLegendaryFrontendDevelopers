@@ -15,11 +15,13 @@ import { servicesController } from '../controllers/services.controller';
 import { servicesValidators } from './validators/services.validators';
 
 export const router = express.Router();
-const middlewaresRoutes: string[] = ['/users', '/users/:id', '/categories', '/categories/:id', '/services', '/services/:id'];
-const middlewaresRoutesAuth: string[] = ['/users', '/users/:id', '/categories', '/categories/:id', '/services/:id'];
+const middlewaresRoutes: string[] = ['/users', '/users/:id', '/categories', '/categories/:id', '/services', '/services/:id', 'services/most/used'];
+const middlewaresRoutesAuth: string[] = ['/users', '/users/:id', '/categories/:id'];
 
 router.all(middlewaresRoutesAuth, authMiddleware);
 router.all(middlewaresRoutes, loggerMiddleware, authMiddleware, disconnectDbMiddleware);
+router.patch(['/services/:id'], authMiddleware);
+router.post(['categories'], authMiddleware);
 
 router.get('/', async (_req: Request, res: Response) => {
     res.status(200).send(`<h1 style="text-align: center">Base app route</h1>`);
@@ -50,9 +52,10 @@ router
         categoriesController.updateCategory,
     )
     .delete(categoriesValidators.categoryId, validateErrors, permissionMiddleware, categoriesController.removeCategory);
+router.route('/services/most/used').get(servicesController.mostUsed);
 router
     .route('/services')
-    .get(servicesController.allServices)
+    .get(servicesValidators.all, validateErrors, servicesController.allServices)
     .post(servicesValidators.serviceCreate, validateErrors, permissionMiddleware, servicesController.createService);
 router
     .route('/services/:id')

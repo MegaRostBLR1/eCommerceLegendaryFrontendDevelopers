@@ -1,6 +1,7 @@
-import { body, param } from 'express-validator';
+import { body, param, query } from 'express-validator';
 import { HttpException } from '../../exceptions/exception';
 import { servicesService } from '../../services/services.service';
+import { categoriesService } from '../../services/categories.service';
 
 export const servicesValidators = {
     serviceId: [
@@ -20,13 +21,21 @@ export const servicesValidators = {
         body('workersCount').optional().isInt(),
         body('duration').isInt(),
         body('description').optional().isString(),
-        body('categories').isArray(),
-        body('numbers').custom((value) => {
-            const allIntegers = value.every(Number.isInteger);
-            if (!allIntegers) throw new Error('All elements in the numbers array must be integers');
+        body('categories')
+            .isArray()
+            .custom(async (value) => {
+                if (!value) return true;
 
-            return true;
-        }),
+                const allIntegers = value.every(Number.isInteger);
+
+                if (!allIntegers) throw new HttpException(400, 'All elements in the numbers array must be integers');
+
+                for (const id of value) {
+                    if (!(await categoriesService.getCategoryById(id))) throw new HttpException(400, `Category id ${id} not exist`);
+                }
+
+                return true;
+            }),
     ],
     serviceUpdate: [
         body('name').optional().isString(),
@@ -35,12 +44,25 @@ export const servicesValidators = {
         body('workersCount').optional().isInt(),
         body('duration').optional().isInt(),
         body('description').optional().isString(),
-        body('categories').optional().isArray(),
-        body('numbers').custom((value) => {
-            const allIntegers = value.every(Number.isInteger);
-            if (!allIntegers) throw new Error('All elements in the numbers array must be integers');
+        body('categories')
+            .optional()
+            .isArray()
+            .custom(async (value) => {
+                if (!value) return true;
 
-            return true;
-        }),
+                const allIntegers = value.every(Number.isInteger);
+
+                if (!allIntegers) throw new HttpException(400, 'All elements in the numbers array must be integers');
+
+                for (const id of value) {
+                    if (!(await categoriesService.getCategoryById(id))) throw new HttpException(400, `Category id ${id} not exist`);
+                }
+
+                return true;
+            }),
+    ],
+    all: [
+        query('search').optional().isString().isLength({ min: 3 }).withMessage('Search minimum length is 3 symbols'),
+        query('categories').optional().isString(),
     ],
 };

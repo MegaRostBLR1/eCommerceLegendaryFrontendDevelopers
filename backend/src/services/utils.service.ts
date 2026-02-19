@@ -6,4 +6,9 @@ export const utilsService = {
 
         return { create: difference(current, previous), deletedIds: difference(previous, current) };
     },
+    convertStringToNumberArray: (str?: string): number[] => {
+        if (!str) return [];
+
+        return str.split(',').map((i) => Number(i.trim()));
+    },
 };

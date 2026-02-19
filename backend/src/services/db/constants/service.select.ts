@@ -1,3 +1,5 @@
+import { CATEGORY_SELECT } from './category.select';
+
 export const SERVICE_SELECT = {
     id: true,
     name: true,
@@ -6,5 +8,11 @@ export const SERVICE_SELECT = {
     workersCount: true,
     duration: true,
     description: true,
-    servicesCategories: true,
+    servicesCategories: {
+        select: {
+            serviceId: true,
+            categoryId: true,
+            category: { select: CATEGORY_SELECT },
+        },
+    },
 };

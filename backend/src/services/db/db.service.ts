@@ -7,6 +7,7 @@ import { CategoryResponse } from '../../models/categories/category-response.mode
 import { CATEGORY_SELECT } from './constants/category.select';
 import { ServiceData } from '../../models/services/service-data.model';
 import { SERVICE_SELECT } from './constants/service.select';
+import { queryServices } from './utils/query-services';
 
 const db = new PrismaClient();
 
@@ -54,8 +55,11 @@ export const dbService = {
     updateCategory: async (id: number, data: Prisma.CategoryUncheckedUpdateInput): Promise<CategoryResponse> => {
         return await db.category.update({ where: { id }, data, select: CATEGORY_SELECT });
     },
-    getServices: async (visible: boolean): Promise<ServiceData[]> => {
-        return await db.service.findMany({ where: { visible }, select: SERVICE_SELECT });
+    getServicesCount: async (categories?: number[], search?: string, visible?: boolean): Promise<number> => {
+        return await db.service.count({ where: queryServices(categories, search, visible) });
+    },
+    getServices: async (categories?: number[], search?: string, visible?: boolean): Promise<ServiceData[]> => {
+        return await db.service.findMany({ where: queryServices(categories, search, visible), select: SERVICE_SELECT });
     },
     getServiceById: async (id: number, visible?: boolean): Promise<ServiceData | null> => {
         return await db.service.findFirst({ where: { id, visible }, select: SERVICE_SELECT });
@@ -65,5 +69,15 @@ export const dbService = {
     },
     updateService: async (id: number, data: Prisma.ServiceUncheckedUpdateInput): Promise<ServiceData> => {
         return await db.service.update({ where: { id }, data, select: SERVICE_SELECT });
+    },
+    servicesOrderByPostsCount: async () => {
+        return await db.service.findMany({
+            orderBy: {
+                orders: {
+                    _count: 'desc',
+                },
+            },
+            select: SERVICE_SELECT,
+        });
     },
 };
