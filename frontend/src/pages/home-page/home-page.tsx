@@ -35,7 +35,7 @@ export function HomePage() {
   return (
     <main className="page-main">
       <section className="title-section">
-        <div className="container">
+        <div className="page-container">
           <div className="title-wrapper">
             <Logo className="title-logo" />
             <h2 className="title-section-title">Услуги от ИИ</h2>
@@ -44,7 +44,7 @@ export function HomePage() {
       </section>
 
       <section className="bestseller">
-        <div className="container">
+        <div className="page-container">
           <div className="bestseller-header">
             <h2 className="bestseller-title">Хит продаж</h2>
             <a className="bestseller-link" href="/Каталог/услуги">

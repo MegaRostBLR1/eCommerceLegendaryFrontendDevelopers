@@ -1,11 +1,11 @@
 .title-wrapper {
   min-height: 600px;
-  padding-right: 80px;
+  padding-right: var(--space-xl);
   display: flex;
   justify-content: flex-end;
   align-items: center;
   position: relative;
-  background: linear-gradient(181deg, #9c9c9d 0%, #fefaf6 50.96%, #d4d4d4 100%);
+  background: var(--bg-gradient);
 }
 
 .title-logo {
@@ -16,65 +16,65 @@
 }
 
 .title-section-title {
-  font-weight: 900;
-  font-size: 96px;
-  color: #074733;
-  text-shadow: 2px 6px 6px rgba(4, 22, 14, 0.5);
+  font-weight: var(--font-black);
+  font-size: var(--title-size);
+  color: var(--title-color);
+  text-shadow: var(--title-shadow);
 }
 
 .bestseller {
-  margin-top: 170px;
-  margin-bottom: 120px;
+  margin-top: var(--space-xxxl);
+  margin-bottom: var(--space-xxl);
 }
 
 .bestseller-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  border-bottom: 1px solid #ab9988;
-  padding-bottom: 10px;
+  border-bottom: var(--border-light);
+  padding-bottom: var(--space-xs);
 
   .bestseller-arrow-right {
-    font-size: 20px;
-    color: #063526;
+    font-size: var(--icon-size);
+    color: var(--second-color);
   }
 }
 
 .bestseller-title {
   margin: 0;
-  font-weight: 600;
-  font-size: 85px;
+  font-weight: var(--font-semibold);
+  font-size: var(--bestseller-title-size);
   line-height: 140%;
   text-transform: uppercase;
-  color: #063526;
+  color: var(--second-color);
 }
 
 .bestseller-link {
   display: flex;
-  gap: 10px;
+  gap: var(--space-xs);
   align-items: center;
-  font-weight: 700;
-  font-size: 15px;
+  font-weight: var(--font-bold);
+  font-size: var(--text-xs);
   line-height: 140%;
   text-transform: uppercase;
-  color: #24221f;
+  color: var(--color-dark);
   text-decoration: none;
 }
 
 .bestseller-wrapper {
   display: grid;
-  margin-top: 30px;
+  margin-top: var(--space-md);
   grid-template-columns: repeat(4, 1fr);
-  gap: 40px;
+  gap: var(--space-lg);
 }
 
 .bestseller-card {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 20px;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
   height: 100%;
-  background: linear-gradient(181deg, #9c9c9d 0%, #fefaf6 50.96%, #d4d4d4 100%);
+  background: var(--bg-gradient);
 }
 
 .bestseller-card-header {
@@ -83,44 +83,44 @@
 }
 
 .bestseller-card-title {
-  font-weight: 500;
-  font-size: 16px;
+  font-weight: var(--font-medium);
+  font-size: var(--text-base);
   line-height: 140%;
-  color: #24221f;
+  color: var(--color-dark);
 }
 
 .bestseller-card-price {
-  font-weight: 700;
-  font-size: 16px;
+  font-weight: var(--font-bold);
+  font-size: var(--text-base);
   line-height: 140%;
-  color: #063526;
+  color: var(--second-color);
 }
 
 .bestseller-card-description {
-  font-weight: 400;
-  font-size: 14px;
+  font-weight: var(--font-regular);
+  font-size: var(--text-small);
   line-height: 140%;
-  color: #7b7b7b;
+  color: var(--color-gray);
 }
 
 .bestseller-card-button {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--space-xs);
   border: none;
   background: transparent;
   cursor: pointer;
   margin-top: auto;
 
   .bestseller-card-button-text {
-    font-weight: 800;
-    font-size: 14px;
+    font-weight: var(--font-extrabold);
+    font-size: var(--text-small);
     line-height: 140%;
     text-transform: uppercase;
-    color: #24221f;
+    color: var(--color-dark);
   }
   .bestseller-arrow-right {
-    font-size: 20px;
-    color: #063526;
+    font-size: var(--icon-size);
+    color: var(--second-color);
   }
 }
