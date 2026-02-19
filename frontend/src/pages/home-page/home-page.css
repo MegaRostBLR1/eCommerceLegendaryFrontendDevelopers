@@ -1,0 +1,126 @@
+.title-wrapper {
+  min-height: 600px;
+  padding-right: var(--space-xl);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  background: var(--bg-gradient);
+}
+
+.title-logo {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+}
+
+.title-section-title {
+  font-weight: var(--font-black);
+  font-size: var(--title-size);
+  color: var(--title-color);
+  text-shadow: var(--title-shadow);
+}
+
+.bestseller {
+  margin-top: var(--space-xxxl);
+  margin-bottom: var(--space-xxl);
+}
+
+.bestseller-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: var(--border-light);
+  padding-bottom: var(--space-xs);
+
+  .bestseller-arrow-right {
+    font-size: var(--icon-size);
+    color: var(--second-color);
+  }
+}
+
+.bestseller-title {
+  margin: 0;
+  font-weight: var(--font-semibold);
+  font-size: var(--bestseller-title-size);
+  line-height: 140%;
+  text-transform: uppercase;
+  color: var(--second-color);
+}
+
+.bestseller-link {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: center;
+  font-weight: var(--font-bold);
+  font-size: var(--text-xs);
+  line-height: 140%;
+  text-transform: uppercase;
+  color: var(--color-dark);
+  text-decoration: none;
+}
+
+.bestseller-wrapper {
+  display: grid;
+  margin-top: var(--space-md);
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-lg);
+}
+
+.bestseller-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  height: 100%;
+  background: var(--bg-gradient);
+}
+
+.bestseller-card-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.bestseller-card-title {
+  font-weight: var(--font-medium);
+  font-size: var(--text-base);
+  line-height: 140%;
+  color: var(--color-dark);
+}
+
+.bestseller-card-price {
+  font-weight: var(--font-bold);
+  font-size: var(--text-base);
+  line-height: 140%;
+  color: var(--second-color);
+}
+
+.bestseller-card-description {
+  font-weight: var(--font-regular);
+  font-size: var(--text-small);
+  line-height: 140%;
+  color: var(--color-gray);
+}
+
+.bestseller-card-button {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  margin-top: auto;
+
+  .bestseller-card-button-text {
+    font-weight: var(--font-extrabold);
+    font-size: var(--text-small);
+    line-height: 140%;
+    text-transform: uppercase;
+    color: var(--color-dark);
+  }
+  .bestseller-arrow-right {
+    font-size: var(--icon-size);
+    color: var(--second-color);
+  }
+}
