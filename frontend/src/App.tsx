@@ -1,14 +1,16 @@
 import './App.css';
-import Button from '@mui/material/Button';
-import { HomePage } from './pages/home-page/home-page';
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import MainPage from './components/MainPage/MainPage.tsx';
+import Footer from './components/Footer/Footer.tsx';
 
 export function App() {
   return (
-    <>
-      < HomePage/>
-      <Button variant="contained">Hello world</Button>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
+  );
 }
-
-
