@@ -1,0 +1,105 @@
+.header {
+  width: 100%;
+  border-bottom: 1px solid #d1c7bc;
+  background-color: #FFF8F0;
+  font-family: 'Lato', sans-serif;
+}
+
+.container {
+  max-width: 100%;
+  margin: 0;
+  display: flex;
+  align-items: stretch;
+  height: 64px;
+}
+
+.logoSection,
+.navLink,
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32px;
+  text-decoration: none;
+  color: #1a3e2b;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.logoSection {
+  gap: 12px;
+  border-right: 1px solid #d1c7bc;
+}
+
+.nav {
+  display: flex;
+}
+
+.navLink {
+  font-size: 14px;
+  font-weight: 500;
+  border-right: 1px solid #d1c7bc;
+  transition: background-color 0.2s;
+}
+
+.navLink:hover {
+  background-color: #f5f0e8;
+}
+
+.actions {
+  margin-left: auto;
+  border-left: 1px solid #d1c7bc;
+}
+
+.logo {
+  height: 32px;
+  width: auto;
+}
+
+.brandName {
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.profileIconButton {
+  color: #1a3e2b;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  border-radius: 50%;
+}
+
+.profileIconButton:hover {
+  color: #047854;
+  background-color: #e0f0e5;
+}
+
+.profileMenu {
+  background-color: #003322 !important;
+  color: #d1e3d0 !important;
+  min-width: 180px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.profileMenuItem {
+  border-bottom: 1px solid #0a4d29;
+  font-weight: 400;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.profileMenuItem:hover {
+  background-color: #145a37;
+  color: #ffffff;
+}
+
+.profileMenuItemExit {
+  color: #ff5c5c;
+  font-weight: 700;
+}
+
+.profileMenuItemExit:hover {
+  background-color: #ffcccc;
+  color: #990000;
+}
