@@ -1,7 +1,9 @@
+@import '../../assets/styles/fonts.css';
+
 .header {
   width: 100%;
   border-bottom: 1px solid #d1c7bc;
-  background-color: #FFF8F0;
+  background-color: #fff8f0;
   font-family: 'Lato', sans-serif;
 }
 
@@ -64,7 +66,9 @@
 
 .profileIconButton {
   color: #1a3e2b;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
   border-radius: 50%;
 }
 
@@ -78,7 +82,7 @@
   color: #d1e3d0 !important;
   min-width: 180px;
   border-radius: 4px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   font-family: 'Montserrat', sans-serif;
 }
 

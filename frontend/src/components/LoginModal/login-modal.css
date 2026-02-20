@@ -1,0 +1,49 @@
+@import '../../assets/styles/variables.css';
+@import '../../assets/styles/fonts.css';
+
+.login-form-title {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.login-form-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.login-title-container {
+  width: 100%;
+  margin-top: var(--space-md);
+  display: flex;
+  justify-content: center;
+}
+
+.login-title-container span {
+  font-family: Lato-Regular, sans-serif;
+  font-size: calc(var(--space-lg) + 5px);
+  color: var(--second-color);
+}
+
+.login-form-text-field .MuiInputLabel-root {
+  font-family: Lato-Regular, sans-serif;
+  color: var(--divider-color);
+}
+
+.login-form-text-field .MuiInput-underline:before {
+  border-bottom: 1px solid var(--divider-color);
+}
+
+.MuiButton-root.confirm-send-btn {
+  text-transform: uppercase;
+  color: #fff8f0;
+  background-color: var(--second-color);
+  font-family: Lato-Regular, sans-serif;
+  border-radius: 0;
+  width: calc(var(--space-xxl) + 30px);
+}
+
+.MuiButton-root.confirm-send-btn :hover {
+  background-color: var(--text-shadow-color);
+}
