@@ -1,0 +1,63 @@
+.cube-wrapper {
+  width: 200px;
+  height: 200px;
+  opacity: 0;
+  position: absolute;
+}
+
+.cube-icon {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.2));
+}
+
+.face-top {
+  fill: var(--cube-highlight);
+}
+.face-front {
+  fill: var(--cube-color);
+}
+.face-side {
+  fill: var(--cube-shadow);
+}
+
+.cube-left {
+  animation: slideInLeft 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  bottom: 0;
+  z-index: 1;
+}
+
+.cube-right {
+  animation: slideInRight 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  right: 0;
+  z-index: 1;
+  top: 80px;
+}
+
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(-150%) rotate(0deg) scale(0.3);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) rotate(360deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    transform: translateX(150%) rotate(0deg) scale(0.3);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) rotate(-360deg) scale(1);
+    opacity: 1;
+  }
+}
