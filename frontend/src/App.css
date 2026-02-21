@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+body {
+  overflow-x: hidden;
+}
+
 .page-container {
   max-width: var(--container-width);
   margin: 0 auto;
