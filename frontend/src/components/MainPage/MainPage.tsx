@@ -1,5 +1,11 @@
+import { HomePage } from '../../pages/home-page/home-page.tsx';
+
 function mainPage() {
-  return <></>;
+  return (
+    <>
+      <HomePage />
+    </>
+  );
 }
 
 export default mainPage;
