@@ -59,6 +59,7 @@ model Order {
   serviceId   Int      @map(name: "service_id") @db.Integer
   userId      Int      @map(name: "user_id") @db.Integer
   quantity    Int      @db.Integer
+  price       Float    @db.DoublePrecision
   status      Int      @default(1) @db.SmallInt
   visible     Boolean  @default(true)
   startDate   DateTime @map(name: "start_date")
