@@ -1,19 +1,26 @@
 @import '../../assets/styles/fonts.css';
+@import '../../assets/styles/variables.css';
 
 footer {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  height: 241px;
-  width: 1200px;
+  height: 85px;
+  width: 100%;
   max-width: 100%;
   box-sizing: border-box;
   border-bottom: 1px solid #ab9988;
   border-top: 1px solid #ab9988;
-  bottom: 40px;
+  bottom: 0;
   display: flex;
   align-items: center;
   background-color: #fff8f0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .logo-container {
@@ -27,26 +34,29 @@ footer {
   gap: 17px;
 }
 
+.logo-container img {
+  height: 64px;
+}
+
 .team-name {
-  font-size: 40px;
+  font-size: 15px;
   color: #063526;
   font-family: 'Lato-Regular', sans-serif;
 }
 
 .developers-container {
-  height: 140px;
-  width: 211px;
+  height: 70px;
   display: flex;
-  margin-left: 101px;
+  margin-left: 100px;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 5px;
 }
 
 .developers-header {
   display: flex;
   justify-content: flex-start;
-  font-size: 24px;
+  font-size: 15px;
   text-align: left;
   color: #24221f;
   text-transform: uppercase;
@@ -56,15 +66,15 @@ footer {
 .developers-list {
   display: grid;
   grid-template-columns: repeat(2, 86px);
-  column-gap: 47px;
-  row-gap: 10px;
+  column-gap: 45px;
+  row-gap: 5px;
   justify-items: center;
 }
 
 .developer-link,
 .information-link {
   text-decoration: none;
-  font-size: 16px;
+  font-size: 10px;
   color: #24221f;
   font-family: Montserrat-Regular, sans-serif;
 }
