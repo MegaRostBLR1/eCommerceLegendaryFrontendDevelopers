@@ -1,7 +1,7 @@
 import { Logo } from '../../components/icons/logo';
 import './home-page.css';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Card } from './ui/card/card';
+import { Card } from './card/card';
 
 const DATA = [
   {

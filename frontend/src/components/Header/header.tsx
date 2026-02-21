@@ -35,7 +35,7 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
 const Header = () => {
   const navigate = useNavigate();
 
-  // Пока сочтояния локальные 
+  // Пока сочтояния локальные
   const isAuth = true;
   const isAdmin = true;
 
@@ -74,11 +74,7 @@ const Header = () => {
 
         <nav className={styles.nav}>
           {NAV_LINKS.map((link) => (
-            <Link
-              key={link.id}
-              to={link.path}
-              className={styles.navLink}
-            >
+            <Link key={link.id} to={link.path} className={styles.navLink}>
               {link.title}
             </Link>
           ))}
