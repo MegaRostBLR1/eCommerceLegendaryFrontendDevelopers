@@ -15,6 +15,10 @@
   left: 0;
 }
 
+.title-section {
+  position: relative;
+}
+
 .title-section-title {
   font-weight: var(--font-black);
   font-size: var(--title-size);
@@ -23,8 +27,14 @@
 }
 
 .bestseller {
+  position: relative;
   margin-top: var(--space-xxxl);
-  margin-bottom: var(--space-xxl);
+  padding-bottom: var(--space-xxl);
+
+  .page-container {
+    position: relative;
+    z-index: 2;
+  }
 }
 
 .bestseller-header {

@@ -12,6 +12,10 @@
   --color-dark: #24221f;
   --color-gray: #7b7b7b;
 
+  --cube-color: #005a3c;
+  --cube-highlight: #008f5d;
+  --cube-shadow: #003d29;
+
   --space-xs: 10px;
   --space-sm: 20px;
   --space-md: 30px;
