@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import logo from '../../assets/logo.svg';
-import styles from './header.module.css';
+import logo from '../../../assets/logo.svg';
+import './header.css';
 
 type Role = 'admin' | 'user';
 type MenuItemType =
@@ -65,27 +65,31 @@ const Header = () => {
   const currentMenuItems = MENU_ITEMS[role];
 
   return (
-    <header className={styles.header}>
-      <div className={styles.container}>
-        <Link to="/" className={styles.logoSection}>
-          <img src={logo} alt="Logo" className={styles.logo} />
-          <span className={styles.brandName}>Legendary Frontend</span>
+    <header className="header">
+      <div className="container">
+        <Link to="/" className="logoSection">
+          <img src={logo} alt="Logo" className="logo" />
+          <span className="brandName">
+            Legendary
+            <br />
+            Frontend
+          </span>
         </Link>
 
-        <nav className={styles.nav}>
+        <nav className="nav">
           {NAV_LINKS.map((link) => (
-            <Link key={link.id} to={link.path} className={styles.navLink}>
+            <Link key={link.id} to={link.path} className="navLink">
               {link.title}
             </Link>
           ))}
         </nav>
 
-        <div className={styles.actions}>
+        <div className="actions">
           {!isAuth ? (
             <IconButton
               aria-label="Login"
               onClick={() => console.log('Open login modal')}
-              className={styles.profileIconButton}
+              className="profileIconButton"
             >
               <LoginIcon />
             </IconButton>
@@ -97,7 +101,7 @@ const Header = () => {
                 aria-haspopup="true"
                 aria-expanded={isMenuOpen ? 'true' : undefined}
                 onClick={handleOpenMenu}
-                className={styles.profileIconButton}
+                className="profileIconButton"
               >
                 <PersonOutlineIcon />
               </IconButton>
@@ -107,13 +111,13 @@ const Header = () => {
                 anchorEl={anchorEl}
                 open={isMenuOpen}
                 onClose={handleCloseMenu}
-                PaperProps={{ className: styles.profileMenu }}
+                PaperProps={{ className: 'profileMenu' }}
               >
                 {currentMenuItems.map((item) => (
                   <MenuItem
                     key={item.isExit ? 'logout' : item.path}
                     onClick={() => handleMenuItemClick(item)}
-                    className={`${styles.profileMenuItem} ${item.isExit ? styles.profileMenuItemExit : ''}`}
+                    className={`profileMenuItem ${item.isExit ? 'profileMenuItemExit' : ''}`}
                   >
                     {item.title}
                   </MenuItem>
