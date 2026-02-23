@@ -8,6 +8,9 @@ import { CATEGORY_SELECT } from './constants/category.select';
 import { ServiceData } from '../../models/services/service-data.model';
 import { SERVICE_SELECT } from './constants/service.select';
 import { queryServices } from './utils/query-services';
+import { OrderData } from '../../models/orders/order-data.model';
+import { ordersQuery } from './utils/orders-query';
+import { ORDER_SELECT } from './constants/order.select';
 
 const db = new PrismaClient();
 
@@ -28,8 +31,8 @@ export const dbService = {
     getUserByEmail: async (email: string, visible?: boolean): Promise<UserResponse | null> => {
         return await db.user.findFirst({ where: { email, visible }, select: USER_SELECT });
     },
-    allUsers: async (page: number, count: number): Promise<UserResponse[]> => {
-        return await db.user.findMany({ where: { visible: true }, select: USER_SELECT, take: count, skip: (page - 1) * count });
+    allUsers: async (page: number, take: number): Promise<UserResponse[]> => {
+        return await db.user.findMany({ where: { visible: true }, select: USER_SELECT, take, skip: (page - 1) * take });
     },
     usersCount: async (): Promise<number> => {
         return await db.user.count({ where: { visible: true } });
@@ -70,7 +73,7 @@ export const dbService = {
     updateService: async (id: number, data: Prisma.ServiceUncheckedUpdateInput): Promise<ServiceData> => {
         return await db.service.update({ where: { id }, data, select: SERVICE_SELECT });
     },
-    servicesOrderByPostsCount: async () => {
+    servicesOrderByPostsCount: async (take: number) => {
         return await db.service.findMany({
             orderBy: {
                 orders: {
@@ -78,6 +81,16 @@ export const dbService = {
                 },
             },
             select: SERVICE_SELECT,
+            take,
         });
+    },
+    ordersCount: async (userId?: number, search?: string, visible?: boolean): Promise<number> => {
+        return await db.order.count({ where: ordersQuery(userId, search, visible) });
+    },
+    allOrders: async (page: number, take: number, userId?: number, search?: string, visible?: boolean): Promise<OrderData[]> => {
+        return await db.order.findMany({ where: ordersQuery(userId, search, visible), select: ORDER_SELECT, take, skip: (page - 1) * take });
+    },
+    getOrderById: async (id: number, visible?: boolean): Promise<OrderData> => {
+        return await db.order.findFirst({ where: { id, visible }, select: ORDER_SELECT });
     },
 };

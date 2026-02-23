@@ -7,13 +7,15 @@ import { UpdateService } from '../models/services/update-service.model';
 import { dbService } from './db/db.service';
 import { utilsService } from './utils.service';
 
+const MOST_USED_ORDERS_COUNT = 4;
+
 const mappedServiceCategories = (data: any[]): CategoryResponse[] => {
     return data.map(({ category }) => category);
 };
 
 export const servicesService = {
     mostUsedServices: async (): Promise<ServiceResponse[] | any> => {
-        return (await dbService.servicesOrderByPostsCount()).map(({ servicesCategories, ...d }) => ({
+        return (await dbService.servicesOrderByPostsCount(MOST_USED_ORDERS_COUNT)).map(({ servicesCategories, ...d }) => ({
             ...d,
             categories: mappedServiceCategories(servicesCategories),
         }));

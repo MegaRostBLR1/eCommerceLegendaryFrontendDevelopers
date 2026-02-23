@@ -13,13 +13,26 @@ import { categoriesController } from '../controllers/categories.controller';
 import { categoriesValidators } from './validators/categories.validator';
 import { servicesController } from '../controllers/services.controller';
 import { servicesValidators } from './validators/services.validators';
+import { ordersController } from '../controllers/orders.controller';
+import { ordersValidators } from './validators/orders.validator';
 
 export const router = express.Router();
-const middlewaresRoutes: string[] = ['/users', '/users/:id', '/categories', '/categories/:id', '/services', '/services/:id', 'services/most/used'];
-const middlewaresRoutesAuth: string[] = ['/users', '/users/:id', '/categories/:id'];
+const middlewaresRoutes: string[] = [
+    '/users',
+    '/users/:id',
+    '/categories',
+    '/categories/:id',
+    '/services',
+    '/services/:id',
+    'services/most/used',
+    '/orders',
+    '/orders:/id',
+    '/orders/user/:id',
+];
+const middlewaresRoutesAuth: string[] = ['/users', '/users/:id', '/categories/:id', '/orders', '/orders:/id', 'orders/user/:id'];
 
+router.all(middlewaresRoutes, loggerMiddleware, disconnectDbMiddleware);
 router.all(middlewaresRoutesAuth, authMiddleware);
-router.all(middlewaresRoutes, loggerMiddleware, authMiddleware, disconnectDbMiddleware);
 router.patch(['/services/:id'], authMiddleware);
 router.post(['categories'], authMiddleware);
 
@@ -62,5 +75,15 @@ router
     .get(servicesValidators.serviceId, validateErrors, categoriesController.categoryById)
     .patch(servicesValidators.serviceId, servicesValidators.serviceUpdate, validateErrors, permissionMiddleware, servicesController.updateService)
     .delete(servicesValidators.serviceId, validateErrors, permissionMiddleware, servicesController.removeService);
+router.route('/orders/user/:id').get(userValidators.userId, validateErrors, ordersController.ordersByUserId);
+router
+    .route('/orders')
+    .get(validators.search, validateErrors, ordersController.allOrders)
+    .post(ordersValidators.orderCreate, validateErrors, ordersController.createOrder);
+router
+    .route('/order/:id')
+    .get(ordersValidators.orderId, validateErrors, ordersController.orderById)
+    .patch(ordersValidators.orderId, ordersValidators.orderUpdate, validateErrors, ordersController.updateOrder)
+    .delete(ordersValidators.orderId, ordersController.removeOrder);
 
 export default router;

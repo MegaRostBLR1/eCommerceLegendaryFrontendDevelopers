@@ -20,7 +20,7 @@ export const ordersController = {
             next(HttpException.internalError(JSON.stringify(e)));
         }
     },
-     ordersByUserId: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    ordersByUserId: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             res.status(200).json(await ordersService.ordersByUserId(Number(req.params['id'])));
         } catch (e) {

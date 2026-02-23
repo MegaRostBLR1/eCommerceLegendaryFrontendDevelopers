@@ -2,6 +2,7 @@ import { body, param, query } from 'express-validator';
 import { HttpException } from '../../exceptions/exception';
 import { servicesService } from '../../services/services.service';
 import { categoriesService } from '../../services/categories.service';
+import { validators } from './validators';
 
 export const servicesValidators = {
     serviceId: [
@@ -61,8 +62,5 @@ export const servicesValidators = {
                 return true;
             }),
     ],
-    all: [
-        query('search').optional().isString().isLength({ min: 3 }).withMessage('Search minimum length is 3 symbols'),
-        query('categories').optional().isString(),
-    ],
+    all: [...validators.search, query('categories').optional().isString()],
 };
