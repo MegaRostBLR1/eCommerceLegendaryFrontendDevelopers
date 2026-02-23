@@ -1,0 +1,51 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.title {
+  font-weight: 400;
+  font-size: 48px;
+  line-height: 140%;
+  text-transform: uppercase;
+  color: #063526;
+  border-bottom: 1px solid #063526;
+  padding-bottom: 10px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 38px;
+}
+
+.categories {
+  position: relative;
+  cursor: pointer;
+}
+
+.categories svg {
+  position: absolute;
+  right: 20px;
+  top: calc(50% - 16px);
+  z-index: 1;
+}
+
+.search {
+  position: relative;
+  grid-column: span 3;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 40px;
+  row-gap: 30px;
+}
