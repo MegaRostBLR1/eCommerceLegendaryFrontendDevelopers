@@ -1,5 +1,8 @@
 import './App.css';
 
+import Header from './pages/components/header/Header.tsx';
+import { Routes, Route } from 'react-router-dom';
+import Footer from './pages/components/footer/Footer.tsx';
 import Header from './components/Header/header.tsx';
 import { Routes, Route } from 'react-router-dom';
 import Footer from './components/Footer/Footer.tsx';
