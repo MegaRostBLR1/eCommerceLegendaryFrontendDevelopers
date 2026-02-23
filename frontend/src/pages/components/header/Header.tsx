@@ -5,6 +5,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import logo from '../../../assets/logo.svg';
 import './header.css';
+import AuthorizationModal from '../../modals/LoginModal/authorization-modal';
 
 type Role = 'admin' | 'user';
 type MenuItemType =
@@ -15,6 +16,7 @@ const NAV_LINKS = [
   { id: 'catalog', title: 'Catalog', path: '/catalog' },
   { id: 'about', title: 'About', path: '/about' },
 ];
+
 const MENU_ITEMS: Record<Role, MenuItemType[]> = {
   admin: [
     { title: 'Profile', path: '/profile' },
@@ -35,10 +37,11 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
 const Header = () => {
   const navigate = useNavigate();
 
-  // Пока сочтояния локальные
-  const isAuth = true;
+  // Пока состояния локальные
+  const isAuth = false;
   const isAdmin = true;
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const isMenuOpen = Boolean(anchorEl);
 
@@ -65,69 +68,75 @@ const Header = () => {
   const currentMenuItems = MENU_ITEMS[role];
 
   return (
-    <header className="header">
-      <div className="container">
-        <Link to="/" className="logoSection">
-          <img src={logo} alt="Logo" className="logo" />
-          <span className="brandName">
-            Legendary
-            <br />
-            Frontend
-          </span>
-        </Link>
+    <>
+      <header className="header">
+        <div className="container">
+          <Link to="/" className="logoSection">
+            <img src={logo} alt="Logo" className="logo" />
+            <span className="brandName">
+              Legendary
+              <br />
+              Frontend
+            </span>
+          </Link>
 
-        <nav className="nav">
-          {NAV_LINKS.map((link) => (
-            <Link key={link.id} to={link.path} className="navLink">
-              {link.title}
-            </Link>
-          ))}
-        </nav>
+          <nav className="nav">
+            {NAV_LINKS.map((link) => (
+              <Link key={link.id} to={link.path} className="navLink">
+                {link.title}
+              </Link>
+            ))}
+          </nav>
 
-        <div className="actions">
-          {!isAuth ? (
-            <IconButton
-              aria-label="Login"
-              onClick={() => console.log('Open login modal')}
-              className="profileIconButton"
-            >
-              <LoginIcon />
-            </IconButton>
-          ) : (
-            <>
+          <div className="actions">
+            {!isAuth ? (
               <IconButton
-                aria-label="Profile"
-                aria-controls={isMenuOpen ? 'profile-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={isMenuOpen ? 'true' : undefined}
-                onClick={handleOpenMenu}
+                aria-label="Login"
+                onClick={() => setIsModalOpen(true)}
                 className="profileIconButton"
               >
-                <PersonOutlineIcon />
+                <LoginIcon />
               </IconButton>
+            ) : (
+              <>
+                <IconButton
+                  aria-label="Profile"
+                  aria-controls={isMenuOpen ? 'profile-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={isMenuOpen ? 'true' : undefined}
+                  onClick={handleOpenMenu}
+                  className="profileIconButton"
+                >
+                  <PersonOutlineIcon />
+                </IconButton>
 
-              <Menu
-                id="profile-menu"
-                anchorEl={anchorEl}
-                open={isMenuOpen}
-                onClose={handleCloseMenu}
-                PaperProps={{ className: 'profileMenu' }}
-              >
-                {currentMenuItems.map((item) => (
-                  <MenuItem
-                    key={item.isExit ? 'logout' : item.path}
-                    onClick={() => handleMenuItemClick(item)}
-                    className={`profileMenuItem ${item.isExit ? 'profileMenuItemExit' : ''}`}
-                  >
-                    {item.title}
-                  </MenuItem>
-                ))}
-              </Menu>
-            </>
-          )}
+                <Menu
+                  id="profile-menu"
+                  anchorEl={anchorEl}
+                  open={isMenuOpen}
+                  onClose={handleCloseMenu}
+                  PaperProps={{ className: 'profileMenu' }}
+                >
+                  {currentMenuItems.map((item) => (
+                    <MenuItem
+                      key={item.isExit ? 'logout' : item.path}
+                      onClick={() => handleMenuItemClick(item)}
+                      className={`profileMenuItem ${item.isExit ? 'profileMenuItemExit' : ''}`}
+                    >
+                      {item.title}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            )}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+      <AuthorizationModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+    </>
   );
 };
 
