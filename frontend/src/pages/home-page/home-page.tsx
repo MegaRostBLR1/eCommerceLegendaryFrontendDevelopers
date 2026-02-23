@@ -1,33 +1,33 @@
-import { Logo } from '../../components/icons/logo';
 import './home-page.css';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card } from './ui/card/card';
 import { AnimationCube } from './ui/animation-cube/animation-cube';
+import logoHome from '../../assets/icons/logoHome.svg';
 
 const DATA = [
   {
-    title: 'titl',
-    price: 100,
-    description: 'description',
+    title: 'Creating a video',
+    price: 167,
+    description: 'Description',
     id: 1,
   },
   {
-    title: 'tit',
-    price: 10,
-    description: 'description',
+    title: 'Creating a video',
+    price: 167,
+    description: 'Description',
     id: 2,
   },
   {
-    title: 'ti',
-    price: 10,
-    description: 'description',
+    title: 'Creating a video',
+    price: 167,
+    description: 'Description',
     id: 3,
   },
   {
-    title: 't',
-    price: 1000,
+    title: 'Creating a video',
+    price: 167,
     description:
-      'lorem ipsum dolor sit amet consectetur adipiscing elit ut aliquam purus sit amet luctus venenatis description description',
+      'lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur',
     id: 4,
   },
 ];
@@ -39,8 +39,8 @@ export function HomePage() {
         <AnimationCube position="right" />
         <div className="page-container">
           <div className="title-wrapper">
-            <Logo className="title-logo" />
-            <h2 className="title-section-title">Услуги от ИИ</h2>
+            <img src={logoHome} alt="Logo" className="title-logo" />
+            <h2 className="title-section-title">Services from AI</h2>
           </div>
         </div>
       </section>
@@ -49,9 +49,9 @@ export function HomePage() {
         <AnimationCube position="left" />
         <div className="page-container">
           <div className="bestseller-header">
-            <h2 className="bestseller-title">Хит продаж</h2>
-            <a className="bestseller-link" href="/Каталог/услуги">
-              <span>Все улуги</span>
+            <h2 className="bestseller-title">A HIT OF SALES</h2>
+            <a className="bestseller-link" href="/catalog/services">
+              <span>All services</span>
               <ArrowForwardIosIcon className="bestseller-arrow-right" />
             </a>
           </div>
