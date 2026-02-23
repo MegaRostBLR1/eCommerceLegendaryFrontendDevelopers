@@ -44,7 +44,9 @@ export const ordersService = {
 
         return { page, count, pages: Math.ceil(ordersCount / count), data };
     },
-    createOrder: async (): Promise<OrderDataResponse> => {
+    createOrder: async (dto: any): Promise<OrderDataResponse> => {
+        console.log(dto);
+
         return {} as OrderDataResponse;
     },
     updateOrder: async (id: number, dto: UpdateOrderDto): Promise<OrderDataResponse> => {

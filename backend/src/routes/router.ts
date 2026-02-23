@@ -24,17 +24,17 @@ const middlewaresRoutes: string[] = [
     '/categories/:id',
     '/services',
     '/services/:id',
-    'services/most/used',
+    '/services/most/used',
     '/orders',
-    '/orders:/id',
+    '/orders/:id',
     '/orders/user/:id',
 ];
-const middlewaresRoutesAuth: string[] = ['/users', '/users/:id', '/categories/:id', '/orders', '/orders:/id', 'orders/user/:id'];
+const middlewaresRoutesAuth: string[] = ['/users', '/users/:id', '/categories/:id', '/orders', '/orders/:id', '/orders/user/:id'];
 
 router.all(middlewaresRoutes, loggerMiddleware, disconnectDbMiddleware);
 router.all(middlewaresRoutesAuth, authMiddleware);
 router.patch(['/services/:id'], authMiddleware);
-router.post(['categories'], authMiddleware);
+router.post(['/categories'], authMiddleware);
 
 router.get('/', async (_req: Request, res: Response) => {
     res.status(200).send(`<h1 style="text-align: center">Base app route</h1>`);
@@ -81,7 +81,7 @@ router
     .get(validators.search, validateErrors, ordersController.allOrders)
     .post(ordersValidators.orderCreate, validateErrors, ordersController.createOrder);
 router
-    .route('/order/:id')
+    .route('/orders/:id')
     .get(ordersValidators.orderId, validateErrors, ordersController.orderById)
     .patch(ordersValidators.orderId, ordersValidators.orderUpdate, validateErrors, ordersController.updateOrder)
     .delete(ordersValidators.orderId, ordersController.removeOrder);

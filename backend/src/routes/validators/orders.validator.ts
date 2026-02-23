@@ -1,4 +1,4 @@
-import { param } from 'express-validator';
+import { body, param } from 'express-validator';
 import { ordersService } from '../../services/orders.service';
 import { HttpException } from '../../exceptions/exception';
 
@@ -14,8 +14,8 @@ export const ordersValidators = {
             .withMessage('Not exist entity'),
     ],
     orderCreate: [
-        // body('name').isString(),
-        // body('discount').optional().isDecimal(),
+        body('serviceId').isInt(),
+        body('quantity').isInt(),
         // body('amount').isDecimal(),
         // body('workersCount').optional().isInt(),
         // body('duration').isInt(),
@@ -33,7 +33,7 @@ export const ordersValidators = {
         //     }),
     ],
     orderUpdate: [
-        // body('name').optional().isString(),
+        body('quantity').optional().isInt(),
         // body('discount').optional().isDecimal(),
         // body('amount').optional().isDecimal(),
         // body('workersCount').optional().isInt(),
