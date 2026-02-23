@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Cube } from '../../../../components/icons/cube';
+import { Cube } from '../../../../assets/icons/cube';
 import './animation-cube.css';
 
 export const AnimationCube = ({ position }: { position: 'left' | 'right' }) => {
