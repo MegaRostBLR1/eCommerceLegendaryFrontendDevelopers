@@ -1,6 +1,6 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { Burger } from '../../../../components/icons/burger';
 import { LABEL_STYLE, SELECT_STYLE } from '../../constants';
+import { Burger } from '../../../../assets/icons/burger';
 
 export const SelectComponent = () => {
   return (

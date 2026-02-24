@@ -51,6 +51,10 @@ const DATA = [
   },
 ];
 
+const DEV_URL = import.meta.env.VITE_DEV_URL;
+
+console.log(DEV_URL);
+
 export const CatalogPage = () => {
   return (
     <main className={styles.main}>

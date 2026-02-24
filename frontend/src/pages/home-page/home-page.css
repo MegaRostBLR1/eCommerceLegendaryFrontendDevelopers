@@ -96,8 +96,6 @@
 
 /* CARD */
 .bestseller-card {
-  width: 275px;
-  height: 170px;
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
