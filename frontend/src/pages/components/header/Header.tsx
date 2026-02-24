@@ -6,6 +6,7 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import logo from '../../../assets/icons/logo.svg';
 import './header.css';
 import AuthorizationModal from '../../modals/LoginModal/authorization-modal';
+import { isAuthUser, userIsAdmin } from '../../../services/authorization-service.ts';
 
 type Role = 'admin' | 'user';
 type MenuItemType =
@@ -37,9 +38,8 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
 const Header = () => {
   const navigate = useNavigate();
 
-  // Пока состояния локальные
-  const isAuth = false;
-  const isAdmin = true;
+  const isAuth = isAuthUser();
+  const isAdmin = userIsAdmin();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
