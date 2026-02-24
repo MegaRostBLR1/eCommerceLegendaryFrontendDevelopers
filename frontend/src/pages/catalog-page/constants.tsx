@@ -1,4 +1,5 @@
 export const PAGINATION_STYLE = {
+  'margin-top': 'auto',
   '& .MuiPagination-ul': {
     justifyContent: 'center',
   },

@@ -28,7 +28,7 @@ const DATA = [
     title: 't',
     price: 1000,
     description:
-      'lorem ipsum dolor sit amet consectetur adipiscing elit ut aliquam purus sit amet luctus venenatis description description',
+      'lorem ipsum dolor sit amet consectetur adipiscing elit ut aliquam purus sit amet luctus venenatis description description urus sit amet luctus venenatis description urus sit amet luctus venenatisdescription urus sit amet luctus venenatis',
     id: 4,
   },
   {
@@ -53,9 +53,9 @@ const DATA = [
 
 export const CatalogPage = () => {
   return (
-    <main>
-      <section>
-        <div className="page-container">
+    <main className={styles.main}>
+      <section className={styles.catalog}>
+        <div className={styles.container + ' page-container'}>
           <div className={styles.wrapper}>
             <h1 className={styles.title}>services</h1>
             <div className={styles.content}>
