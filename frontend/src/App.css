@@ -1,7 +1,38 @@
+@font-face {
+  font-family: 'Lato-Regular';
+  src:
+    local('Lato Regular'),
+    local('Lato-Regular'),
+    url('./assets/fonts/Lato/Lato-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('./assets/fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('./assets/fonts/Montserrat/Montserrat-Bold.ttf') format('truetype');
+  font-weight: 700;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: 'Lato-Regular', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
 body {
@@ -9,8 +40,13 @@ body {
 }
 
 .page-container {
-  max-width: var(--container-width);
   margin: 0 auto;
+  max-width: var(--container-width);
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 #root {

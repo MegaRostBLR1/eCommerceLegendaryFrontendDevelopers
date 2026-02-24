@@ -1,37 +1,37 @@
-@import '../../assets/styles/variables.css';
-@import '../../assets/styles/fonts.css';
+@import '../../../assets/styles/variables.css';
+@import '../../../App.css';
 
-.login-form-title {
+.create-acc-form-title {
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 
-.login-form-dialog-content {
+.create-acc-form-dialog-content {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
 }
 
-.login-title-container {
+.create-acc-title-container {
   width: 100%;
   margin-top: var(--space-md);
   display: flex;
   justify-content: center;
 }
 
-.login-title-container span {
+.create-acc-title-container span {
   font-family: Lato-Regular, sans-serif;
-  font-size: calc(var(--space-lg) + 5px);
+  font-size: calc(var(--space-lg));
   color: var(--second-color);
 }
 
-.login-form-text-field .MuiInputLabel-root {
+.create-acc-form-text-field .MuiInputLabel-root {
   font-family: Lato-Regular, sans-serif;
   color: var(--divider-color);
 }
 
-.login-form-text-field .MuiInput-underline:before {
+.create-acc-form-text-field .MuiInput-underline:before {
   border-bottom: 1px solid var(--divider-color);
 }
 
@@ -46,4 +46,8 @@
 
 .MuiButton-root.confirm-send-btn :hover {
   background-color: var(--text-shadow-color);
+}
+
+.MuiButton-root.confirm-send-btn :disabled {
+  cursor: not-allowed;
 }
