@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import logo from '../../../assets/logo.svg';
+import logo from '../../../assets/icons/logo.svg';
 import './header.css';
 import AuthorizationModal from '../../modals/LoginModal/authorization-modal';
 
