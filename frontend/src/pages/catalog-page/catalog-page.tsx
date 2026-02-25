@@ -7,47 +7,81 @@ import { SearchInput } from './ui/search-input/search-input';
 
 const DATA = [
   {
-    title: 'titl',
-    price: 100,
-    description: 'description',
-    id: 1,
-  },
-  {
-    title: 'tit',
-    price: 10,
-    description: 'description',
-    id: 2,
-  },
-  {
-    title: 'ti',
-    price: 10,
-    description: 'description',
-    id: 3,
-  },
-  {
-    title: 't',
-    price: 1000,
+    title: 'Разработка лендинга',
+    price: 15000,
     description:
-      'lorem ipsum dolor sit amet consectetur adipiscing elit ut aliquam purus sit amet luctus venenatis description description urus sit amet luctus venenatis description urus sit amet luctus venenatisdescription urus sit amet luctus venenatis',
+      'Создание продающей страницы с уникальным дизайном и адаптивной версткой под все устройства.',
+    id: 1,
+    discount: 14,
+    employeesCount: 2,
+    duration: '3-5 дней',
+    category: 'Веб-разработка',
+  },
+  {
+    title: 'Логотип бренда',
+    price: 5000,
+    description:
+      'Разработка фирменного стиля, включая три варианта логотипа и подбор цветовой палитры.',
+    id: 2,
+    discount: 12,
+    employeesCount: 1,
+    duration: '2 дня',
+    category: 'Дизайн',
+  },
+  {
+    title: 'SEO Оптимизация',
+    price: 10000,
+    description:
+      'Базовая настройка мета-тегов, анализ ключевых слов и улучшение индексации вашего ресурса.',
+    id: 3,
+    discount: 15,
+    employeesCount: 1,
+    duration: '7 дней',
+    category: 'Маркетинг',
+  },
+  {
+    title: 'Мобильное приложение',
+    price: 100000,
+    description:
+      'Полноценная разработка под iOS и Android на React Native с интеграцией серверной части и API.',
     id: 4,
+    discount: 15,
+    employeesCount: 4,
+    duration: '30 дней',
+    category: 'Разработка',
   },
   {
-    title: 'titl',
-    price: 100,
-    description: 'description',
+    title: 'Контент-план',
+    price: 3000,
+    description:
+      'Составление стратегии публикаций на месяц вперед для ваших социальных сетей.',
     id: 12,
+    discount: 1.5,
+    employeesCount: 1,
+    duration: '4 часа',
+    category: 'SMM',
   },
   {
-    title: 'tit',
-    price: 10,
-    description: 'description',
+    title: 'Настройка рекламы',
+    price: 8000,
+    description:
+      'Запуск контекстной рекламы в поисковых системах с оптимизацией стоимости клика.',
     id: 22,
+    discount: 1.1,
+    employeesCount: 2,
+    duration: '3 дня',
+    category: 'Маркетинг',
   },
   {
-    title: 'ti',
-    price: 10,
-    description: 'description',
+    title: 'Поддержка сайта',
+    price: 5000,
+    description:
+      'Техническое обслуживание сайта, исправление ошибок и регулярное обновление контента. ошибок и регулярное обновление контентаошибок и регулярное обновление контентаошибок и регулярное обновление контентаошибок и регулярное обновление контента',
     id: 32,
+    discount: 0,
+    employeesCount: 1,
+    duration: 'Ежемесячно',
+    category: 'IT-услуги',
   },
 ];
 
@@ -78,6 +112,10 @@ export const CatalogPage = () => {
                     title={item.title}
                     price={item.price}
                     description={item.description}
+                    discount={item.discount}
+                    employeesCount={item.employeesCount}
+                    duration={item.duration}
+                    category={item.category}
                   />
                 ))}
               </div>

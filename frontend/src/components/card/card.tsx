@@ -1,23 +1,78 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import './card.css';
+
+interface CardProps {
+  title: string;
+  price: number;
+  description: string;
+  discount?: number;
+  employeesCount: number;
+  duration: string;
+  category: string;
+}
 
 export const Card = ({
   title,
   price,
   description,
-}: {
-  title: string;
-  price: number;
-  description: string;
-}) => {
+  discount,
+  employeesCount,
+  duration,
+  category,
+}: CardProps) => {
+  const formatValue = (num: number) => num.toFixed(2);
+
+  const hasDiscount = !!(discount && discount > 0);
+  const oldPrice = hasDiscount ? price / (1 - discount / 100) : null;
+
   return (
     <div className="bestseller-card">
-      <div className="bestseller-card-header">
-        <span className="bestseller-card-title">{title}</span>
-        <span className="bestseller-card-price">{price} USD</span>
+      <div className="bestseller-category-and-title">
+        <div className="bestseller-category-wrapper">
+          <span className="bestseller-category-tag" title={category}>
+            {category}
+          </span>
+          <span className="bestseller-category-tag">КРЕАТИВ</span>
+        </div>
+        <div className="bestseller-card-title-and-price">
+          <h3 className="bestseller-card-title" title={title}>
+            {title}
+          </h3>
+          <div className="bestseller-card-price-block">
+            {hasDiscount && (
+              <div className="bestseller-price-top">
+                <span className="bestseller-old-price">
+                  {formatValue(oldPrice!)}
+                </span>
+                <span className="bestseller-discount-badge">-{discount}%</span>
+              </div>
+            )}
+            <div className="bestseller-current-price">
+              <span className="price-value">{formatValue(price)}</span>
+              <span className="price-currency">USD</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <p className="bestseller-card-description">{description}</p>
+
+      <div className="bestseller-card-header">
+        <div className="bestseller-card-main-info">
+          <p className="bestseller-card-description">{description}</p>
+        </div>
+      </div>
+      <div className="bestseller-card-details">
+        <div className="details-item">
+          <span className="details-label">КОЛИЧЕСТВО СОТРУДНИКОВ</span>
+          <span className="details-value">{employeesCount} специалиста</span>
+        </div>
+        <div className="details-item">
+          <span className="details-label">ДЛИТЕЛЬНОСТЬ ВЫПОЛНЕНИЯ</span>
+          <span className="details-value">{duration}</span>
+        </div>
+      </div>
+
       <button className="bestseller-card-button">
-        <span className="bestseller-card-button-text">Place an order</span>
+        <span className="bestseller-card-button-text">ОФОРМИТЬ ЗАКАЗ</span>
         <ArrowForwardIosIcon className="bestseller-arrow-right" />
       </button>
     </div>

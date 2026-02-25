@@ -94,66 +94,6 @@
   gap: var(--space-lg);
 }
 
-/* CARD */
-.bestseller-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-  padding: var(--space-sm);
-  height: 181px;
-  background: var(--bg-gradient);
-}
-
-.bestseller-card-header {
-  display: flex;
-  justify-content: space-between;
-}
-
-.bestseller-card-title {
-  font-weight: var(--font-medium);
-  font-size: var(--text-base);
-  line-height: 140%;
-  color: var(--color-dark);
-}
-
-.bestseller-card-price {
-  font-weight: var(--font-bold);
-  font-size: var(--text-base);
-  line-height: 140%;
-  color: var(--second-color);
-}
-
-.bestseller-card-description {
-  display: -webkit-box;
-  font-weight: var(--font-regular);
-  font-size: var(--text-small);
-  line-height: 140%;
-  color: var(--color-gray);
-
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: var(--line-clamp);
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.bestseller-card-button {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  margin-top: auto;
-}
-
-.bestseller-card-button-text {
-  font-weight: var(--font-extrabold);
-  font-size: var(--text-small);
-  line-height: 140%;
-  text-transform: uppercase;
-  color: var(--color-dark);
-}
-
 /*MEDIA*/
 @media (max-width: 1024px) {
   .title-section-title {

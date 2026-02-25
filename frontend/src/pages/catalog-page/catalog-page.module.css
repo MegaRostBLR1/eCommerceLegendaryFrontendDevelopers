@@ -65,6 +65,6 @@
 .cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  column-gap: var(--space-lg);
-  row-gap: var(--space-md);
+  column-gap: 16px;
+  row-gap: 12px;
 }
