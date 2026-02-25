@@ -30,7 +30,12 @@ export const ordersController = {
     },
     createOrder: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            res.status(201).json(await ordersService.createOrder(req.body));
+            res.status(201).json(
+                await ordersService.createOrder({
+                    ...req.body,
+                    userId: (req as any).user?.id,
+                }),
+            );
         } catch (e) {
             console.log('ERROR', e);
             next(HttpException.internalError(JSON.stringify(e)));

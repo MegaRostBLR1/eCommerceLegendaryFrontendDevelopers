@@ -5,10 +5,12 @@ import { UpdateUser } from '../models/users/update-user.model';
 import { hashEssence } from './authorization.service';
 import { UsersResponse } from '../models/users/users-many-response.model';
 import { PageCountQuery } from '../models/query/user-query.model';
+import { USER_SELECT } from './db/constants/user.select';
+import { Prisma } from '@prisma/client';
 
 export const userService = {
-    getCandidate: async (email: string, visible?: boolean): Promise<UserResponse | null> => {
-        return await dbService.getUserByEmail(email, visible);
+    getCandidate: async (email: string, visible?: boolean, select?: Prisma.UserSelect): Promise<UserResponse | null> => {
+        return await dbService.getUserByEmail(email, visible, select || USER_SELECT);
     },
 
     getUserById: async (id: number): Promise<UserResponse | null> => {

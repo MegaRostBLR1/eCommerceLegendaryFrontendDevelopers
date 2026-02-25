@@ -20,8 +20,8 @@ export const servicesService = {
             categories: mappedServiceCategories(servicesCategories),
         }));
     },
-    getServiceById: async (id: number): Promise<ServiceResponse | null> => {
-        const data = await dbService.getServiceById(id);
+    getServiceById: async (id: number, visible?: boolean): Promise<ServiceResponse | null> => {
+        const data = await dbService.getServiceById(id, visible);
 
         if (!data) return null;
 

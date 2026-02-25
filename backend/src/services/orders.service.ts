@@ -1,3 +1,5 @@
+import { OrderStatus } from '../enums/order.status.enum';
+import { CreateOrderDto } from '../models/orders/create-order.model';
 import { OrderDataResponse } from '../models/orders/order-data-response.model';
 import { OrderData } from '../models/orders/order-data.model';
 import { OrdersResponse } from '../models/orders/orders-response.model';
@@ -5,10 +7,18 @@ import { UpdateOrderDto } from '../models/orders/update-order.model';
 import { OrdersQuery } from '../models/query/orders-query.model';
 import { dbService } from './db/db.service';
 
-const mappedOrder = (data: OrderData): OrderDataResponse => {
-    console.log('DATA', data);
+const mappedOrder = (data: OrderData | null): OrderDataResponse | null => {
+    if (!data) return null;
 
-    return {} as OrderDataResponse;
+    const { description, service, user, ...d } = data;
+
+    return {
+        ...d,
+        description: description || '',
+        name: service.name,
+        discount: service.discount || 0,
+        user: { id: user?.id || 0, lastName: user?.lastName || '', firstName: user?.firstName || '', patronymic: user?.patronymic || '' },
+    };
 };
 
 export const ordersService = {
@@ -22,7 +32,7 @@ export const ordersService = {
             page,
             count,
             pages: Math.ceil(ordersCount / count),
-            data: (await dbService.allOrders(page, count, undefined, search)).map((i) => mappedOrder(i)),
+            data: (await dbService.allOrders(page, count, undefined, search)).map((i) => mappedOrder(i)) as OrderDataResponse[],
         };
     },
     orderById: async (id: number): Promise<OrderDataResponse | null> => {
@@ -30,31 +40,36 @@ export const ordersService = {
 
         if (!data) return null;
 
-        return {} as OrderDataResponse;
-
-        // const { servicesCategories, ...d } = data;
-
-        // return { ...d, categories: mappedServiceCategories(servicesCategories) };
+        return mappedOrder(await dbService.getOrderById(id, true));
     },
     ordersByUserId: async (userId: number, { page: p, count: c }: OrdersQuery): Promise<OrdersResponse> => {
         const page = p ? Number(p) : 1;
         const count = c ? Number(c) : 10;
         const ordersCount = await dbService.ordersCount(userId);
-        const data = await dbService.allOrders(page, count, userId, undefined, true);
 
-        return { page, count, pages: Math.ceil(ordersCount / count), data };
+        return {
+            page,
+            count,
+            pages: Math.ceil(ordersCount / count),
+            data: (await dbService.allOrders(page, count, userId, undefined, true)).map((i) => mappedOrder(i)) as OrderDataResponse[],
+        };
     },
-    createOrder: async (dto: any): Promise<OrderDataResponse> => {
-        console.log(dto);
-
-        return {} as OrderDataResponse;
+    createOrder: async ({ serviceId, quantity, price, startDate, userId }: CreateOrderDto): Promise<OrderDataResponse | null> => {
+        return mappedOrder(
+            await dbService.createOrder({
+                serviceId,
+                quantity,
+                price,
+                startDate,
+                userId,
+                status: OrderStatus.CREATED,
+            }),
+        );
     },
-    updateOrder: async (id: number, dto: UpdateOrderDto): Promise<OrderDataResponse> => {
-        console.log(id, dto);
-
-        return {} as OrderDataResponse;
+    updateOrder: async (id: number, { quantity, description, status, startDate }: UpdateOrderDto): Promise<OrderDataResponse | null> => {
+        return mappedOrder(await dbService.updateOrder(id, { quantity, description, status, startDate }));
     },
-    removeOrder: async (id: number): Promise<OrderDataResponse> => {
+    removeOrder: async (id: number): Promise<OrderDataResponse | null> => {
         return await ordersService.updateOrder(id, { visible: false });
     },
 };

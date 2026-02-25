@@ -8,6 +8,7 @@ import { SignResponse } from '../models/authorization/sign-response.model';
 import { DecodedToken } from '../models/authorization/decoded-token.model';
 import { ReqBody } from '../models/common/request-body.model';
 import { dbService } from './db/db.service';
+import { USER_SELECT } from './db/constants/user.select';
 
 const config = ConfigFactory();
 
@@ -51,7 +52,9 @@ export const authorizationService = {
 
     signInSignUp: async (dto: ReqBody): Promise<SignResponse> => {
         const { password, email } = dto;
-        let candidate = await userService.getCandidate(email, true);
+        let candidate = await userService.getCandidate(email, true, { ...USER_SELECT, password: true });
+
+        if (candidate && !(await compareHashEssence(password, candidate.password || ''))) return { code: 401, status: 'Error' };
 
         if (!candidate)
             candidate = await dbService.createUser({

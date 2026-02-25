@@ -1,3 +1,5 @@
 import { User } from '@prisma/client';
 
-export type UserResponse = Omit<User, 'date' | 'visible' | 'password'>;
+export type UserResponse = Omit<User, 'date' | 'visible' | 'password'> & {
+    password?: string;
+};

@@ -28,8 +28,8 @@ export const dbService = {
             select: USER_SELECT,
         });
     },
-    getUserByEmail: async (email: string, visible?: boolean): Promise<UserResponse | null> => {
-        return await db.user.findFirst({ where: { email, visible }, select: USER_SELECT });
+    getUserByEmail: async (email: string, visible?: boolean, select?: Prisma.UserSelect): Promise<UserResponse | null> => {
+        return await db.user.findFirst({ where: { email, visible }, select });
     },
     allUsers: async (page: number, take: number): Promise<UserResponse[]> => {
         return await db.user.findMany({ where: { visible: true }, select: USER_SELECT, take, skip: (page - 1) * take });
@@ -90,7 +90,13 @@ export const dbService = {
     allOrders: async (page: number, take: number, userId?: number, search?: string, visible?: boolean): Promise<OrderData[]> => {
         return await db.order.findMany({ where: ordersQuery(userId, search, visible), select: ORDER_SELECT, take, skip: (page - 1) * take });
     },
-    getOrderById: async (id: number, visible?: boolean): Promise<OrderData> => {
+    getOrderById: async (id: number, visible?: boolean): Promise<OrderData | null> => {
         return await db.order.findFirst({ where: { id, visible }, select: ORDER_SELECT });
+    },
+    createOrder: async (data: Prisma.OrderUncheckedCreateInput): Promise<OrderData> => {
+        return await db.order.create({ data, select: ORDER_SELECT });
+    },
+    updateOrder: async (id: number, data: Prisma.OrderUncheckedUpdateInput) => {
+        return await db.order.update({ where: { id }, data, select: ORDER_SELECT });
     },
 };
