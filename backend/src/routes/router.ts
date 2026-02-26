@@ -34,7 +34,7 @@ const middlewaresRoutesAuth: string[] = ['/users', '/users/:id', '/categories/:i
 router.all(middlewaresRoutes, loggerMiddleware, disconnectDbMiddleware);
 router.all(middlewaresRoutesAuth, authMiddleware);
 router.patch(['/services/:id'], authMiddleware);
-router.post(['/categories'], authMiddleware);
+router.post(['/categories', '/services'], authMiddleware);
 
 router.get('/', async (_req: Request, res: Response) => {
     res.status(200).send(`<h1 style="text-align: center">Base app route</h1>`);
