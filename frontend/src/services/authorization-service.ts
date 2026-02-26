@@ -26,3 +26,7 @@ export const userIsAdmin = () => {
   }
   return false;
 };
+
+export const logoutUser = ()=>{
+  localStorage.removeItem('token')
+}
