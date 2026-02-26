@@ -1,27 +1,24 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './card.css';
-import type { Category } from '../../types';
+import type { Service } from '../../types';
 
 interface CardProps {
-  title: string;
-  price: number;
-  description: string;
-  discount?: number;
-  employeesCount: number;
-  duration: string;
-  categories: Category[];
+  data: Service;
+  handleClick: (service: Service) => void;
 }
 
-export const Card = ({
-  title,
-  price,
-  description,
-  discount,
-  employeesCount,
-  duration,
-  categories,
-}: CardProps) => {
+export const Card = ({ data, handleClick }: CardProps) => {
   const formatValue = (num: number) => num.toFixed(2);
+
+  const {
+    name: title,
+    amount: price,
+    description,
+    discount,
+    workersCount: employeesCount,
+    duration,
+    categories,
+  } = data;
 
   const hasDiscount = !!(discount && discount > 0);
   const oldPrice = hasDiscount ? price / (1 - discount / 100) : null;
@@ -53,10 +50,12 @@ export const Card = ({
                 <span className="bestseller-discount-badge">-{discount}%</span>
               </div>
             )}
-            <div className="bestseller-current-price">
-              <span className="price-value">{formatValue(price)}</span>
-              <span className="price-currency">USD</span>
-            </div>
+            {price && (
+              <div className="bestseller-current-price">
+                <span className="price-value">{formatValue(price)}</span>
+                <span className="price-currency">USD</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -77,7 +76,10 @@ export const Card = ({
         </div>
       </div>
 
-      <button className="bestseller-card-button">
+      <button
+        className="bestseller-card-button"
+        onClick={() => handleClick(data)}
+      >
         <span className="bestseller-card-button-text">ОФОРМИТЬ ЗАКАЗ</span>
         <ArrowForwardIosIcon className="bestseller-arrow-right" />
       </button>

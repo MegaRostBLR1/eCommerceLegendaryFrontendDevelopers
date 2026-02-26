@@ -3,29 +3,33 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card } from '../../components/card/card';
 import { AnimationCube } from './ui/animation-cube/animation-cube';
 import logoHome from '../../assets/icons/logoHome.svg';
+import { createPortal } from 'react-dom';
+import OpenOrderForm from '../modals/OrderForm/OrderForm';
+import { useState } from 'react';
+import type { Service } from '../../types';
 
 const DATA = [
   {
-    title: 'Creating a video',
-    price: 167,
+    name: 'Creating a video',
+    amount: 167,
     description: 'Description',
     id: 1,
   },
   {
-    title: 'Creating a video',
-    price: 167,
+    name: 'Creating a video',
+    amount: 167,
     description: 'Description',
     id: 2,
   },
   {
-    title: 'Creating a video',
-    price: 167,
+    name: 'Creating a video',
+    amount: 167,
     description: 'Description',
     id: 3,
   },
   {
-    title: 'Creating a video',
-    price: 167,
+    name: 'Creating a video',
+    amount: 167,
     description:
       'lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur',
     id: 4,
@@ -33,6 +37,14 @@ const DATA = [
 ];
 
 export function HomePage() {
+  const [open, setOpen] = useState(false);
+  const [currentService, setCurrentService] = useState<Service>();
+
+  const handleOpenModal = (service: Service) => {
+    setCurrentService(service);
+    setOpen(true);
+  };
+
   return (
     <main className="page-main">
       <section className="title-section">
@@ -59,14 +71,21 @@ export function HomePage() {
             {DATA.map((item) => (
               <Card
                 key={item.id}
-                title={item.title}
-                price={item.price}
-                description={item.description}
+                data={item}
+                handleClick={() => handleOpenModal(item)}
               />
             ))}
           </div>
         </div>
       </section>
+      {createPortal(
+        <OpenOrderForm
+          open={open}
+          onClose={() => setOpen(false)}
+          service={currentService}
+        />,
+        document.body
+      )}
     </main>
   );
 }

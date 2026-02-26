@@ -15,14 +15,21 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import React from 'react';
+import type { Service } from '../../../types';
 
-export default function OpenOrderForm() {
-  const [open, setOpen] = useState(false);
+export default function OpenOrderForm({
+  open,
+  onClose,
+  service,
+}: {
+  open: boolean;
+  onClose: () => void;
+  service?: Service;
+}) {
   const [date, setDate] = useState<Dayjs | null>(null);
   {
     /* тут открывается модалка const handleClickOpen = () => setOpen(true);*/
   }
-  const handleClose = () => setOpen(false);
 
   const handleConfirm = (e: React.FormEvent<HTMLFormElement>) => {
     {
@@ -37,7 +44,7 @@ export default function OpenOrderForm() {
     <>
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={onClose}
         PaperProps={{
           component: 'form',
           onSubmit: handleConfirm,
@@ -57,10 +64,7 @@ export default function OpenOrderForm() {
             </span>
           </div>
           <div className={'close-order-form-container'}>
-            <IconButton
-              className={'close-order-form-btn'}
-              onClick={handleClose}
-            >
+            <IconButton className={'close-order-form-btn'} onClick={onClose}>
               <CloseOutlinedIcon />
             </IconButton>
           </div>
@@ -81,6 +85,7 @@ export default function OpenOrderForm() {
             label={'Service'}
             variant={'standard'}
             required={true}
+            value={service?.name}
             className={'order-form-text-field'}
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -111,7 +116,7 @@ export default function OpenOrderForm() {
           >
             confirm
           </Button>
-          <Button onClick={handleClose} className={'cancel-order-btn'}>
+          <Button onClick={onClose} className={'cancel-order-btn'}>
             cancel
           </Button>
         </DialogActions>

@@ -5,7 +5,9 @@ import { PAGINATION_STYLE } from './constants';
 import { SelectComponent } from './ui/select-component/select-component';
 import { SearchInput } from './ui/search-input/search-input';
 import { useEffect, useState } from 'react';
-import type { ServicesData } from '../../types';
+import type { Service, ServicesData } from '../../types';
+import { createPortal } from 'react-dom';
+import OpenOrderForm from '../modals/OrderForm/OrderForm';
 
 const DEV_URL = import.meta.env.VITE_DEV_URL;
 
@@ -16,6 +18,14 @@ export const CatalogPage = () => {
   const [category, setCategory] = useState('');
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [open, setOpen] = useState(false);
+  const [currentService, setCurrentService] = useState<Service>();
+
+  const handleOpenModal = (service: Service) => {
+    setCurrentService(service);
+    setOpen(true);
+  };
+
   useEffect(() => {
     fetch(
       `${DEV_URL}/services?page=${page}&count=${CARDS_ON_PAGE}${category ? `&categories=${category}` : ''}${search ? `&search=${search}` : ''}`
@@ -50,13 +60,8 @@ export const CatalogPage = () => {
                 {data?.data?.map((item) => (
                   <Card
                     key={item.id}
-                    title={item.name}
-                    price={item.amount}
-                    description={item.description}
-                    discount={item.discount}
-                    employeesCount={item.workersCount}
-                    duration={item.duration}
-                    categories={item.categories}
+                    data={item}
+                    handleClick={handleOpenModal}
                   />
                 ))}
               </div>
@@ -73,6 +78,14 @@ export const CatalogPage = () => {
           </div>
         </div>
       </section>
+      {createPortal(
+        <OpenOrderForm
+          open={open}
+          onClose={() => setOpen(false)}
+          service={currentService}
+        />,
+        document.body
+      )}
     </main>
   );
 };
