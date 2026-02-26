@@ -1,5 +1,6 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './card.css';
+import type { Category } from '../../types';
 
 interface CardProps {
   title: string;
@@ -8,7 +9,7 @@ interface CardProps {
   discount?: number;
   employeesCount: number;
   duration: string;
-  category: string;
+  categories: Category[];
 }
 
 export const Card = ({
@@ -18,7 +19,7 @@ export const Card = ({
   discount,
   employeesCount,
   duration,
-  category,
+  categories,
 }: CardProps) => {
   const formatValue = (num: number) => num.toFixed(2);
 
@@ -29,10 +30,15 @@ export const Card = ({
     <div className="bestseller-card">
       <div className="bestseller-category-and-title">
         <div className="bestseller-category-wrapper">
-          <span className="bestseller-category-tag" title={category}>
-            {category}
-          </span>
-          <span className="bestseller-category-tag">КРЕАТИВ</span>
+          {categories?.map((category) => (
+            <span
+              className="bestseller-category-tag"
+              key={category.id}
+              title={category.name}
+            >
+              {category.name}
+            </span>
+          ))}
         </div>
         <div className="bestseller-card-title-and-price">
           <h3 className="bestseller-card-title" title={title}>
