@@ -1,9 +1,9 @@
 import { jwtDecode } from 'jwt-decode';
 
-const UserRole = {
-  ADMIN: 'admin',
-  USER: 'user',
-} as const;
+enum UserRole {
+  ADMIN = 'admin',
+  USER = 'user',
+}
 
 interface IUserToken {
   status: string;
@@ -13,7 +13,7 @@ interface IUserToken {
 
 interface IDecodedUserToken {
   exp: number;
-  role: string;
+  role: UserRole;
 }
 
 export const authorizationService = {
