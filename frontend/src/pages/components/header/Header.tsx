@@ -5,8 +5,8 @@ import LoginIcon from '@mui/icons-material/Login';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import logo from '../../../assets/icons/logo.svg';
 import './header.css';
-import AuthorizationModal from '../../modals/LoginModal/authorization-modal';
-import { isAuthUser, logoutUser, userIsAdmin } from '../../../services/authorization-service.ts';
+import AuthorizationModal from '../../modals/AuthorizationModal/AuthorizationModal.tsx';
+import {authorizationService} from "../../../services/authorization-service.ts";
 
 type Role = 'admin' | 'user';
 type MenuItemType =
@@ -38,8 +38,8 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
 const Header = () => {
   const navigate = useNavigate();
 
-  const isAuth = isAuthUser();
-  const isAdmin = userIsAdmin();
+  const isAuth = authorizationService.isAuthUser();
+  const isAdmin = authorizationService.userIsAdmin();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -57,7 +57,7 @@ const Header = () => {
     handleCloseMenu();
 
     if (item.isExit) {
-      logoutUser();
+      authorizationService.logoutUser();
       return;
     }
 

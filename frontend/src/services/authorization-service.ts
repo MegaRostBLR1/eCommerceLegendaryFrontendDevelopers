@@ -1,32 +1,54 @@
 import { jwtDecode } from 'jwt-decode';
 
-interface UserToken {
+const UserRole = {
+  ADMIN: 'admin',
+  USER: 'user',
+} as const;
+
+interface IUserToken {
+  status: string;
+  token: string;
+  exp: number;
+}
+
+interface IDecodedUserToken {
   exp: number;
   role: string;
 }
 
-export const isAuthUser = () => {
-  const userToken: string | null = localStorage.getItem('token');
-  if (userToken) {
-    const user = jwtDecode(userToken);
-    const userExp: number = user.exp as number;
-    return userExp >= Math.floor(Date.now() / 1000);
-  }
-  return false;
-};
+export const authorizationService = {
+  decodeToken(token: string): IDecodedUserToken {
+    return jwtDecode(token);
+  },
 
-export const userIsAdmin = () => {
-  const userToken: string | null = localStorage.getItem('token');
-  if (isAuthUser()) {
-    if (userToken){
-      const user = jwtDecode<UserToken>(userToken);
-      const userRole = user.role;
-      return userRole === "admin";
+  setUserInLocalStorage(json: IUserToken): void {
+    localStorage.setItem('token', `${json.token}`);
+  },
+
+  logoutUser(): void {
+    localStorage.removeItem('token');
+  },
+
+  isAuthUser(): boolean {
+    const userToken: string | null = localStorage.getItem('token');
+
+    if (!userToken) {
+      return false;
     }
-  }
-  return false;
-};
+    const user: IDecodedUserToken = this.decodeToken(userToken);
 
-export const logoutUser = ()=>{
-  localStorage.removeItem('token')
-}
+    return user.exp * 1000 >= Date.now();
+  },
+
+  userIsAdmin(): boolean {
+    const userToken: string | null = localStorage.getItem('token');
+
+    if (!this.isAuthUser() || !userToken) {
+      return false;
+    }
+    const user: IDecodedUserToken = this.decodeToken(userToken);
+    const userRole: string = user.role;
+
+    return userRole === UserRole.ADMIN;
+  },
+};
