@@ -1,4 +1,4 @@
-import './home-page.css';
+import './HomePage.css';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card } from './ui/card/card';
 import { AnimationCube } from './ui/animation-cube/animation-cube';

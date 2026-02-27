@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import logo from '../../../assets/icons/logo.svg';
+import logo from '../../assets/icons/logo.svg';
 import './header.css';
-import AuthorizationModal from '../../modals/LoginModal/authorization-modal';
+import AuthorizationModal from '../modals/LoginModal/authorization-modal';
 
 type Role = 'admin' | 'user';
 type MenuItemType =
@@ -38,7 +38,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   // Пока состояния локальные
-  const isAuth = false;
+  const isAuth = true;
   const isAdmin = true;
 
   const [isModalOpen, setIsModalOpen] = useState(false);

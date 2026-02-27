@@ -1,4 +1,4 @@
-import logo from '../../../assets/icons/logo.svg';
+import logo from '../../assets/icons/logo.svg';
 import './Footer.css';
 import type { Developer, InformationLink } from './FooterTypes';
 
