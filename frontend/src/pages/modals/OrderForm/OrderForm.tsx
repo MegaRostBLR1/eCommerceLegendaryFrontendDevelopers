@@ -7,6 +7,7 @@ import {
   Button,
   IconButton,
   TextField,
+  Snackbar,
 } from '@mui/material';
 import { useState } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
@@ -16,6 +17,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import React from 'react';
 import type { Service } from '../../../types';
+
+const DEV_URL = import.meta.env.VITE_DEV_URL;
 
 export default function OpenOrderForm({
   open,
@@ -27,6 +30,8 @@ export default function OpenOrderForm({
   service?: Service;
 }) {
   const [date, setDate] = useState<Dayjs | null>(null);
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState('');
   {
     /* тут открывается модалка const handleClickOpen = () => setOpen(true);*/
   }
@@ -36,12 +41,42 @@ export default function OpenOrderForm({
       /*Обрабатываем результаты работы с инпутами и кладем их ве объект*/
     }
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-    data.date = date ? date.format('DD.MM.YYYY') : '';
+
+    const startDate = date ? date.format('DD.MM.YYYY') : '';
+    const serviceId = service?.id;
+    const price = service?.amount;
+
+    fetch(`${DEV_URL}/orders`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: JSON.stringify({ startDate, serviceId, price, quantity: 1 }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          onClose();
+        } else {
+          response.json().then((errorData) => {
+            setSnackMessage(errorData.message);
+            setSnackOpen(true);
+          });
+        }
+      })
+      .catch((error) => {
+        setSnackMessage(`${error}`);
+        setSnackOpen(true);
+      });
   };
   return (
     <>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={snackOpen}
+        autoHideDuration={5000}
+        onClose={() => setSnackOpen(false)}
+        message={snackMessage}
+      />
       <Dialog
         open={open}
         onClose={onClose}

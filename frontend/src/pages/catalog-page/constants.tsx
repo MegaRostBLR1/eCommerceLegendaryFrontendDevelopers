@@ -45,3 +45,5 @@ export const SELECT_STYLE = {
     borderColor: '#063526 !important',
   },
 };
+
+export const CARDS_ON_PAGE = 16;

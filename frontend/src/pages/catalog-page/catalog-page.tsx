@@ -1,7 +1,7 @@
 import { Pagination } from '@mui/material';
 import { Card } from '../../components/card/card';
 import styles from './catalog-page.module.css';
-import { PAGINATION_STYLE } from './constants';
+import { CARDS_ON_PAGE, PAGINATION_STYLE } from './constants';
 import { SelectComponent } from './ui/select-component/select-component';
 import { SearchInput } from './ui/search-input/search-input';
 import { useEffect, useState } from 'react';
@@ -10,8 +10,6 @@ import { createPortal } from 'react-dom';
 import OpenOrderForm from '../modals/OrderForm/OrderForm';
 
 const DEV_URL = import.meta.env.VITE_DEV_URL;
-
-const CARDS_ON_PAGE = 16;
 
 export const CatalogPage = () => {
   const [data, setData] = useState<ServicesData>();

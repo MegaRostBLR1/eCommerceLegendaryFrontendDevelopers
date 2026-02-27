@@ -5,40 +5,22 @@ import { AnimationCube } from './ui/animation-cube/animation-cube';
 import logoHome from '../../assets/icons/logoHome.svg';
 import { createPortal } from 'react-dom';
 import OpenOrderForm from '../modals/OrderForm/OrderForm';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Service } from '../../types';
+import { HOME_UI } from './constants';
 
-const DATA = [
-  {
-    name: 'Creating a video',
-    amount: 167,
-    description: 'Description',
-    id: 1,
-  },
-  {
-    name: 'Creating a video',
-    amount: 167,
-    description: 'Description',
-    id: 2,
-  },
-  {
-    name: 'Creating a video',
-    amount: 167,
-    description: 'Description',
-    id: 3,
-  },
-  {
-    name: 'Creating a video',
-    amount: 167,
-    description:
-      'lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur',
-    id: 4,
-  },
-];
+const DEV_URL = import.meta.env.VITE_DEV_URL;
 
 export function HomePage() {
   const [open, setOpen] = useState(false);
   const [currentService, setCurrentService] = useState<Service>();
+  const [data, setData] = useState<Service[]>();
+
+  useEffect(() => {
+    fetch(`${DEV_URL}/services/most/used`)
+      .then((response) => response.json())
+      .then((data: Service[]) => setData(data));
+  }, []);
 
   const handleOpenModal = (service: Service) => {
     setCurrentService(service);
@@ -52,7 +34,7 @@ export function HomePage() {
         <div className="page-container">
           <div className="title-wrapper">
             <img src={logoHome} alt="Logo" className="title-logo" />
-            <h2 className="title-section-title">Services from AI</h2>
+            <h2 className="title-section-title">{HOME_UI.TITLE}</h2>
           </div>
         </div>
       </section>
@@ -61,14 +43,16 @@ export function HomePage() {
         <AnimationCube position="left" />
         <div className="page-container">
           <div className="bestseller-header">
-            <h2 className="bestseller-title">A HIT OF SALES</h2>
+            <h2 className="bestseller-title">
+              {HOME_UI.BESTSELLER_BLOCK.TITLE}
+            </h2>
             <a className="bestseller-link" href="/catalog/services">
-              <span>All services</span>
+              <span>{HOME_UI.BESTSELLER_BLOCK.LINK_TEXT}</span>
               <ArrowForwardIosIcon className="bestseller-arrow-right" />
             </a>
           </div>
           <div className="bestseller-wrapper">
-            {DATA.map((item) => (
+            {data?.map((item) => (
               <Card
                 key={item.id}
                 data={item}

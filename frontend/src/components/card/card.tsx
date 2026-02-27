@@ -1,6 +1,7 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './card.css';
 import type { Service } from '../../types';
+import { CARD_TEXT } from './constants';
 
 interface CardProps {
   data: Service;
@@ -53,7 +54,7 @@ export const Card = ({ data, handleClick }: CardProps) => {
             {price && (
               <div className="bestseller-current-price">
                 <span className="price-value">{formatValue(price)}</span>
-                <span className="price-currency">USD</span>
+                <span className="price-currency">{CARD_TEXT.CURRENCY}</span>
               </div>
             )}
           </div>
@@ -67,11 +68,13 @@ export const Card = ({ data, handleClick }: CardProps) => {
       </div>
       <div className="bestseller-card-details">
         <div className="details-item">
-          <span className="details-label">КОЛИЧЕСТВО СОТРУДНИКОВ</span>
-          <span className="details-value">{employeesCount} специалиста</span>
+          <span className="details-label">{CARD_TEXT.EMPLOYEES_LABEL}</span>
+          <span className="details-value">
+            {employeesCount} {CARD_TEXT.SPECIALISTS_SUFFIX}
+          </span>
         </div>
         <div className="details-item">
-          <span className="details-label">ДЛИТЕЛЬНОСТЬ ВЫПОЛНЕНИЯ</span>
+          <span className="details-label">{CARD_TEXT.DURATION_LABEL}</span>
           <span className="details-value">{duration}</span>
         </div>
       </div>
@@ -80,7 +83,9 @@ export const Card = ({ data, handleClick }: CardProps) => {
         className="bestseller-card-button"
         onClick={() => handleClick(data)}
       >
-        <span className="bestseller-card-button-text">ОФОРМИТЬ ЗАКАЗ</span>
+        <span className="bestseller-card-button-text">
+          {CARD_TEXT.BUTTON_TEXT}
+        </span>
         <ArrowForwardIosIcon className="bestseller-arrow-right" />
       </button>
     </div>
