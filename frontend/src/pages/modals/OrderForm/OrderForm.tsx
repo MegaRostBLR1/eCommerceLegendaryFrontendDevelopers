@@ -7,6 +7,7 @@ import {
   Button,
   IconButton,
   TextField,
+  Snackbar,
 } from '@mui/material';
 import { useState } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
@@ -15,29 +16,70 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import React from 'react';
+import type { Service } from '../../../types';
 
-export default function OpenOrderForm() {
-  const [open, setOpen] = useState(false);
+const DEV_URL = import.meta.env.VITE_DEV_URL;
+
+export default function OpenOrderForm({
+  open,
+  onClose,
+  service,
+}: {
+  open: boolean;
+  onClose: () => void;
+  service?: Service;
+}) {
   const [date, setDate] = useState<Dayjs | null>(null);
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState('');
   {
     /* тут открывается модалка const handleClickOpen = () => setOpen(true);*/
   }
-  const handleClose = () => setOpen(false);
 
   const handleConfirm = (e: React.FormEvent<HTMLFormElement>) => {
     {
       /*Обрабатываем результаты работы с инпутами и кладем их ве объект*/
     }
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-    data.date = date ? date.format('DD.MM.YYYY') : '';
+
+    const startDate = date ? date.format('DD.MM.YYYY') : '';
+    const serviceId = service?.id;
+    const price = service?.amount;
+
+    fetch(`${DEV_URL}/orders`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      body: JSON.stringify({ startDate, serviceId, price, quantity: 1 }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          onClose();
+        } else {
+          response.json().then((errorData) => {
+            setSnackMessage(errorData.message);
+            setSnackOpen(true);
+          });
+        }
+      })
+      .catch((error) => {
+        setSnackMessage(`${error}`);
+        setSnackOpen(true);
+      });
   };
   return (
     <>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={snackOpen}
+        autoHideDuration={5000}
+        onClose={() => setSnackOpen(false)}
+        message={snackMessage}
+      />
       <Dialog
         open={open}
-        onClose={handleClose}
+        onClose={onClose}
         PaperProps={{
           component: 'form',
           onSubmit: handleConfirm,
@@ -57,10 +99,7 @@ export default function OpenOrderForm() {
             </span>
           </div>
           <div className={'close-order-form-container'}>
-            <IconButton
-              className={'close-order-form-btn'}
-              onClick={handleClose}
-            >
+            <IconButton className={'close-order-form-btn'} onClick={onClose}>
               <CloseOutlinedIcon />
             </IconButton>
           </div>
@@ -81,6 +120,7 @@ export default function OpenOrderForm() {
             label={'Service'}
             variant={'standard'}
             required={true}
+            value={service?.name}
             className={'order-form-text-field'}
           />
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -111,7 +151,7 @@ export default function OpenOrderForm() {
           >
             confirm
           </Button>
-          <Button onClick={handleClose} className={'cancel-order-btn'}>
+          <Button onClick={onClose} className={'cancel-order-btn'}>
             cancel
           </Button>
         </DialogActions>
