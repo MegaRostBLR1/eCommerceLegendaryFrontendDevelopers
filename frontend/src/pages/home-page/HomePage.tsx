@@ -1,10 +1,10 @@
-import './home-page.css';
+import './HomePage.css';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card } from '../../components/card/card';
 import { AnimationCube } from './ui/animation-cube/animation-cube';
 import logoHome from '../../assets/icons/logoHome.svg';
 import { createPortal } from 'react-dom';
-import OpenOrderForm from '../modals/OrderForm/OrderForm';
+import OpenOrderForm from '../../components/modals/OrderForm/OrderForm';
 import { useEffect, useState } from 'react';
 import type { Service } from '../../types';
 import { HOME_UI } from './constants';
