@@ -7,7 +7,7 @@ import { SearchInput } from './ui/search-input/search-input';
 import { useEffect, useState } from 'react';
 import type { Service, ServicesData } from '../../types';
 import { createPortal } from 'react-dom';
-import OpenOrderForm from '../modals/OrderForm/OrderForm';
+import OpenOrderForm from '../../components/modals/OrderForm/OrderForm';
 
 const DEV_URL = import.meta.env.VITE_DEV_URL;
 

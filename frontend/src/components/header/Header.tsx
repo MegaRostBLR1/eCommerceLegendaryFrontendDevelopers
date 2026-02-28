@@ -3,10 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import logo from '../../../assets/icons/logo.svg';
+import logo from '../../assets/icons/logo.svg';
 import './header.css';
-import AuthorizationModal from '../../modals/AuthorizationModal/AuthorizationModal.tsx';
-import {authorizationService} from "../../../services/authorization-service.ts";
+import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal.tsx';
+import {authorizationService} from "../../services/authorization-service.ts";
 
 type Role = 'admin' | 'user';
 type MenuItemType =
