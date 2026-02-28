@@ -2,6 +2,7 @@ import './App.css';
 import Header from './components/header/Header';
 import Footer from './components/footer/Footer';
 import { Routes, Route } from 'react-router-dom';
+import { CatalogPage } from './pages/catalog-page/catalog-page.tsx';
 
 import { HomePage } from './pages/home-page/HomePage';
 import { ProfilePage } from './pages/profile/ProfilePage';
@@ -20,6 +21,7 @@ export function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/catalog" element={<CatalogPage />} />
 
           <Route path="/admin/users" element={<UsersPage />} />
           <Route path="/admin/stats" element={<AdminStatsPage />} />
