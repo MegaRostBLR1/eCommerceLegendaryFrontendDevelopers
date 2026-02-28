@@ -1,38 +1,32 @@
 import './home-page.css';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Card } from './ui/card/card';
+import { Card } from '../../components/card/card';
 import { AnimationCube } from './ui/animation-cube/animation-cube';
 import logoHome from '../../assets/icons/logoHome.svg';
+import { createPortal } from 'react-dom';
+import OpenOrderForm from '../modals/OrderForm/OrderForm';
+import { useEffect, useState } from 'react';
+import type { Service } from '../../types';
+import { HOME_UI } from './constants';
 
-const DATA = [
-  {
-    title: 'Creating a video',
-    price: 167,
-    description: 'Description',
-    id: 1,
-  },
-  {
-    title: 'Creating a video',
-    price: 167,
-    description: 'Description',
-    id: 2,
-  },
-  {
-    title: 'Creating a video',
-    price: 167,
-    description: 'Description',
-    id: 3,
-  },
-  {
-    title: 'Creating a video',
-    price: 167,
-    description:
-      'lorem ipsum dolor sit amet consectetur, lorem ipsum dolor sit amet consectetur',
-    id: 4,
-  },
-];
+const DEV_URL = import.meta.env.VITE_DEV_URL;
 
 export function HomePage() {
+  const [open, setOpen] = useState(false);
+  const [currentService, setCurrentService] = useState<Service>();
+  const [data, setData] = useState<Service[]>();
+
+  useEffect(() => {
+    fetch(`${DEV_URL}/services/most/used`)
+      .then((response) => response.json())
+      .then((data: Service[]) => setData(data));
+  }, []);
+
+  const handleOpenModal = (service: Service) => {
+    setCurrentService(service);
+    setOpen(true);
+  };
+
   return (
     <main className="page-main">
       <section className="title-section">
@@ -40,7 +34,7 @@ export function HomePage() {
         <div className="page-container">
           <div className="title-wrapper">
             <img src={logoHome} alt="Logo" className="title-logo" />
-            <h2 className="title-section-title">Services from AI</h2>
+            <h2 className="title-section-title">{HOME_UI.TITLE}</h2>
           </div>
         </div>
       </section>
@@ -49,24 +43,33 @@ export function HomePage() {
         <AnimationCube position="left" />
         <div className="page-container">
           <div className="bestseller-header">
-            <h2 className="bestseller-title">A HIT OF SALES</h2>
+            <h2 className="bestseller-title">
+              {HOME_UI.BESTSELLER_BLOCK.TITLE}
+            </h2>
             <a className="bestseller-link" href="/catalog/services">
-              <span>All services</span>
+              <span>{HOME_UI.BESTSELLER_BLOCK.LINK_TEXT}</span>
               <ArrowForwardIosIcon className="bestseller-arrow-right" />
             </a>
           </div>
           <div className="bestseller-wrapper">
-            {DATA.map((item) => (
+            {data?.map((item) => (
               <Card
                 key={item.id}
-                title={item.title}
-                price={item.price}
-                description={item.description}
+                data={item}
+                handleClick={() => handleOpenModal(item)}
               />
             ))}
           </div>
         </div>
       </section>
+      {createPortal(
+        <OpenOrderForm
+          open={open}
+          onClose={() => setOpen(false)}
+          service={currentService}
+        />,
+        document.body
+      )}
     </main>
   );
 }

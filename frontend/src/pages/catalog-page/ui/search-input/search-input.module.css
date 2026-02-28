@@ -1,0 +1,12 @@
+.search_input {
+  width: 100%;
+  padding: 20px 55px 20px 20px;
+  border: 1px solid #063526;
+  border-radius: 5px;
+}
+
+.search_icon {
+  position: absolute;
+  right: 20px;
+  top: calc(50% - 16px);
+}

@@ -42,4 +42,11 @@
   --title-shadow: 2px 6px 6px var(--text-shadow-color);
 
   --border-light: 1px solid var(--divider-color);
+
+  --font-size-h2: 48px;
+  --line-height-titles: 140%;
+  --filter-gap: 38px;
+  --border-dark: 1px solid var(--second-color);
+
+  --line-clamp: 4;
 }
