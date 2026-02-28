@@ -11,6 +11,7 @@ import {
 import React, { useState } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import Snackbar from '@mui/material/Snackbar';
+import { authorizationService } from '../../../services/authorization-service.ts';
 
 const DEV_URL = import.meta.env.VITE_DEV_URL;
 export default function OpenLoginModal({
@@ -43,7 +44,7 @@ export default function OpenLoginModal({
         });
         if (response.ok) {
           const json = await response.json();
-          localStorage.setItem('token', `${json.token}`)
+          authorizationService.setUserInLocalStorage(json)
           onClose();
         } else {
           const errorData = await response.json();

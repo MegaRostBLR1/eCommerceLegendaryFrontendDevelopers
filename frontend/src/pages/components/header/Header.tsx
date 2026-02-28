@@ -5,7 +5,8 @@ import LoginIcon from '@mui/icons-material/Login';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import logo from '../../../assets/icons/logo.svg';
 import './header.css';
-import AuthorizationModal from '../../modals/LoginModal/authorization-modal';
+import AuthorizationModal from '../../modals/AuthorizationModal/AuthorizationModal.tsx';
+import {authorizationService} from "../../../services/authorization-service.ts";
 
 type Role = 'admin' | 'user';
 type MenuItemType =
@@ -37,9 +38,8 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
 const Header = () => {
   const navigate = useNavigate();
 
-  // Пока состояния локальные
-  const isAuth = false;
-  const isAdmin = true;
+  const isAuth = authorizationService.isAuthUser();
+  const isAdmin = authorizationService.userIsAdmin();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -57,7 +57,7 @@ const Header = () => {
     handleCloseMenu();
 
     if (item.isExit) {
-      console.log('Logout logic here');
+      authorizationService.logoutUser();
       return;
     }
 
