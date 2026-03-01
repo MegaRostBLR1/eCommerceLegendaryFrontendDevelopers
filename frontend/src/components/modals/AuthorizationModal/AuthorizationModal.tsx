@@ -32,6 +32,11 @@ export default function OpenLoginModal({
     const userEmail = data.userEmail.toString();
     const userPassword = data.password.toString();
     const user = { email: userEmail, password: userPassword };
+    const errorMessages = {
+      wrongPasswordOrEmail: "Incorrect data. Check that your email and password are spelled correctly.",
+      errorFromServer: "Server error",
+      incorrectPassword: 'Password: Latin characters only. At least one digit. At least 4 characters. No more than 10.'
+    }
 
     if (emailRegexp.test(userEmail) && passwordRegexp.test(userPassword)) {
       try {
@@ -46,9 +51,11 @@ export default function OpenLoginModal({
           const json = await response.json();
           authorizationService.setUserInLocalStorage(json)
           onClose();
+        } else if(response.status === 401) {
+          setSnackMessage(errorMessages.wrongPasswordOrEmail);
+          setSnackOpen(true);
         } else {
-          const errorData = await response.json();
-          setSnackMessage(errorData.message);
+          setSnackMessage(errorMessages.errorFromServer);
           setSnackOpen(true);
         }
       } catch (error) {
@@ -56,9 +63,7 @@ export default function OpenLoginModal({
         setSnackOpen(true);
       }
     } else {
-      setSnackMessage(
-        'Password: Latin characters only. At least one digit. At least 4 characters. No more than 10.'
-      );
+      setSnackMessage(errorMessages.incorrectPassword);
       setSnackOpen(true);
     }
   };
