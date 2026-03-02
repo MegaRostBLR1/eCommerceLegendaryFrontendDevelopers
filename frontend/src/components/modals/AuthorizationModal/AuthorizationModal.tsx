@@ -44,7 +44,7 @@ export default function OpenLoginModal({
         });
         if (response.ok) {
           const json = await response.json();
-          authorizationService.setUserInLocalStorage(json)
+          authorizationService.setUserInLocalStorage(json);
           onClose();
         } else {
           const errorData = await response.json();
