@@ -1,5 +1,5 @@
 import logo from '../../assets/icons/logo.svg';
-import './Footer.css';
+import './footer.css';
 import type { Developer, InformationLink } from './FooterTypes';
 
 const developers: Developer[] = [
