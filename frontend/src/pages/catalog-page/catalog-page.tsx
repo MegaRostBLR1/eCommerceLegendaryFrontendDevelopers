@@ -8,8 +8,9 @@ import { useEffect, useState } from 'react';
 import type { Service, ServicesData } from '../../types';
 import { createPortal } from 'react-dom';
 import OpenOrderForm from '../../components/modals/OrderForm/OrderForm';
+import { environment } from '../../assets/environment/environment.ts';
 
-const DEV_URL = import.meta.env.VITE_DEV_URL;
+const BASE_URL = environment.baseUrl;
 
 export const CatalogPage = () => {
   const [data, setData] = useState<ServicesData>();
@@ -26,7 +27,7 @@ export const CatalogPage = () => {
 
   useEffect(() => {
     fetch(
-      `${DEV_URL}/services?page=${page}&count=${CARDS_ON_PAGE}${category ? `&categories=${category}` : ''}${search ? `&search=${search}` : ''}`
+      `${BASE_URL}/services?page=${page}&count=${CARDS_ON_PAGE}${category ? `&categories=${category}` : ''}${search ? `&search=${search}` : ''}`
     )
       .then((response) => response.json())
       .then((data: ServicesData) => setData(data));

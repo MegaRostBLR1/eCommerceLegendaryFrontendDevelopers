@@ -17,8 +17,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Dayjs } from 'dayjs';
 import React from 'react';
 import type { Service } from '../../../types';
+import { environment } from '../../../assets/environment/environment.ts';
 
-const DEV_URL = import.meta.env.VITE_DEV_URL;
+const BASE_URL = environment.baseUrl;
 
 export default function OpenOrderForm({
   open,
@@ -32,21 +33,15 @@ export default function OpenOrderForm({
   const [date, setDate] = useState<Dayjs | null>(null);
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
-  {
-    /* тут открывается модалка const handleClickOpen = () => setOpen(true);*/
-  }
 
   const handleConfirm = (e: React.FormEvent<HTMLFormElement>) => {
-    {
-      /*Обрабатываем результаты работы с инпутами и кладем их ве объект*/
-    }
     e.preventDefault();
 
     const startDate = date ? date.format('DD.MM.YYYY') : '';
     const serviceId = service?.id;
     const price = service?.amount;
 
-    fetch(`${DEV_URL}/orders`, {
+    fetch(`${BASE_URL}/orders`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
