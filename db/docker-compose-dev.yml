@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  postgres_dev:
+    image: postgres:14.8-alpine3.18
+    environment:
+      POSTGRES_DB: "db_dev"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "pwd"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      #- ../2. Init Database:/docker-entrypoint-initdb.d
+      - pg-data_dev:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - main
+
+volumes:
+  pg-data_dev:
+
+networks:
+  main:
+    driver: bridge
