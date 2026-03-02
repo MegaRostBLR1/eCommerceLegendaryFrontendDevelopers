@@ -21,3 +21,13 @@ export type ServicesData = {
   pages: number;
   data?: Service[];
 };
+
+export interface User {
+  firstName: string;
+  lastName: string;
+  patronymic: string;
+  email: string;
+  role: string;
+}
+
+export type UpdateUserDto = Omit<User, 'role'>;
