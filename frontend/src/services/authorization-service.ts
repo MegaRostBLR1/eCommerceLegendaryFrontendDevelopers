@@ -12,6 +12,7 @@ interface IUserToken {
 }
 
 interface IDecodedUserToken {
+  id: number;
   exp: number;
   role: UserRole;
 }
@@ -29,16 +30,17 @@ export const authorizationService = {
     localStorage.removeItem('token');
   },
 
-  isAuthUser(): boolean {
-    const userToken: string | null = localStorage.getItem('token');
-
-    if (!userToken) {
-      return false;
-    }
-    const user: IDecodedUserToken = this.decodeToken(userToken);
-
-    return user.exp * 1000 >= Date.now();
-  },
+isAuthUser(): boolean {
+  const userToken = localStorage.getItem('token');
+  if (!userToken) return false;
+  
+  try {
+    const user = this.decodeToken(userToken);
+    return user && user.exp * 1000 >= Date.now();
+  } catch {
+    return false;
+  }
+},
 
   userIsAdmin(): boolean {
     const userToken: string | null = localStorage.getItem('token');
@@ -50,5 +52,18 @@ export const authorizationService = {
     const userRole: string = user.role;
 
     return userRole === UserRole.ADMIN;
+  },
+
+  getUserId(): number | null {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+
+    try {
+      const decoded: IDecodedUserToken = this.decodeToken(token);
+      return decoded.id;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   },
 };
