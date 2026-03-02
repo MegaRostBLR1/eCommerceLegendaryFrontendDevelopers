@@ -12,6 +12,7 @@ interface IUserToken {
 }
 
 interface IDecodedUserToken {
+  id: number;
   exp: number;
   role: UserRole;
 }
@@ -29,16 +30,17 @@ export const authorizationService = {
     localStorage.removeItem('token');
   },
 
-  isAuthUser(): boolean {
-    const userToken: string | null = localStorage.getItem('token');
-
-    if (!userToken) {
-      return false;
-    }
-    const user: IDecodedUserToken = this.decodeToken(userToken);
-
-    return user.exp * 1000 >= Date.now();
-  },
+isAuthUser(): boolean {
+  const userToken = localStorage.getItem('token');
+  if (!userToken) return false;
+  
+  try {
+    const user = this.decodeToken(userToken);
+    return user && user.exp * 1000 >= Date.now();
+  } catch {
+    return false;
+  }
+},
 
   userIsAdmin(): boolean {
     const userToken: string | null = localStorage.getItem('token');

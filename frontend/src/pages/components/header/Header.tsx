@@ -3,10 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import logo from '../../assets/icons/logo.svg';
+import logo from '../../../assets/logo.svg';
 import './header.css';
-import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal.tsx';
-import { authorizationService } from '../../services/authorization-service.ts';
+import AuthorizationModal from '../../modals/LoginModal/authorization-modal';
 
 type Role = 'admin' | 'user';
 type MenuItemType =
@@ -38,8 +37,9 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
 const Header = () => {
   const navigate = useNavigate();
 
-  const isAuth = authorizationService.isAuthUser();
-  const isAdmin = authorizationService.userIsAdmin();
+  // Пока состояния локальные
+  const isAuth = false;
+  const isAdmin = true;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -57,19 +57,12 @@ const Header = () => {
     handleCloseMenu();
 
     if (item.isExit) {
-      authorizationService.logoutUser();
-      const privateRoutes = ['/profile', '/admin', '/orders', '/stats'];
-      const isPrivatePage = privateRoutes.some(path => location.pathname.startsWith(path));
-
-      if (isPrivatePage) {
-        navigate('/', { replace: true });
-      }
+      console.log('Logout logic here');
       return;
     }
 
     navigate(item.path);
   };
-
 
   const role: Role = isAdmin ? 'admin' : 'user';
   const currentMenuItems = MENU_ITEMS[role];
