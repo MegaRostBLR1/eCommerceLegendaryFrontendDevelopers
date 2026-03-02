@@ -54,7 +54,7 @@ export const ordersService = {
             data: (await dbService.allOrders(page, count, userId, undefined, true)).map((i) => mappedOrder(i)) as OrderDataResponse[],
         };
     },
-    createOrder: async ({ serviceId, quantity, price, startDate, userId }: CreateOrderDto): Promise<OrderDataResponse | null> => {
+    createOrder: async ({ serviceId, quantity, price, startDate, userId, description }: CreateOrderDto): Promise<OrderDataResponse | null> => {
         return mappedOrder(
             await dbService.createOrder({
                 serviceId,
@@ -62,6 +62,7 @@ export const ordersService = {
                 price,
                 startDate,
                 userId,
+                description,
                 status: OrderStatus.CREATED,
             }),
         );
