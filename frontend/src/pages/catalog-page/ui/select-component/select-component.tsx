@@ -9,8 +9,9 @@ import { LABEL_STYLE, SELECT_STYLE } from '../../constants';
 import { Burger } from '../../../../assets/icons/burger';
 import { useEffect, useState } from 'react';
 import type { Category } from '../../../../types';
+import { environment } from '../../../../assets/environment/environment.ts';
 
-const DEV_URL = import.meta.env.VITE_DEV_URL;
+const BASE_URL = environment.baseUrl;
 
 export const SelectComponent = ({
   category,
@@ -26,7 +27,7 @@ export const SelectComponent = ({
   };
 
   useEffect(() => {
-    fetch(`${DEV_URL}/categories`)
+    fetch(`${BASE_URL}/categories`)
       .then((response) => response.json())
       .then((data: Category[]) => setCategories(data));
   }, []);
