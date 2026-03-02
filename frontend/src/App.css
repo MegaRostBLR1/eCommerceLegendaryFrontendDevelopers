@@ -26,6 +26,15 @@
     url('./assets/fonts/Montserrat/Montserrat-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
+  font-family: 'Montserrat';
+  src: url('./assets/fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('./assets/fonts/Montserrat/Montserrat-Bold.ttf') format('truetype');
+  font-weight: 700;
 }
 
 * {
@@ -41,6 +50,8 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
+}
+
 body {
   overflow-x: hidden;
 }
@@ -55,4 +66,38 @@ body {
   padding-right: 15px;
   max-width: var(--container-width);
   margin: 0 auto;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-container {
+  flex: 1;
+  max-width: var(--container-width);
+  width: 100%;
+  margin: 0 auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  box-sizing: border-box;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex-grow: 1;
+}
+
+header {
+  flex-shrink: 0;
+}
+
+footer {
+  flex-shrink: 0;
 }
