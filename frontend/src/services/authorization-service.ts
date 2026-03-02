@@ -53,17 +53,4 @@ isAuthUser(): boolean {
 
     return userRole === UserRole.ADMIN;
   },
-
-  getUserId(): number | null {
-    const token = localStorage.getItem('token');
-    if (!token) return null;
-
-    try {
-      const decoded: IDecodedUserToken = this.decodeToken(token);
-      return decoded.id;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  },
 };

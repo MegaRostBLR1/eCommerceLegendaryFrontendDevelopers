@@ -1,3 +1,3 @@
 export const environment = {
-    baseUrl: process.env.VITE_BASE_URL,
+  baseUrl: import.meta.env.VITE_BASE_URL,
 };
