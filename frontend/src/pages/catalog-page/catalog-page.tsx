@@ -13,7 +13,7 @@ const DEV_URL = import.meta.env.VITE_DEV_URL;
 
 export const CatalogPage = () => {
   const [data, setData] = useState<ServicesData>();
-  const [category, setCategory] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState(['all']);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [open, setOpen] = useState(false);
@@ -24,13 +24,25 @@ export const CatalogPage = () => {
     setOpen(true);
   };
 
-  useEffect(() => {
+  const getData = () => {
     fetch(
-      `${DEV_URL}/services?page=${page}&count=${CARDS_ON_PAGE}${category ? `&categories=${category}` : ''}${search ? `&search=${search}` : ''}`
+      `${DEV_URL}/services?page=${page}&count=${CARDS_ON_PAGE}${selectedCategories.includes('all') ? '' : `&categories=${selectedCategories.join(',')}`}${search ? `&search=${search}` : ''}`
     )
       .then((response) => response.json())
       .then((data: ServicesData) => setData(data));
-  }, [category, page, search]);
+  };
+
+  useEffect(() => {
+    getData();
+  }, [selectedCategories, page]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      getData();
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const handlePageChange = (page: number) => {
     setPage(page);
@@ -46,8 +58,8 @@ export const CatalogPage = () => {
               <div className={styles.filters}>
                 <div className={styles.categories}>
                   <SelectComponent
-                    category={category}
-                    setCategory={setCategory}
+                    selectedCategories={selectedCategories}
+                    setSelectedCategories={setSelectedCategories}
                   />
                 </div>
                 <div className={styles.search}>
