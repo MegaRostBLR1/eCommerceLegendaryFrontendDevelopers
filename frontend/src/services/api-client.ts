@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_DEV_URL;
+const API_BASE_URL = import.meta.env.VITE_BASE_URL;
 const AUTH_HEADER = 'Authorization';
 
 export class ApiError extends Error {
