@@ -54,6 +54,7 @@ export const authorizationService = {
     return userRole === UserRole.ADMIN;
   },
 
+  
   getUserId(): number | null {
     const token = localStorage.getItem('token');
     if (!token) return null;
