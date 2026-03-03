@@ -162,3 +162,8 @@
   font-size: 18px !important;
   color: var(--second-color);
 }
+
+.edit-card-btn {
+  width: 35px;
+  height: 35px;
+}

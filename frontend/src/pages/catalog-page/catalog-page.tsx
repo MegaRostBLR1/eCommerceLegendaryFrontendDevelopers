@@ -9,6 +9,8 @@ import type { Service, ServicesData } from '../../types';
 import { createPortal } from 'react-dom';
 import OpenOrderForm from '../../components/modals/OrderForm/OrderForm';
 import { environment } from '../../assets/environment/environment.ts';
+import { authorizationService } from '../../services/authorization-service.ts';
+import { useNavigate } from 'react-router-dom';
 
 const BASE_URL = environment.baseUrl;
 
@@ -19,6 +21,12 @@ export const CatalogPage = () => {
   const [search, setSearch] = useState('');
   const [open, setOpen] = useState(false);
   const [currentService, setCurrentService] = useState<Service>();
+  const isAuthUser: boolean = authorizationService.isAuthUser();
+  const navigate = useNavigate();
+
+  if (!isAuthUser) {
+    navigate('/');
+  }
 
   const handleOpenModal = (service: Service) => {
     setCurrentService(service);

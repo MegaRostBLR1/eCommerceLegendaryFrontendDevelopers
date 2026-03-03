@@ -43,7 +43,7 @@ export default function OpenLoginModal({
         });
         if (response.ok) {
           const json = await response.json();
-          localStorage.setItem('token', `${json.token}`)
+          localStorage.setItem('token', `${json.token}`);
           onClose();
         } else {
           const errorData = await response.json();
