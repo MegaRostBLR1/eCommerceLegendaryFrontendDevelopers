@@ -30,17 +30,17 @@ export const authorizationService = {
     localStorage.removeItem('token');
   },
 
-isAuthUser(): boolean {
-  const userToken = localStorage.getItem('token');
-  if (!userToken) return false;
-  
-  try {
-    const user = this.decodeToken(userToken);
-    return user && user.exp * 1000 >= Date.now();
-  } catch {
-    return false;
-  }
-},
+  isAuthUser(): boolean {
+    const userToken = localStorage.getItem('token');
+    if (!userToken) return false;
+
+    try {
+      const user = this.decodeToken(userToken);
+      return user && user.exp * 1000 >= Date.now();
+    } catch {
+      return false;
+    }
+  },
 
   userIsAdmin(): boolean {
     const userToken: string | null = localStorage.getItem('token');

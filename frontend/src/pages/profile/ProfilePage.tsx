@@ -17,7 +17,7 @@ export const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<MessageState | null>(null);
-  
+
   const navigate = useNavigate();
   const userId = authorizationService.getUserId();
 
@@ -50,42 +50,40 @@ export const ProfilePage = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUser(prev => (prev ? { ...prev, [name]: value } : prev));
+    setUser((prev) => (prev ? { ...prev, [name]: value } : prev));
   };
 
-const handleUpdate = async () => {
-  if (!user || !userId) return;
+  const handleUpdate = async () => {
+    if (!user || !userId) return;
 
-  if (!user.firstName.trim() || !user.lastName.trim() || !user.email.trim()) {
-    setMessage({ 
-      type: 'error', 
-      text: 'Please fill in all required fields (Name, Last name, E-mail)' 
-    });
-    return;
-  }
+    if (!user.firstName.trim() || !user.lastName.trim() || !user.email.trim()) {
+      setMessage({
+        type: 'error',
+        text: 'Please fill in all required fields (Name, Last name, E-mail)',
+      });
+      return;
+    }
 
-  setSaving(true);
-  setMessage(null);
+    setSaving(true);
+    setMessage(null);
 
-  const updateData: UpdateUserDto = {
-    firstName: user.firstName,
-    lastName: user.lastName,
-    patronymic: user.patronymic,
-    email: user.email,
+    const updateData: UpdateUserDto = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      patronymic: user.patronymic,
+      email: user.email,
+    };
+
+    try {
+      const updated = await userService.updateProfile(userId, updateData);
+      setUser(updated);
+      setMessage({ type: 'success', text: 'Data updated successfully' });
+    } catch {
+      setMessage({ type: 'error', text: 'Failed to save changes' });
+    } finally {
+      setSaving(false);
+    }
   };
-
-  try {
-    const updated = await userService.updateProfile(userId, updateData);
-    setUser(updated);
-    setMessage({ type: 'success', text: 'Data updated successfully' });
-  } catch {
-    setMessage({ type: 'error', text: 'Failed to save changes' });
-  } finally {
-    setSaving(false);
-  }
-};
-
-
 
   if (loading) return <div className="loader">Loading...</div>;
   if (!user) return <div>User not found</div>;
@@ -146,20 +144,16 @@ const handleUpdate = async () => {
           <div className="role-field">
             <div className="input-field">
               <label>Role</label>
-              <input 
-                value={user.role} 
-                readOnly 
-                className="input-readonly" 
-                tabIndex={-1} 
+              <input
+                value={user.role}
+                readOnly
+                className="input-readonly"
+                tabIndex={-1}
               />
             </div>
           </div>
 
-          <button
-            className="edit-btn"
-            onClick={handleUpdate}
-            disabled={saving}
-          >
+          <button className="edit-btn" onClick={handleUpdate} disabled={saving}>
             {saving ? 'Saving...' : 'SAVE CHANGES'}
           </button>
         </div>
