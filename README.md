@@ -1,6 +1,10 @@
 **Date:** 2026-02-21
 # Project: eCommerceLegendaryFrontendDevelopers
 
+## Live Demo
+
+[Deployed Application](http://188.127.251.19:5000/)
+
 ---
 
 ## Project Overview

@@ -8,8 +8,9 @@ import OpenOrderForm from '../../components/modals/OrderForm/OrderForm';
 import { useEffect, useState } from 'react';
 import type { Service } from '../../types';
 import { HOME_UI } from './constants';
+import { environment } from '../../assets/environment/environment.ts';
 
-const DEV_URL = import.meta.env.VITE_DEV_URL;
+const BASE_URL = environment.baseUrl;
 
 export function HomePage() {
   const [open, setOpen] = useState(false);
@@ -17,7 +18,7 @@ export function HomePage() {
   const [data, setData] = useState<Service[]>();
 
   useEffect(() => {
-    fetch(`${DEV_URL}/services/most/used`)
+    fetch(`${BASE_URL}/services/most/used`)
       .then((response) => response.json())
       .then((data: Service[]) => setData(data));
   }, []);

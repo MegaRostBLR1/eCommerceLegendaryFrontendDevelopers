@@ -12,8 +12,10 @@ import React, { useState } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import Snackbar from '@mui/material/Snackbar';
 import { authorizationService } from '../../../services/authorization-service.ts';
+import { environment } from '../../../assets/environment/environment.ts';
+import { errorMessages } from '../../../../constants/errors.ts';
 
-const DEV_URL = import.meta.env.VITE_DEV_URL;
+const BASE_URL = environment.baseUrl;
 export default function OpenLoginModal({
   open,
   onClose,
@@ -35,7 +37,7 @@ export default function OpenLoginModal({
 
     if (emailRegexp.test(userEmail) && passwordRegexp.test(userPassword)) {
       try {
-        const response = await fetch(`${DEV_URL}/login`, {
+        const response = await fetch(`${BASE_URL}/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -46,9 +48,11 @@ export default function OpenLoginModal({
           const json = await response.json();
           authorizationService.setUserInLocalStorage(json);
           onClose();
+        } else if (response.status === 401) {
+          setSnackMessage(errorMessages.wrongPasswordOrEmail);
+          setSnackOpen(true);
         } else {
-          const errorData = await response.json();
-          setSnackMessage(errorData.message);
+          setSnackMessage(errorMessages.errorFromServer);
           setSnackOpen(true);
         }
       } catch (error) {
@@ -56,9 +60,7 @@ export default function OpenLoginModal({
         setSnackOpen(true);
       }
     } else {
-      setSnackMessage(
-        'Password: Latin characters only. At least one digit. At least 4 characters. No more than 10.'
-      );
+      setSnackMessage(errorMessages.incorrectPassword);
       setSnackOpen(true);
     }
   };
