@@ -1,4 +1,5 @@
-const API_BASE_URL = import.meta.env.VITE_BASE_URL;
+import { environment } from '../assets/environment/environment';
+const API_BASE_URL = environment.baseUrl;
 const AUTH_HEADER = 'Authorization';
 
 export class ApiError extends Error {
