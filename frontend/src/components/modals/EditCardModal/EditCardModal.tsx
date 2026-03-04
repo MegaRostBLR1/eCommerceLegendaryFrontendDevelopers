@@ -26,7 +26,7 @@ export default function OpenOrderForm({
 }) {
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
-  const BASE_URL = environment.baseUrl
+  const BASE_URL = environment.baseUrl;
 
   const handleConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -70,27 +70,27 @@ export default function OpenOrderForm({
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `${localStorage.getItem('token')}`
+          Authorization: `${localStorage.getItem('token')}`,
         },
         body: JSON.stringify(json),
-      })
+      });
 
-      if (response.ok){
-        setSnackMessage("Service update successfully")
-        setSnackOpen(true)
+      if (response.ok) {
+        setSnackMessage('Service update successfully');
+        setSnackOpen(true);
         window.location.reload();
-      } else if (response.status === 403){
-        setSnackMessage("Sorry, you are denied access.")
-        setSnackOpen(true)
+      } else if (response.status === 403) {
+        setSnackMessage('Sorry, you are denied access.');
+        setSnackOpen(true);
       } else {
         const errorData = await response.json();
-        setSnackMessage(`${errorData.message}` || "Failed")
-        setSnackOpen(true)
+        setSnackMessage(`${errorData.message}` || 'Failed');
+        setSnackOpen(true);
       }
-    } catch (error){
+    } catch (error) {
       setSnackMessage('Server error');
       setSnackOpen(true);
-      console.log(error)
+      console.log(error);
     }
   };
   return (
@@ -183,7 +183,7 @@ export default function OpenOrderForm({
             name="categories"
             label={'Categories'}
             variant={'standard'}
-            defaultValue={service?.categories?.map(c => c.id).join(', ')}
+            defaultValue={service?.categories?.map((c) => c.id).join(', ')}
             className={'order-form-text-field'}
           />
         </DialogContent>

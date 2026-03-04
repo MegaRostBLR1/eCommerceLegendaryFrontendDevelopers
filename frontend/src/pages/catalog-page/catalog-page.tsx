@@ -10,7 +10,7 @@ import { createPortal } from 'react-dom';
 import OpenOrderForm from '../../components/modals/OrderForm/OrderForm';
 import { environment } from '../../assets/environment/environment.ts';
 import { authorizationService } from '../../services/authorization-service.ts';
-import { useNavigate } from 'react-router-dom';
+import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal.tsx';
 
 const BASE_URL = environment.baseUrl;
 
@@ -20,17 +20,17 @@ export const CatalogPage = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [open, setOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [currentService, setCurrentService] = useState<Service>();
-  const isAuthUser: boolean = authorizationService.isAuthUser();
-  const navigate = useNavigate();
-
-  if (!isAuthUser) {
-    navigate('/');
-  }
 
   const handleOpenModal = (service: Service) => {
-    setCurrentService(service);
-    setOpen(true);
+    const isAuth = authorizationService.isAuthUser();
+    if (!isAuth) {
+      setIsAuthModalOpen(true);
+    } else {
+      setCurrentService(service);
+      setOpen(true);
+    }
   };
 
   useEffect(() => {
@@ -90,6 +90,13 @@ export const CatalogPage = () => {
           open={open}
           onClose={() => setOpen(false)}
           service={currentService}
+        />,
+        document.body
+      )}
+      {createPortal(
+        <AuthorizationModal
+          open={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
         />,
         document.body
       )}
