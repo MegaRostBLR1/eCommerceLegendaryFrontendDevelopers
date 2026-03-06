@@ -6,7 +6,7 @@ export const userService = {
     return apiClient.request<User>(`/users/${userId}`);
   },
 
-  updateProfile(userId: number, data: UpdateUserDto) {
+  updateProfile(userId: number, data: UpdateUserDto & { role?: string }) {
     return apiClient.request<User>(`/users/${userId}`, {
       method: 'PATCH',
       body: JSON.stringify(data),

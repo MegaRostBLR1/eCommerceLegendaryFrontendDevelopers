@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './ProfilePage.css';
-
 import { authorizationService } from '../../services/authorization-service';
 import { userService } from '../../services/user.service';
 import type { User, UpdateUserDto } from '../../types';
@@ -17,25 +16,32 @@ export const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<MessageState | null>(null);
-
+  const [errors, setErrors] = useState<string[]>([]);
   const navigate = useNavigate();
   const userId = authorizationService.getUserId();
+
+  const { id } = useParams<{ id: string }>();
+  const isAdmin = authorizationService.userIsAdmin();
+  const myOwnId = authorizationService.getUserId();
+
+  const targetUserId = id ? Number(id) : myOwnId;
+  const isEditingSomeoneElse = Boolean(id) && isAdmin;
 
   useEffect(() => {
     if (!authorizationService.isAuthUser()) {
       navigate('/');
     }
-  }, [navigate]);
+  }, [navigate, userId]);
 
   useEffect(() => {
-    if (!userId) {
+    if (!targetUserId) {
       setLoading(false);
       return;
     }
 
     const loadProfile = async () => {
       try {
-        const data = await userService.getProfile(userId);
+        const data = await userService.getProfile(targetUserId);
         setUser(data);
       } catch (error) {
         console.error(error);
@@ -46,21 +52,26 @@ export const ProfilePage = () => {
     };
 
     loadProfile();
-  }, [userId]);
+  }, [targetUserId]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setUser((prev) => (prev ? { ...prev, [name]: value } : prev));
   };
 
   const handleUpdate = async () => {
-    if (!user || !userId) return;
+    if (!user || !targetUserId) return;
 
-    if (!user.firstName.trim() || !user.lastName.trim() || !user.email.trim()) {
-      setMessage({
-        type: 'error',
-        text: 'Please fill in all required fields (Name, Last name, E-mail)',
-      });
+    const newErrors: string[] = [];
+    if (!user.firstName.trim()) newErrors.push('firstName');
+    if (!user.lastName.trim()) newErrors.push('lastName');
+    if (!user.email.trim()) newErrors.push('email');
+    setErrors(newErrors);
+
+    if (newErrors.length > 0) {
+      setMessage({ type: 'error', text: 'Fill in the red fields!' });
       return;
     }
 
@@ -72,10 +83,16 @@ export const ProfilePage = () => {
       lastName: user.lastName,
       patronymic: user.patronymic,
       email: user.email,
+      role: isAdmin ? user.role : undefined,
     };
 
+    if (isAdmin) {
+      updateData.role = user.role;
+    }
+
     try {
-      const updated = await userService.updateProfile(userId, updateData);
+      const updated = await userService.updateProfile(targetUserId, updateData);
+
       setUser(updated);
       setMessage({ type: 'success', text: 'Data updated successfully' });
     } catch {
@@ -91,7 +108,10 @@ export const ProfilePage = () => {
   return (
     <main className="profile-page">
       <div className="profile-container">
-        <h1 className="profile-title">PERSONAL DATA</h1>
+        <h1 className="profile-title">
+          {' '}
+          {isEditingSomeoneElse ? `EDIT USER #${id}` : 'PERSONAL DATA'}{' '}
+        </h1>
 
         {message && (
           <Message
@@ -108,7 +128,13 @@ export const ProfilePage = () => {
               <input
                 name="firstName"
                 value={user.firstName || ''}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  setErrors((prev) =>
+                    prev.filter((item) => item !== 'firstName')
+                  );
+                }}
+                className={errors.includes('firstName') ? 'input-error' : ''}
               />
             </div>
 
@@ -117,7 +143,13 @@ export const ProfilePage = () => {
               <input
                 name="lastName"
                 value={user.lastName || ''}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  setErrors((prev) =>
+                    prev.filter((item) => item !== 'lastName')
+                  );
+                }}
+                className={errors.includes('lastName') ? 'input-error' : ''}
               />
             </div>
 
@@ -136,7 +168,11 @@ export const ProfilePage = () => {
                 type="email"
                 name="email"
                 value={user.email || ''}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  setErrors((prev) => prev.filter((item) => item !== 'email'));
+                }}
+                className={errors.includes('email') ? 'input-error' : ''}
               />
             </div>
           </div>
@@ -144,12 +180,25 @@ export const ProfilePage = () => {
           <div className="role-field">
             <div className="input-field">
               <label>Role</label>
-              <input
-                value={user.role}
-                readOnly
-                className="input-readonly"
-                tabIndex={-1}
-              />
+
+              {isAdmin ? (
+                <select
+                  name="role"
+                  value={user.role}
+                  onChange={handleChange}
+                  className="profile-select"
+                >
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+              ) : (
+                <input
+                  value={user.role}
+                  readOnly
+                  className="input-readonly"
+                  tabIndex={-1}
+                />
+              )}
             </div>
           </div>
 
