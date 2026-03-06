@@ -39,8 +39,16 @@ export default function OpenOrderForm({
       errorMessage = 'Incorrect service name (3-50 characters).';
     } else if (!validationRules.discount.test(data.discount as string)) {
       errorMessage = 'The discount must be a number (eg 1.1).';
-    } else if (!validationRules.amount.test(data.amount as string)) {
+    } else if (!validationRules.numberRegExp.test(data.amount as string)) {
       errorMessage = 'Amount must be an integer.';
+    } else if (
+      !validationRules.numberRegExp.test(data.workersCount as string)
+    ) {
+      errorMessage = 'Workers count must be an integer.';
+    } else if (!validationRules.numberRegExp.test(data.duration as string)) {
+      errorMessage = 'Duration count must be an integer.';
+    } else if (!validationRules.description.test(data.description as string)) {
+      errorMessage = 'Description will be not more than 150 symbols';
     } else if (!validationRules.categories.test(data.categories as string)) {
       errorMessage = 'Categories must be numbers separated by commas (1, 2).';
     }

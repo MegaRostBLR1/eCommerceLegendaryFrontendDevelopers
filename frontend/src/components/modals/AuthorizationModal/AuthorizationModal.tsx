@@ -129,7 +129,7 @@ export default function OpenLoginModal({
                     onMouseDown={(e) => e.preventDefault()}
                     edge="end"
                   >
-                    {showPassword ? <Visibility/> : <VisibilityOff/>}
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               ),
