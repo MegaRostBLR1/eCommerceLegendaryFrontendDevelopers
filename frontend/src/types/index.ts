@@ -22,12 +22,18 @@ export type ServicesData = {
   data?: Service[];
 };
 
+export type UserRole = 'admin' | 'user';
+
 export interface User {
+  id: number;
   firstName: string;
   lastName: string;
   patronymic: string;
   email: string;
-  role: string;
+  role: UserRole;
 }
 
-export type UpdateUserDto = Omit<User, 'role'>;
+export type UpdateUserDto = Omit<User, 'id' | 'role'> & {
+  id?: number;
+  role?: UserRole;
+};
