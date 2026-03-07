@@ -14,6 +14,9 @@ import Snackbar from '@mui/material/Snackbar';
 import { authorizationService } from '../../../services/authorization-service.ts';
 import { environment } from '../../../assets/environment/environment.ts';
 import { errorMessages } from '../../../../constants/errors.ts';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const BASE_URL = environment.baseUrl;
 export default function OpenLoginModal({
@@ -25,6 +28,9 @@ export default function OpenLoginModal({
 }) {
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
   const handleConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -113,7 +119,21 @@ export default function OpenLoginModal({
             name="password"
             label={'Password'}
             variant={'standard'}
-            type={'password'}
+            type={showPassword ? 'text' : 'password'}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={(e) => e.preventDefault()}
+                    edge="end"
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
             required={true}
             className={'create-acc-form-text-field'}
           />

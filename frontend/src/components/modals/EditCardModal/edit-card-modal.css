@@ -1,0 +1,14 @@
+@import '../../../assets/styles/fonts.css';
+@import '../../../assets/styles/variables.css';
+
+.edit-card-modal-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edit-card-modal-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
