@@ -1,5 +1,10 @@
 import { apiClient } from './api-client';
-import type { User, UpdateUserDto } from '../types/index';
+import type {
+  User,
+  UpdateUserDto,
+  UpdateServiceDto,
+  Service,
+} from '../types/index';
 
 export const userService = {
   getProfile(userId: number) {
@@ -10,6 +15,19 @@ export const userService = {
     return apiClient.request<User>(`/users/${userId}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
+    });
+  },
+
+  updateService(serviceId: number, data: UpdateServiceDto) {
+    return apiClient.request<Service>(`/services/${serviceId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  },
+
+  deleteService(serviceId: number) {
+    return apiClient.request<void>(`/services/${serviceId}`, {
+      method: 'DELETE',
     });
   },
 };

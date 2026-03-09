@@ -10,47 +10,73 @@ import {
   Snackbar,
 } from '@mui/material';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Service } from '../../../types';
 import { validationRules } from '../../../../constants/validation-rules.ts';
-import { environment } from '../../../assets/environment/environment.ts';
+import { userService } from '../../../services/user.service.ts';
+import { SelectComponent } from '../../../pages/catalog-page/ui/select-component/select-component.tsx';
 
-export default function OpenOrderForm({
-  open,
-  onClose,
-  service,
-}: {
+interface EditCardModalProps {
   open: boolean;
   onClose: () => void;
   service?: Service;
-}) {
+  onUpdateSuccess?: () => void;
+}
+
+export default function EditCardModal({
+  open,
+  onClose,
+  service,
+  onUpdateSuccess,
+}: EditCardModalProps) {
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
-  const BASE_URL = environment.baseUrl;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
+  const [values, setValues] = useState({
+    name: '',
+    discount: '0',
+    amount: '0',
+    workersCount: '0',
+    duration: '',
+    description: '',
+    categories: [] as number[],
+  });
+
+  useEffect(() => {
+    if (service && open) {
+      setValues({
+        name: service.name,
+        discount: String(service.discount || 0),
+        amount: String(service.amount),
+        workersCount: String(service.workersCount),
+        duration: service.duration,
+        description: service.description,
+        categories: service.categories?.map((c) => c.id) || [],
+      });
+    }
+  }, [service, open]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleConfirm = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+    if (!service) return;
 
     let errorMessage = '';
-
-    if (!validationRules.serviceName.test(data.serviceName as string)) {
+    if (!validationRules.serviceName.test(values.name)) {
       errorMessage = 'Incorrect service name (3-50 characters).';
-    } else if (!validationRules.discount.test(data.discount as string)) {
-      errorMessage = 'The discount must be a number (eg 1.1).';
-    } else if (!validationRules.numberRegExp.test(data.amount as string)) {
+    } else if (!validationRules.discount.test(values.discount)) {
+      errorMessage = 'The discount must be a number.';
+    } else if (!validationRules.numberRegExp.test(values.amount)) {
       errorMessage = 'Amount must be an integer.';
-    } else if (
-      !validationRules.numberRegExp.test(data.workersCount as string)
-    ) {
-      errorMessage = 'Workers count must be an integer.';
-    } else if (!validationRules.numberRegExp.test(data.duration as string)) {
-      errorMessage = 'Duration count must be an integer.';
-    } else if (!validationRules.description.test(data.description as string)) {
-      errorMessage = 'Description will be not more than 150 symbols';
-    } else if (!validationRules.categories.test(data.categories as string)) {
-      errorMessage = 'Categories must be numbers separated by commas (1, 2).';
+    } else if (!validationRules.description.test(values.description)) {
+      errorMessage = 'Description length must be up to 150 characters.';
+    } else if (values.categories.length === 0) {
+      errorMessage = 'Please select at least one category.';
     }
 
     if (errorMessage) {
@@ -59,149 +85,139 @@ export default function OpenOrderForm({
       return;
     }
 
-    const serviceId = service?.id;
-
-    const json = {
-      name: data.serviceName,
-      discount: parseFloat(data.discount as string),
-      amount: parseInt(data.amount as string),
-      workersCount: parseInt(data.workersCount as string),
-      duration: parseInt(data.duration as string),
-      description: data.description,
-      categories: (data.categories as string)
-        .split(',')
-        .map((id) => parseInt(id.trim())),
-    };
+    setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${BASE_URL}/services/${serviceId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify(json),
-      });
+      const updateData = {
+        name: values.name,
+        discount: parseFloat(values.discount),
+        amount: parseInt(values.amount),
+        workersCount: parseInt(values.workersCount),
+        duration: values.duration,
+        description: values.description,
+        categories: values.categories,
+      };
 
-      if (response.ok) {
-        setSnackMessage('Service update successfully');
-        setSnackOpen(true);
-        window.location.reload();
-      } else if (response.status === 403) {
-        setSnackMessage('Sorry, you are denied access.');
-        setSnackOpen(true);
-      } else {
-        const errorData = await response.json();
-        setSnackMessage(`${errorData.message}` || 'Failed');
-        setSnackOpen(true);
-      }
-    } catch (error) {
-      setSnackMessage('Server error');
+      await userService.updateService(service.id, updateData);
+
+      setSnackMessage('Service updated successfully!');
       setSnackOpen(true);
-      console.log(error);
+
+      setTimeout(() => {
+        onClose();
+        if (onUpdateSuccess) onUpdateSuccess();
+      }, 600);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Update failed';
+
+      setSnackMessage(errorMessage);
+      setSnackOpen(true);
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
   return (
     <>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={snackOpen}
-        autoHideDuration={5000}
+        autoHideDuration={4000}
         onClose={() => setSnackOpen(false)}
         message={snackMessage}
       />
+
       <Dialog
         open={open}
         onClose={onClose}
-        key={service?.id}
         PaperProps={{
           component: 'form',
           onSubmit: handleConfirm,
           sx: {
             width: '466px',
-            height: '604px',
-            padding: '40px',
-            borderRadius: 0,
+            padding: '30px 40px',
+            borderRadius: '8px',
           },
         }}
       >
-        <DialogTitle className={'edit-card-modal-title'}>
-          <div className={'order-form-logo'}>
-            <img src={'/page-logo.svg'} alt="logo" />
-            <span className={'team-name-order'}>
+        <DialogTitle className="edit-card-modal-title" sx={{ p: 0, mb: 3 }}>
+          <div className="order-form-logo">
+            <img src="/page-logo.svg" alt="logo" />
+            <span className="team-name-order">
               Legendary <br /> Frontend
             </span>
           </div>
-          <div className={'close-edit-card-modal-container'}>
-            <IconButton className={'close-order-form-btn'} onClick={onClose}>
-              <CloseOutlinedIcon />
-            </IconButton>
-          </div>
+          <IconButton
+            onClick={onClose}
+            sx={{ position: 'absolute', right: 16, top: 16 }}
+          >
+            <CloseOutlinedIcon />
+          </IconButton>
         </DialogTitle>
-        <DialogContent className={'edit-card-modal-dialog-content'}>
+
+        <DialogContent
+          className="edit-card-modal-dialog-content"
+          sx={{ p: 0, display: 'flex', flexDirection: 'column', gap: 2 }}
+        >
           <TextField
-            name="serviceName"
-            label={'Service name'}
-            variant={'standard'}
-            required={true}
-            defaultValue={service?.name}
-            className={'order-form-text-field'}
+            name="name"
+            label="Service name"
+            variant="standard"
+            fullWidth
+            value={values.name}
+            onChange={handleChange}
           />
-          <TextField
-            name="discount"
-            label={'Discount'}
-            required={true}
-            variant={'standard'}
-            defaultValue={service?.discount || 0}
-            className={'order-form-text-field'}
+
+          <div style={{ display: 'flex', gap: '20px' }}>
+            <TextField
+              name="discount"
+              label="Discount (%)"
+              variant="standard"
+              fullWidth
+              value={values.discount}
+              onChange={handleChange}
+            />
+            <TextField
+              name="amount"
+              label="Price"
+              variant="standard"
+              fullWidth
+              value={values.amount}
+              onChange={handleChange}
+            />
+          </div>
+
+          <SelectComponent
+            multiple
+            label="Categories"
+            category={values.categories}
+            setCategory={(newIds) =>
+              setValues((prev) => ({ ...prev, categories: newIds as number[] }))
+            }
           />
-          <TextField
-            name="amount"
-            label={'Amount'}
-            required={true}
-            variant={'standard'}
-            defaultValue={service?.amount}
-            className={'order-form-text-field'}
-          />
-          <TextField
-            name="workersCount"
-            label={'Workers count'}
-            required={true}
-            variant={'standard'}
-            defaultValue={service?.workersCount}
-            className={'order-form-text-field'}
-          />
-          <TextField
-            name="duration"
-            label={'Duration'}
-            required={true}
-            variant={'standard'}
-            defaultValue={service?.duration}
-            className={'order-form-text-field'}
-          />
+
           <TextField
             name="description"
-            label={'Description'}
-            required={true}
-            variant={'standard'}
-            defaultValue={service?.description}
-            className={'order-form-text-field'}
-          />
-          <TextField
-            name="categories"
-            label={'Categories'}
-            variant={'standard'}
-            defaultValue={service?.categories?.map((c) => c.id).join(', ')}
-            className={'order-form-text-field'}
+            label="Description"
+            variant="standard"
+            fullWidth
+            multiline
+            rows={3}
+            value={values.description}
+            onChange={handleChange}
           />
         </DialogContent>
-        <DialogActions sx={{ justifyContent: 'center' }}>
+
+        <DialogActions sx={{ justifyContent: 'center', mt: 4, p: 0 }}>
           <Button
-            type={'submit'}
+            type="submit"
             variant="contained"
-            className={'confirm-order-btn'}
+            disabled={isSubmitting}
+            className="confirm-order-btn"
+            sx={{ width: '100%', py: 1.5 }}
           >
-            send
+            {isSubmitting ? 'Saving...' : 'Save'}
           </Button>
         </DialogActions>
       </Dialog>

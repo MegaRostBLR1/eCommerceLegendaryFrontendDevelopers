@@ -16,7 +16,7 @@ const BASE_URL = environment.baseUrl;
 
 export const CatalogPage = () => {
   const [data, setData] = useState<ServicesData>();
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState<string | number[]>('');
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [open, setOpen] = useState(false);

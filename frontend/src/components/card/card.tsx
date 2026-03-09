@@ -2,23 +2,32 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './card.css';
 import type { Service } from '../../types';
 import { CARD_TEXT } from './constants';
-import { authorizationService } from '../../services/authorization-service.ts';
 import EditCardModal from '../modals/EditCardModal/EditCardModal.tsx';
 import { IconButton } from '@mui/material';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from 'react';
 
 interface CardProps {
   data: Service;
   handleClick: (service: Service) => void;
+  isAdminMode?: boolean;
+  onDelete?: (id: number) => void;
+  onUpdateSuccess?: () => void;
 }
 
-export const Card = ({ data, handleClick }: CardProps) => {
+export const Card = ({
+  data,
+  handleClick,
+  isAdminMode = false,
+  onDelete,
+  onUpdateSuccess,
+}: CardProps) => {
   const formatValue = (num: number) => num.toFixed(2);
-  const isAdmin = authorizationService.userIsAdmin();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
+    id,
     name: title,
     amount: price,
     description,
@@ -35,13 +44,28 @@ export const Card = ({ data, handleClick }: CardProps) => {
     <>
       <div className="bestseller-card">
         <div className="bestseller-category-and-title">
-          {isAdmin && (
-            <IconButton
-              className={'edit-card-btn'}
-              onClick={() => setIsModalOpen(true)}
-            >
-              <BorderColorIcon />
-            </IconButton>
+          {isAdminMode && (
+            <div className="admin-card-controls">
+              <IconButton
+                className={'edit-card-btn'}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsModalOpen(true);
+                }}
+              >
+                <BorderColorIcon fontSize="small" />
+              </IconButton>
+              <IconButton
+                className={'delete-card-btn'}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete?.(id);
+                }}
+                sx={{ color: '#d32f2f' }}
+              >
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </div>
           )}
           <div className="bestseller-category-wrapper">
             {categories?.map((category) => (
@@ -97,20 +121,23 @@ export const Card = ({ data, handleClick }: CardProps) => {
           </div>
         </div>
 
-        <button
-          className="bestseller-card-button"
-          onClick={() => handleClick(data)}
-        >
-          <span className="bestseller-card-button-text">
-            {CARD_TEXT.BUTTON_TEXT}
-          </span>
-          <ArrowForwardIosIcon className="bestseller-arrow-right" />
-        </button>
+        {!isAdminMode && (
+          <button
+            className="bestseller-card-button"
+            onClick={() => handleClick(data)}
+          >
+            <span className="bestseller-card-button-text">
+              {CARD_TEXT.BUTTON_TEXT}
+            </span>
+            <ArrowForwardIosIcon className="bestseller-arrow-right" />
+          </button>
+        )}
       </div>
       <EditCardModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         service={data}
+        onUpdateSuccess={onUpdateSuccess}
       />
     </>
   );
