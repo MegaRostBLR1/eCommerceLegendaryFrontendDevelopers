@@ -37,3 +37,7 @@ export type UpdateUserDto = Omit<User, 'id' | 'role'> & {
   id?: number;
   role?: UserRole;
 };
+
+export type UpdateServiceDto = Partial<Omit<Service, 'id' | 'categories'>> & {
+  categories?: number[];
+};

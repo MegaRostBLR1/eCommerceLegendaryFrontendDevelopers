@@ -4,6 +4,8 @@ import {
   MenuItem,
   Select,
   type SelectChangeEvent,
+  Box,
+  Chip,
 } from '@mui/material';
 import { LABEL_STYLE, SELECT_STYLE } from '../../constants';
 import { Burger } from '../../../../assets/icons/burger';
@@ -13,17 +15,24 @@ import { environment } from '../../../../assets/environment/environment.ts';
 
 const BASE_URL = environment.baseUrl;
 
+interface SelectComponentProps {
+  category: string | number[];
+  setCategory: (value: string | number[]) => void;
+  multiple?: boolean;
+  label?: string;
+}
+
 export const SelectComponent = ({
   category,
   setCategory,
-}: {
-  category: string;
-  setCategory: (value: string) => void;
-}) => {
+  multiple = false,
+  label = 'categories',
+}: SelectComponentProps) => {
   const [categories, setCategories] = useState<Category[]>([]);
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setCategory(event.target.value);
+  const handleChange = (event: SelectChangeEvent<typeof category>) => {
+    const { value } = event.target;
+    setCategory(value);
   };
 
   useEffect(() => {
@@ -34,21 +43,41 @@ export const SelectComponent = ({
 
   return (
     <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label" sx={LABEL_STYLE}>
-        categories
+      <InputLabel id="category-select-label" sx={LABEL_STYLE}>
+        {label}
       </InputLabel>
       <Select
+        multiple={multiple}
         IconComponent={Burger}
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
+        labelId="category-select-label"
+        id="category-select"
         value={category}
-        label="categories"
+        label={label}
         onChange={handleChange}
         sx={SELECT_STYLE}
+        renderValue={
+          multiple
+            ? (selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {(selected as number[]).map((value) => (
+                    <Chip
+                      key={value}
+                      label={
+                        categories.find((c) => c.id === value)?.name || value
+                      }
+                      size="small"
+                    />
+                  ))}
+                </Box>
+              )
+            : undefined
+        }
       >
-        <MenuItem value="">All</MenuItem>
+        {!multiple && <MenuItem value="">All</MenuItem>}
         {categories.map((item) => (
-          <MenuItem value={item.id}>{item.name}</MenuItem>
+          <MenuItem key={item.id} value={item.id}>
+            {item.name}
+          </MenuItem>
         ))}
       </Select>
     </FormControl>
