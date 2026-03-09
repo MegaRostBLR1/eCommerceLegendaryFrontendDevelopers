@@ -8,8 +8,11 @@ import { useEffect, useState } from 'react';
 import type { Service, ServicesData } from '../../types';
 import { createPortal } from 'react-dom';
 import OpenOrderForm from '../../components/modals/OrderForm/OrderForm';
+import { environment } from '../../assets/environment/environment.ts';
+import { authorizationService } from '../../services/authorization-service.ts';
+import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal.tsx';
 
-const DEV_URL = import.meta.env.VITE_DEV_URL;
+const BASE_URL = environment.baseUrl;
 
 export const CatalogPage = () => {
   const [data, setData] = useState<ServicesData>();
@@ -17,16 +20,22 @@ export const CatalogPage = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [open, setOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [currentService, setCurrentService] = useState<Service>();
 
   const handleOpenModal = (service: Service) => {
-    setCurrentService(service);
-    setOpen(true);
+    const isAuth = authorizationService.isAuthUser();
+    if (!isAuth) {
+      setIsAuthModalOpen(true);
+    } else {
+      setCurrentService(service);
+      setOpen(true);
+    }
   };
 
   const getData = () => {
     fetch(
-      `${DEV_URL}/services?page=${page}&count=${CARDS_ON_PAGE}${selectedCategories.includes('all') ? '' : `&categories=${selectedCategories.join(',')}`}${search ? `&search=${search}` : ''}`
+      `${BASE_URL}/services?page=${page}&count=${CARDS_ON_PAGE}${selectedCategories.includes('all') ? '' : `&categories=${selectedCategories.join(',')}`}${search ? `&search=${search}` : ''}`
     )
       .then((response) => response.json())
       .then((data: ServicesData) => setData(data));
@@ -93,6 +102,13 @@ export const CatalogPage = () => {
           open={open}
           onClose={() => setOpen(false)}
           service={currentService}
+        />,
+        document.body
+      )}
+      {createPortal(
+        <AuthorizationModal
+          open={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
         />,
         document.body
       )}

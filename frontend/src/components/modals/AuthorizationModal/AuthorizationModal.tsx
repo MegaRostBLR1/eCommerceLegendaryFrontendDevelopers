@@ -12,8 +12,13 @@ import React, { useState } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import Snackbar from '@mui/material/Snackbar';
 import { authorizationService } from '../../../services/authorization-service.ts';
+import { environment } from '../../../assets/environment/environment.ts';
+import { errorMessages } from '../../../../constants/errors.ts';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-const DEV_URL = import.meta.env.VITE_DEV_URL;
+const BASE_URL = environment.baseUrl;
 export default function OpenLoginModal({
   open,
   onClose,
@@ -23,6 +28,9 @@ export default function OpenLoginModal({
 }) {
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
   const handleConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -32,15 +40,10 @@ export default function OpenLoginModal({
     const userEmail = data.userEmail.toString();
     const userPassword = data.password.toString();
     const user = { email: userEmail, password: userPassword };
-    const errorMessages = {
-      wrongPasswordOrEmail: "Incorrect data. Check that your email and password are spelled correctly.",
-      errorFromServer: "Server error",
-      incorrectPassword: 'Password: Latin characters only. At least one digit. At least 4 characters. No more than 10.'
-    }
 
     if (emailRegexp.test(userEmail) && passwordRegexp.test(userPassword)) {
       try {
-        const response = await fetch(`${DEV_URL}/login`, {
+        const response = await fetch(`${BASE_URL}/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -49,9 +52,9 @@ export default function OpenLoginModal({
         });
         if (response.ok) {
           const json = await response.json();
-          authorizationService.setUserInLocalStorage(json)
+          authorizationService.setUserInLocalStorage(json);
           onClose();
-        } else if(response.status === 401) {
+        } else if (response.status === 401) {
           setSnackMessage(errorMessages.wrongPasswordOrEmail);
           setSnackOpen(true);
         } else {
@@ -116,7 +119,21 @@ export default function OpenLoginModal({
             name="password"
             label={'Password'}
             variant={'standard'}
-            type={'password'}
+            type={showPassword ? 'text' : 'password'}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={(e) => e.preventDefault()}
+                    edge="end"
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
             required={true}
             className={'create-acc-form-text-field'}
           />

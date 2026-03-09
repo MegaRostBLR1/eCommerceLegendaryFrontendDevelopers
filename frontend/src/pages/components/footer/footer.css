@@ -1,0 +1,140 @@
+@import '../../../App.css';
+@import '../../../assets/styles/variables.css';
+
+footer {
+  width: 100%;
+  background-color: #fff8f0;
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+}
+
+.footer-wrapper {
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 100%;
+  max-width: 1200px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  border-bottom: 1px solid #ab9988;
+  border-top: 1px solid #ab9988;
+  padding: 0 20px;
+}
+
+.logo-container {
+  width: 300px;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-right: 1px solid #ab9988;
+  gap: 17px;
+}
+
+.logo-container img {
+  height: 64px;
+}
+
+.team-name {
+  font-size: 15px;
+  color: #063526;
+  font-family: 'Lato-Regular', sans-serif;
+  line-height: 1.2;
+}
+
+.developers-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 50px;
+  gap: 5px;
+}
+
+.developers-header {
+  font-size: 14px;
+  color: #24221f;
+  text-transform: uppercase;
+  font-family: 'Lato-Regular', sans-serif;
+}
+
+.developers-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(100px, auto));
+  column-gap: 30px;
+  row-gap: 4px;
+}
+
+.developer-link,
+.information-link {
+  text-decoration: none;
+  font-size: 11px;
+  color: #24221f;
+  font-family: Montserrat-Regular, sans-serif;
+  transition: opacity 0.2s;
+}
+
+.developer-link:hover,
+.information-link:hover {
+  opacity: 0.7;
+}
+
+.information-links-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  gap: 10px;
+  text-align: right;
+}
+
+@media (max-width: 900px) {
+  .footer-wrapper {
+    height: auto;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .logo-container {
+    width: 100%;
+    padding-bottom: 15px;
+    justify-content: center;
+  }
+
+  .developers-container {
+    margin-left: 0;
+    align-items: center;
+  }
+
+  .information-links-container {
+    margin-left: 0;
+    text-align: center;
+    padding-bottom: 10px;
+  }
+}
+@media (max-width: 550px) {
+  .footer-wrapper {
+    height: auto;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .logo-container {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ab9988;
+    padding-bottom: 15px;
+    justify-content: center;
+  }
+
+  .developers-container {
+    margin-left: 0;
+    align-items: center;
+  }
+
+  .information-links-container {
+    margin-left: 0;
+    text-align: center;
+    padding-bottom: 10px;
+  }
+}

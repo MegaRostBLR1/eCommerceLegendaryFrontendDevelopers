@@ -1,0 +1,142 @@
+.profile-page {
+  background-color: #fdfaf5;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 50px 0 60px;
+}
+
+.profile-container {
+  width: 100%;
+  max-width: 900px;
+  padding: 0 15px;
+}
+
+.profile-title {
+  font-family: 'Lato-Regular', sans-serif;
+  font-weight: 400;
+  font-size: 40px;
+  color: #0c3327;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #c4c4c4;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px 80px;
+  margin-top: 50px;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1.5px solid #0c3327;
+  padding-bottom: 8px;
+  transition: border-color 0.3s ease;
+}
+
+.input-field:focus-within {
+  border-bottom-color: #067552;
+}
+
+.input-field label {
+  font-size: 14px;
+  color: #a3a3a3;
+  margin-bottom: 8px;
+  text-transform: capitalize;
+}
+
+.input-field input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  color: #000;
+  padding: 4px 0;
+  font-family: 'Lato-Regular', sans-serif;
+}
+
+.role-field {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.role-field .input-field {
+  width: 100%;
+  max-width: 410px;
+  border-bottom: 1.5px solid #ccc;
+}
+
+.input-readonly {
+  color: #888 !important;
+  cursor: not-allowed;
+}
+
+.profile-select {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  color: #000;
+  padding: 4px 0;
+  font-family: 'Lato-Regular', sans-serif;
+  cursor: pointer;
+  width: 100%;
+}
+
+.role-field .input-field {
+  position: relative;
+}
+
+.profile-select option {
+  background-color: #fdfaf5;
+  color: #000;
+  padding: 10px;
+}
+
+.edit-btn {
+  display: block;
+  margin: 60px 0 0;
+  padding: 16px 50px;
+  background-color: #0c3327;
+  color: #fff;
+  border: none;
+  font-family: 'Lato-Regular', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  transition: transform 0.1s ease-in-out;
+}
+
+.edit-btn:active {
+  transform: scale(1.05);
+}
+
+.edit-btn:hover {
+  background-color: #1a4a3a;
+}
+
+.input-field:has(.input-error) {
+  border-bottom-color: red !important;
+}
+
+.input-error {
+  color: red !important;
+}
+
+@media (max-width: 768px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .profile-title {
+    font-size: 32px;
+  }
+}

@@ -20,9 +20,10 @@ export function App() {
       <main className="page-container">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/catalog" element={<CatalogPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
 
+          <Route path="/admin/users/:id" element={<ProfilePage />} />
           <Route path="/admin/users" element={<UsersPage />} />
           <Route path="/admin/stats" element={<AdminStatsPage />} />
           <Route path="/admin/services" element={<ServicesPage />} />
