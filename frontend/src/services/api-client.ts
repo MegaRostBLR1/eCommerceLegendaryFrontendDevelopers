@@ -1,17 +1,18 @@
-const API_BASE_URL = import.meta.env.VITE_DEV_URL;
+import { environment } from '../assets/environment/environment';
+const API_BASE_URL = environment.baseUrl;
 const AUTH_HEADER = 'Authorization';
 
 export class ApiError extends Error {
-  constructor(public status: number, message: string) {
+  constructor(
+    public status: number,
+    message: string
+  ) {
     super(message);
   }
 }
 
 export const apiClient = {
-  async request<T>(
-    url: string,
-    options: RequestInit = {}
-  ): Promise<T> {
+  async request<T>(url: string, options: RequestInit = {}): Promise<T> {
     const token = localStorage.getItem('token');
 
     const response = await fetch(`${API_BASE_URL}${url}`, {

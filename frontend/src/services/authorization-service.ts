@@ -30,17 +30,17 @@ export const authorizationService = {
     localStorage.removeItem('token');
   },
 
-isAuthUser(): boolean {
-  const userToken = localStorage.getItem('token');
-  if (!userToken) return false;
-  
-  try {
-    const user = this.decodeToken(userToken);
-    return user && user.exp * 1000 >= Date.now();
-  } catch {
-    return false;
-  }
-},
+  isAuthUser(): boolean {
+    const userToken = localStorage.getItem('token');
+    if (!userToken) return false;
+
+    try {
+      const user = this.decodeToken(userToken);
+      return user && user.exp * 1000 >= Date.now();
+    } catch {
+      return false;
+    }
+  },
 
   userIsAdmin(): boolean {
     const userToken: string | null = localStorage.getItem('token');
@@ -52,5 +52,18 @@ isAuthUser(): boolean {
     const userRole: string = user.role;
 
     return userRole === UserRole.ADMIN;
+  },
+
+  getUserId(): number | null {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+
+    try {
+      const decoded: IDecodedUserToken = this.decodeToken(token);
+      return decoded.id;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   },
 };

@@ -20,9 +20,5 @@ export const Message = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration]);
 
-  return (
-    <div className={`message message-${type}`}>
-      {text}
-    </div>
-  );
+  return <div className={`message message-${type}`}>{text}</div>;
 };

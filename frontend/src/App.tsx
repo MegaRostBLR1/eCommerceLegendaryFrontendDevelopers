@@ -8,7 +8,7 @@ import { HomePage } from './pages/home-page/HomePage';
 import { ProfilePage } from './pages/profile/ProfilePage';
 import { UsersPage } from './pages/admin/UsersPage';
 import { AdminStatsPage } from './pages/admin/AdminStatsPage';
-import { ServicesPage } from './pages/admin/ServicesPage';
+import { ServicesPage } from './pages/admin/Services/ServicesPage.tsx';
 import { AdminOrdersPage } from './pages/admin/AdminOrdersPage';
 import { UserStatsPage } from './pages/user/UserStatsPage';
 import { UserOrdersPage } from './pages/user/UserOrdersPage';
@@ -20,9 +20,10 @@ export function App() {
       <main className="page-container">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/catalog" element={<CatalogPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
 
+          <Route path="/admin/users/:id" element={<ProfilePage />} />
           <Route path="/admin/users" element={<UsersPage />} />
           <Route path="/admin/stats" element={<AdminStatsPage />} />
           <Route path="/admin/services" element={<ServicesPage />} />

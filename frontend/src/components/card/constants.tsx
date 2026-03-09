@@ -1,7 +1,7 @@
 export const CARD_TEXT = {
   CURRENCY: 'USD',
-  EMPLOYEES_LABEL: 'КОЛИЧЕСТВО СОТРУДНИКОВ',
-  SPECIALISTS_SUFFIX: 'специалиста',
-  DURATION_LABEL: 'ДЛИТЕЛЬНОСТЬ ВЫПОЛНЕНИЯ',
-  BUTTON_TEXT: 'ОФОРМИТЬ ЗАКАЗ',
+  EMPLOYEES_LABEL: 'EMPLOYEES',
+  SPECIALISTS_SUFFIX: 'specialists',
+  DURATION_LABEL: 'DURATION',
+  BUTTON_TEXT: 'ORDER NOW',
 };

@@ -26,39 +26,6 @@
   width: 330px;
   height: auto;
   flex-shrink: 0;
-}
-
-.title-section-title {
-  margin: 0;
-  text-shadow: var(--title-shadow);
-  font-family: 'Lato', sans-serif;
-  font-size: 96px;
-  line-height: 100%;
-  letter-spacing: -1px;
-  color: #063526;
-  word-wrap: break-word;
-}
-
-/*BESTSELER*/
-.bestseller {
-  position: relative;
-  margin-top: 0;
-}
-
-.bestseller .page-container {
-  position: relative;
-  z-index: 2;
-.title-wrapper {
-  min-height: 600px;
-  padding-right: var(--space-xl);
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  position: relative;
-  background: var(--bg-gradient);
-}
-
-.title-logo {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -70,21 +37,27 @@
 }
 
 .title-section-title {
-  font-weight: var(--font-black);
+  margin: 0;
+  font-family: 'Lato', sans-serif;
   font-size: var(--title-size);
+  line-height: 100%;
+  letter-spacing: -1px;
   color: var(--title-color);
   text-shadow: var(--title-shadow);
+  font-weight: var(--font-black);
+  word-wrap: break-word;
 }
 
+/*BESTSELLER*/
 .bestseller {
   position: relative;
   margin-top: var(--space-xxxl);
   padding-bottom: var(--space-xxl);
+}
 
-  .page-container {
-    position: relative;
-    z-index: 2;
-  }
+.bestseller .page-container {
+  position: relative;
+  z-index: 2;
 }
 
 .bestseller-header {
@@ -98,17 +71,11 @@
 .bestseller-arrow-right {
   font-size: var(--icon-size);
   color: var(--second-color);
-
-  .bestseller-arrow-right {
-    font-size: var(--icon-size);
-    color: var(--second-color);
-  }
 }
 
 .bestseller-title {
   margin: 0;
   font-weight: var(--font-semibold);
-  font-size: 50px;
   font-size: var(--bestseller-title-size);
   line-height: 140%;
   text-transform: uppercase;
@@ -140,18 +107,11 @@
   width: 275px;
   min-height: 170px;
   height: 100%;
-  display: grid;
   margin-top: var(--space-md);
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-lg);
-}
-
-.bestseller-card {
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
   padding: var(--space-sm);
-  height: 100%;
   background: var(--bg-gradient);
 }
 
@@ -268,6 +228,7 @@
   .bestseller-card {
     width: 70%;
     min-width: 0;
+  }
 
   .bestseller-card-button-text {
     font-weight: var(--font-extrabold);
@@ -276,6 +237,7 @@
     text-transform: uppercase;
     color: var(--color-dark);
   }
+
   .bestseller-arrow-right {
     font-size: var(--icon-size);
     color: var(--second-color);
