@@ -6,6 +6,8 @@ import {
   MenuItem,
   Select,
   type SelectChangeEvent,
+  Box,
+  Chip,
 } from '@mui/material';
 import { LABEL_STYLE, SELECT_STYLE } from '../../constants';
 import { Burger } from '../../../../assets/icons/burger';
@@ -15,6 +17,13 @@ import { TEXT_SELECT } from './constants';
 import { environment } from '../../../../assets/environment/environment.ts';
 
 const BASE_URL = environment.baseUrl;
+
+interface SelectComponentProps {
+  category: string | number[];
+  setCategory: (value: string | number[]) => void;
+  multiple?: boolean;
+  label?: string;
+}
 
 export const SelectComponent = ({
   selectedCategories,

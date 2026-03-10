@@ -8,7 +8,7 @@ import { HomePage } from './pages/home-page/HomePage';
 import { ProfilePage } from './pages/profile/ProfilePage';
 import { UsersPage } from './pages/admin/UsersPage';
 import { AdminStatsPage } from './pages/admin/AdminStatsPage';
-import { ServicesPage } from './pages/admin/ServicesPage';
+import { ServicesPage } from './pages/admin/Services/ServicesPage.tsx';
 import { AdminOrdersPage } from './pages/admin/AdminOrdersPage';
 import { UserStatsPage } from './pages/user/UserStatsPage';
 import { UserOrdersPage } from './pages/user/UserOrdersPage';
