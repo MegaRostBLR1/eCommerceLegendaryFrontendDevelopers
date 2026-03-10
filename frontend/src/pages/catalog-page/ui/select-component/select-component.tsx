@@ -1,6 +1,8 @@
 import {
+  Checkbox,
   FormControl,
   InputLabel,
+  ListItemText,
   MenuItem,
   Select,
   type SelectChangeEvent,
@@ -11,6 +13,7 @@ import { LABEL_STYLE, SELECT_STYLE } from '../../constants';
 import { Burger } from '../../../../assets/icons/burger';
 import { useEffect, useState } from 'react';
 import type { Category } from '../../../../types';
+import { TEXT_SELECT } from './constants';
 import { environment } from '../../../../assets/environment/environment.ts';
 
 const BASE_URL = environment.baseUrl;
@@ -23,16 +26,28 @@ interface SelectComponentProps {
 }
 
 export const SelectComponent = ({
-  category,
-  setCategory,
-  multiple = false,
-  label = 'categories',
-}: SelectComponentProps) => {
+  selectedCategories,
+  setSelectedCategories,
+}: {
+  selectedCategories: string[];
+  setSelectedCategories: (value: string[]) => void;
+}) => {
   const [categories, setCategories] = useState<Category[]>([]);
 
-  const handleChange = (event: SelectChangeEvent<typeof category>) => {
-    const { value } = event.target;
-    setCategory(value);
+  const handleChange = (event: SelectChangeEvent<string[]>) => {
+    const value = Array.isArray(event.target.value)
+      ? event.target.value
+      : [event.target.value];
+
+    if (
+      (value?.includes('all') && !selectedCategories.includes('all')) ||
+      !value.length
+    ) {
+      setSelectedCategories(['all']);
+      return;
+    }
+
+    setSelectedCategories(value.filter((item) => item !== 'all'));
   };
 
   useEffect(() => {
@@ -43,40 +58,36 @@ export const SelectComponent = ({
 
   return (
     <FormControl fullWidth>
-      <InputLabel id="category-select-label" sx={LABEL_STYLE}>
-        {label}
+      <InputLabel id="demo-simple-select-label" sx={LABEL_STYLE}>
+        {TEXT_SELECT.CATEGORIES}
       </InputLabel>
       <Select
-        multiple={multiple}
+        multiple
         IconComponent={Burger}
-        labelId="category-select-label"
-        id="category-select"
-        value={category}
-        label={label}
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={selectedCategories}
+        label="categories"
         onChange={handleChange}
         sx={SELECT_STYLE}
-        renderValue={
-          multiple
-            ? (selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {(selected as number[]).map((value) => (
-                    <Chip
-                      key={value}
-                      label={
-                        categories.find((c) => c.id === value)?.name || value
-                      }
-                      size="small"
-                    />
-                  ))}
-                </Box>
-              )
-            : undefined
-        }
+        renderValue={(selected) => {
+          if (selected.includes('all')) return 'All';
+          return categories
+            .filter((item) => selected.includes(item.id.toString()))
+            .map((c) => c.name)
+            .join(', ');
+        }}
       >
-        {!multiple && <MenuItem value="">All</MenuItem>}
+        <MenuItem value="all">
+          <Checkbox checked={selectedCategories.includes('all')} />
+          <ListItemText primary="All" />
+        </MenuItem>
         {categories.map((item) => (
-          <MenuItem key={item.id} value={item.id}>
-            {item.name}
+          <MenuItem key={item.id} value={item.id.toString()}>
+            <Checkbox
+              checked={selectedCategories.indexOf(item.id.toString()) > -1}
+            />
+            <ListItemText primary={item.name} />
           </MenuItem>
         ))}
       </Select>
