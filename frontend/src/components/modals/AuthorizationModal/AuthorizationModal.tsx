@@ -20,9 +20,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const BASE_URL = environment.baseUrl;
 export default function OpenLoginModal({
-  open,
-  onClose,
-}: {
+                                         open,
+                                         onClose,
+                                       }: {
   open: boolean;
   onClose: () => void;
 }) {
@@ -81,7 +81,13 @@ export default function OpenLoginModal({
       />
       <Dialog
         open={open}
-        onClose={onClose}
+        onClose={(_event, reason) => {
+          if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+            return;
+          }
+          onClose();
+        }}
+        disableEscapeKeyDown={true}
         PaperProps={{
           component: 'form',
           onSubmit: handleConfirm,
