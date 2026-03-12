@@ -15,7 +15,7 @@ const BASE_URL = environment.baseUrl;
 
 export const ServicesPage = () => {
   const [data, setData] = useState<ServicesData>();
-  const [category, setCategory] = useState<string | number[]>('');
+  const [category, setCategory] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
@@ -90,8 +90,8 @@ export const ServicesPage = () => {
               <div className={catalogStyles.filters}>
                 <div className={catalogStyles.categories}>
                   <SelectComponent
-                    category={category}
-                    setCategory={(val) => {
+                    selectedCategories={category}
+                    setSelectedCategories={(val: string[]) => {
                       setCategory(val);
                       setPage(1);
                     }}
