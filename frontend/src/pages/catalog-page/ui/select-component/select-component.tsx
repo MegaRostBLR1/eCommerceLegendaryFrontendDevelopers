@@ -26,20 +26,27 @@ export const SelectComponent = ({
   const [categories, setCategories] = useState<Category[]>([]);
 
   const handleChange = (event: SelectChangeEvent<string[]>) => {
-    const value = event.target.value;
+    const {
+      target: { value },
+    } = event;
     if (!value) return;
 
     const normalizedValue = Array.isArray(value) ? value : [value];
+    const clickedAll = normalizedValue.includes('all');
 
-    if (
-      (normalizedValue.includes('all') &&
-        !selectedCategories?.includes('all')) ||
-      !normalizedValue.length
-    ) {
-      setSelectedCategories(['all']);
+    const isEverythingSelected =
+      selectedCategories.length === categories.length;
+
+    if (clickedAll) {
+      if (isEverythingSelected) {
+        setSelectedCategories([]);
+      } else {
+        setSelectedCategories(categories.map((cat) => cat.id.toString()));
+      }
       return;
     }
-    setSelectedCategories(normalizedValue.filter((item) => item !== 'all'));
+
+    setSelectedCategories(normalizedValue.filter((v) => v !== 'all'));
   };
 
   useEffect(() => {
@@ -63,10 +70,8 @@ export const SelectComponent = ({
         onChange={handleChange}
         sx={SELECT_STYLE}
         renderValue={(selected) => {
-          if (!selected || (Array.isArray(selected) && selected.length === 0))
-            return '';
-          if (selected.includes('all')) return 'All';
-
+          if (categories.length > 0 && selected.length === categories.length)
+            return 'All';
           return categories
             .filter((item) => selected.includes(item.id.toString()))
             .map((c) => c.name)
@@ -74,13 +79,18 @@ export const SelectComponent = ({
         }}
       >
         <MenuItem value="all">
-          <Checkbox checked={selectedCategories.includes('all')} />
+          <Checkbox
+            checked={
+              categories.length > 0 &&
+              selectedCategories.length === categories.length
+            }
+          />
           <ListItemText primary="All" />
         </MenuItem>
         {categories.map((item) => (
           <MenuItem key={item.id} value={item.id.toString()}>
             <Checkbox
-              checked={selectedCategories.indexOf(item.id.toString()) > -1}
+              checked={selectedCategories.includes(item.id.toString())}
             />
             <ListItemText primary={item.name} />
           </MenuItem>
