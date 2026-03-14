@@ -1,6 +1,8 @@
 import {
+  Checkbox,
   FormControl,
   InputLabel,
+  ListItemText,
   MenuItem,
   Select,
   type SelectChangeEvent,
@@ -9,21 +11,35 @@ import { LABEL_STYLE, SELECT_STYLE } from '../../constants';
 import { Burger } from '../../../../assets/icons/burger';
 import { useEffect, useState } from 'react';
 import type { Category } from '../../../../types';
+import { TEXT_SELECT } from './constants';
 import { environment } from '../../../../assets/environment/environment.ts';
 
 const BASE_URL = environment.baseUrl;
 
 export const SelectComponent = ({
-  category,
-  setCategory,
+  selectedCategories = [],
+  setSelectedCategories = () => {},
 }: {
-  category: string;
-  setCategory: (value: string) => void;
+  selectedCategories: string[];
+  setSelectedCategories: (value: string[]) => void;
 }) => {
   const [categories, setCategories] = useState<Category[]>([]);
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setCategory(event.target.value);
+  const handleChange = (event: SelectChangeEvent<string[]>) => {
+    const value = event.target.value;
+    if (!value) return;
+
+    const normalizedValue = Array.isArray(value) ? value : [value];
+
+    if (
+      (normalizedValue.includes('all') &&
+        !selectedCategories?.includes('all')) ||
+      !normalizedValue.length
+    ) {
+      setSelectedCategories(['all']);
+      return;
+    }
+    setSelectedCategories(normalizedValue.filter((item) => item !== 'all'));
   };
 
   useEffect(() => {
@@ -35,20 +51,39 @@ export const SelectComponent = ({
   return (
     <FormControl fullWidth>
       <InputLabel id="demo-simple-select-label" sx={LABEL_STYLE}>
-        categories
+        {TEXT_SELECT.CATEGORIES}
       </InputLabel>
       <Select
+        multiple
         IconComponent={Burger}
         labelId="demo-simple-select-label"
         id="demo-simple-select"
-        value={category}
+        value={selectedCategories || []}
         label="categories"
         onChange={handleChange}
         sx={SELECT_STYLE}
+        renderValue={(selected) => {
+          if (!selected || (Array.isArray(selected) && selected.length === 0))
+            return '';
+          if (selected.includes('all')) return 'All';
+
+          return categories
+            .filter((item) => selected.includes(item.id.toString()))
+            .map((c) => c.name)
+            .join(', ');
+        }}
       >
-        <MenuItem value="">All</MenuItem>
+        <MenuItem value="all">
+          <Checkbox checked={selectedCategories.includes('all')} />
+          <ListItemText primary="All" />
+        </MenuItem>
         {categories.map((item) => (
-          <MenuItem value={item.id}>{item.name}</MenuItem>
+          <MenuItem key={item.id} value={item.id.toString()}>
+            <Checkbox
+              checked={selectedCategories.indexOf(item.id.toString()) > -1}
+            />
+            <ListItemText primary={item.name} />
+          </MenuItem>
         ))}
       </Select>
     </FormControl>

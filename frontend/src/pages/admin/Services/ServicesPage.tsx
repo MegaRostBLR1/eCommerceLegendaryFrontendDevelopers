@@ -1,0 +1,138 @@
+import { useEffect, useState, useCallback } from 'react';
+import { Pagination, Button } from '@mui/material';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import { Card } from '../../../components/card/card';
+import { userService } from '../../../services/user.service';
+import type { ServicesData } from '../../../types';
+import { SelectComponent } from '../../catalog-page/ui/select-component/select-component';
+import { SearchInput } from '../../catalog-page/ui/search-input/search-input';
+import { CARDS_ON_PAGE, PAGINATION_STYLE } from '../../catalog-page/constants';
+import { environment } from '../../../assets/environment/environment';
+import catalogStyles from '../../catalog-page/catalog-page.module.css';
+import './ServicesPage.css';
+
+const BASE_URL = environment.baseUrl;
+
+export const ServicesPage = () => {
+  const [data, setData] = useState<ServicesData>();
+  const [category, setCategory] = useState<string[]>([]);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  const loadServices = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `${BASE_URL}/services?page=${page}&count=${CARDS_ON_PAGE}${
+          category ? `&categories=${category}` : ''
+        }${search ? `&search=${search}` : ''}`
+      );
+      const result: ServicesData = await response.json();
+      setData(result);
+    } catch (err) {
+      console.error('Failed to load services:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, category, search]);
+
+  useEffect(() => {
+    loadServices();
+  }, [loadServices]);
+
+  const handleDelete = async (id: number) => {
+    if (window.confirm('Are you sure you want to delete this service?')) {
+      try {
+        await userService.deleteService(id);
+        if (data?.data) {
+          setData({
+            ...data,
+            data: data.data.filter((s) => s.id !== id),
+          });
+        }
+      } catch {
+        alert('Delete failed');
+      }
+    }
+  };
+
+  return (
+    <main className={catalogStyles.main}>
+      <section className={catalogStyles.catalog}>
+        <div className={catalogStyles.container + ' page-container'}>
+          <div className={catalogStyles.wrapper}>
+            <div
+              className="admin-header-block"
+              style={{ marginBottom: '30px' }}
+            >
+              <h1 className={catalogStyles.title}>Admin Service Management</h1>
+
+              <Button
+                variant="contained"
+                startIcon={<AutoAwesomeIcon />}
+                onClick={() => console.log('Navigate to AI Generation page')}
+                sx={{
+                  backgroundColor: '#074733',
+                  '&:hover': { backgroundColor: '#063526' },
+                  mt: 2,
+                  textTransform: 'none',
+                  borderRadius: '8px',
+                  padding: '10px 20px',
+                  fontWeight: 'bold',
+                }}
+              >
+                AI Generation
+              </Button>
+            </div>
+
+            <div className={catalogStyles.content}>
+              <div className={catalogStyles.filters}>
+                <div className={catalogStyles.categories}>
+                  <SelectComponent
+                    selectedCategories={category}
+                    setSelectedCategories={(val: string[]) => {
+                      setCategory(val);
+                      setPage(1);
+                    }}
+                  />
+                </div>
+                <div className={catalogStyles.search}>
+                  <SearchInput search={search} setSearch={setSearch} />
+                </div>
+              </div>
+
+              <div className={catalogStyles.cards}>
+                {loading && !data?.data ? (
+                  <p>Loading...</p>
+                ) : (
+                  data?.data?.map((item) => (
+                    <Card
+                      key={item.id}
+                      data={item}
+                      handleClick={() => {}}
+                      isAdminMode={true}
+                      onDelete={handleDelete}
+                      onUpdateSuccess={loadServices}
+                    />
+                  ))
+                )}
+              </div>
+
+              {data && data.pages > 1 && (
+                <Pagination
+                  count={data.pages}
+                  page={page}
+                  onChange={(_, value) => setPage(value)}
+                  variant="outlined"
+                  shape="rounded"
+                  sx={PAGINATION_STYLE}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+};
