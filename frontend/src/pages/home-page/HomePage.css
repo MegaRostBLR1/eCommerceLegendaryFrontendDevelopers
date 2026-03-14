@@ -42,13 +42,13 @@
 
 /*BESTSELER*/
 .bestseller {
-  position: relative;
-  margin-top: 0;
+  /* position: relative; */
+  /* margin-top: 0; */
 }
 
 .bestseller .page-container {
-  position: relative;
-  z-index: 2;
+  /* position: relative;
+  z-index: 2; */
 }
 
 .bestseller-header {

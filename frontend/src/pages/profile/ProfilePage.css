@@ -3,7 +3,7 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 50px 0 60px; 
+  padding: 50px 0 60px;
 }
 
 .profile-container {
@@ -77,6 +77,28 @@
   cursor: not-allowed;
 }
 
+.profile-select {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  color: #000;
+  padding: 4px 0;
+  font-family: 'Lato-Regular', sans-serif;
+  cursor: pointer;
+  width: 100%;
+}
+
+.role-field .input-field {
+  position: relative;
+}
+
+.profile-select option {
+  background-color: #fdfaf5;
+  color: #000;
+  padding: 10px;
+}
+
 .edit-btn {
   display: block;
   margin: 60px 0 0;
@@ -99,6 +121,14 @@
 
 .edit-btn:hover {
   background-color: #1a4a3a;
+}
+
+.input-field:has(.input-error) {
+  border-bottom-color: red !important;
+}
+
+.input-error {
+  color: red !important;
 }
 
 @media (max-width: 768px) {

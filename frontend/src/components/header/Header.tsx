@@ -59,7 +59,9 @@ const Header = () => {
     if (item.isExit) {
       authorizationService.logoutUser();
       const privateRoutes = ['/profile', '/admin', '/orders', '/stats'];
-      const isPrivatePage = privateRoutes.some(path => location.pathname.startsWith(path));
+      const isPrivatePage = privateRoutes.some((path) =>
+        location.pathname.startsWith(path)
+      );
 
       if (isPrivatePage) {
         navigate('/', { replace: true });
@@ -69,7 +71,6 @@ const Header = () => {
 
     navigate(item.path);
   };
-
 
   const role: Role = isAdmin ? 'admin' : 'user';
   const currentMenuItems = MENU_ITEMS[role];
