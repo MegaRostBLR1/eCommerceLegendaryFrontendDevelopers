@@ -41,6 +41,7 @@ export const LABEL_STYLE = {
 };
 
 export const SELECT_STYLE = {
+  '& .MuiSelect-select': { 'padding-right': '47px !important' },
   '& fieldset': {
     borderColor: '#063526 !important',
   },

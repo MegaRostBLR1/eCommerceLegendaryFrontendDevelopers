@@ -189,12 +189,14 @@ export default function EditCardModal({
           </div>
 
           <SelectComponent
-            multiple
-            label="Categories"
-            category={values.categories}
-            setCategory={(newIds) =>
-              setValues((prev) => ({ ...prev, categories: newIds as number[] }))
-            }
+            selectedCategories={values.categories.map((id) => String(id))}
+            setSelectedCategories={(newValues: string[]) => {
+              const newIds = newValues
+                .filter((val) => val !== 'all')
+                .map((val) => Number(val));
+
+              setValues((prev) => ({ ...prev, categories: newIds }));
+            }}
           />
 
           <TextField

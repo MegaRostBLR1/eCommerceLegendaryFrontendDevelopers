@@ -1,38 +1,52 @@
 import {
+  Checkbox,
   FormControl,
   InputLabel,
+  ListItemText,
   MenuItem,
   Select,
   type SelectChangeEvent,
-  Box,
-  Chip,
 } from '@mui/material';
 import { LABEL_STYLE, SELECT_STYLE } from '../../constants';
 import { Burger } from '../../../../assets/icons/burger';
 import { useEffect, useState } from 'react';
 import type { Category } from '../../../../types';
+import { TEXT_SELECT } from './constants';
 import { environment } from '../../../../assets/environment/environment.ts';
 
 const BASE_URL = environment.baseUrl;
 
-interface SelectComponentProps {
-  category: string | number[];
-  setCategory: (value: string | number[]) => void;
-  multiple?: boolean;
-  label?: string;
-}
-
 export const SelectComponent = ({
-  category,
-  setCategory,
-  multiple = false,
-  label = 'categories',
-}: SelectComponentProps) => {
+  selectedCategories = [],
+  setSelectedCategories = () => {},
+}: {
+  selectedCategories: string[];
+  setSelectedCategories: (value: string[]) => void;
+}) => {
   const [categories, setCategories] = useState<Category[]>([]);
 
-  const handleChange = (event: SelectChangeEvent<typeof category>) => {
-    const { value } = event.target;
-    setCategory(value);
+  const handleChange = (event: SelectChangeEvent<string[]>) => {
+    const {
+      target: { value },
+    } = event;
+    if (!value) return;
+
+    const normalizedValue = Array.isArray(value) ? value : [value];
+    const clickedAll = normalizedValue.includes('all');
+
+    const isEverythingSelected =
+      selectedCategories.length === categories.length;
+
+    if (clickedAll) {
+      if (isEverythingSelected) {
+        setSelectedCategories([]);
+      } else {
+        setSelectedCategories(categories.map((cat) => cat.id.toString()));
+      }
+      return;
+    }
+
+    setSelectedCategories(normalizedValue.filter((v) => v !== 'all'));
   };
 
   useEffect(() => {
@@ -43,40 +57,42 @@ export const SelectComponent = ({
 
   return (
     <FormControl fullWidth>
-      <InputLabel id="category-select-label" sx={LABEL_STYLE}>
-        {label}
+      <InputLabel id="demo-simple-select-label" sx={LABEL_STYLE}>
+        {TEXT_SELECT.CATEGORIES}
       </InputLabel>
       <Select
-        multiple={multiple}
+        multiple
         IconComponent={Burger}
-        labelId="category-select-label"
-        id="category-select"
-        value={category}
-        label={label}
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={selectedCategories || []}
+        label="categories"
         onChange={handleChange}
         sx={SELECT_STYLE}
-        renderValue={
-          multiple
-            ? (selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {(selected as number[]).map((value) => (
-                    <Chip
-                      key={value}
-                      label={
-                        categories.find((c) => c.id === value)?.name || value
-                      }
-                      size="small"
-                    />
-                  ))}
-                </Box>
-              )
-            : undefined
-        }
+        renderValue={(selected) => {
+          if (categories.length > 0 && selected.length === categories.length)
+            return 'All';
+          return categories
+            .filter((item) => selected.includes(item.id.toString()))
+            .map((c) => c.name)
+            .join(', ');
+        }}
       >
-        {!multiple && <MenuItem value="">All</MenuItem>}
+        <MenuItem value="all">
+          <Checkbox
+            checked={
+              categories.length > 0 &&
+              selectedCategories.length === categories.length
+            }
+          />
+          <ListItemText primary="All" />
+        </MenuItem>
         {categories.map((item) => (
-          <MenuItem key={item.id} value={item.id}>
-            {item.name}
+          <MenuItem key={item.id} value={item.id.toString()}>
+            <Checkbox
+              checked={selectedCategories.includes(item.id.toString())}
+            />
+            <ListItemText primary={item.name} />
           </MenuItem>
         ))}
       </Select>
