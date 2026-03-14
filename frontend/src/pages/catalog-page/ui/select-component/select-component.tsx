@@ -6,8 +6,6 @@ import {
   MenuItem,
   Select,
   type SelectChangeEvent,
-  Box,
-  Chip,
 } from '@mui/material';
 import { LABEL_STYLE, SELECT_STYLE } from '../../constants';
 import { Burger } from '../../../../assets/icons/burger';
@@ -18,16 +16,9 @@ import { environment } from '../../../../assets/environment/environment.ts';
 
 const BASE_URL = environment.baseUrl;
 
-interface SelectComponentProps {
-  category: string | number[];
-  setCategory: (value: string | number[]) => void;
-  multiple?: boolean;
-  label?: string;
-}
-
 export const SelectComponent = ({
-  selectedCategories,
-  setSelectedCategories,
+  selectedCategories = [],
+  setSelectedCategories = () => {},
 }: {
   selectedCategories: string[];
   setSelectedCategories: (value: string[]) => void;
@@ -35,19 +26,20 @@ export const SelectComponent = ({
   const [categories, setCategories] = useState<Category[]>([]);
 
   const handleChange = (event: SelectChangeEvent<string[]>) => {
-    const value = Array.isArray(event.target.value)
-      ? event.target.value
-      : [event.target.value];
+    const value = event.target.value;
+    if (!value) return;
+
+    const normalizedValue = Array.isArray(value) ? value : [value];
 
     if (
-      (value?.includes('all') && !selectedCategories.includes('all')) ||
-      !value.length
+      (normalizedValue.includes('all') &&
+        !selectedCategories?.includes('all')) ||
+      !normalizedValue.length
     ) {
       setSelectedCategories(['all']);
       return;
     }
-
-    setSelectedCategories(value.filter((item) => item !== 'all'));
+    setSelectedCategories(normalizedValue.filter((item) => item !== 'all'));
   };
 
   useEffect(() => {
@@ -66,12 +58,15 @@ export const SelectComponent = ({
         IconComponent={Burger}
         labelId="demo-simple-select-label"
         id="demo-simple-select"
-        value={selectedCategories}
+        value={selectedCategories || []}
         label="categories"
         onChange={handleChange}
         sx={SELECT_STYLE}
         renderValue={(selected) => {
+          if (!selected || (Array.isArray(selected) && selected.length === 0))
+            return '';
           if (selected.includes('all')) return 'All';
+
           return categories
             .filter((item) => selected.includes(item.id.toString()))
             .map((c) => c.name)
