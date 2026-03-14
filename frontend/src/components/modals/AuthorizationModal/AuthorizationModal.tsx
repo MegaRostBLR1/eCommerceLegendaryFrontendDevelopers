@@ -20,9 +20,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const BASE_URL = environment.baseUrl;
 export default function OpenLoginModal({
-                                         open,
-                                         onClose,
-                                       }: {
+  open,
+  onClose,
+}: {
   open: boolean;
   onClose: () => void;
 }) {
