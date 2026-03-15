@@ -4,9 +4,9 @@ import { CreateUser } from '../models/users/create-user.model';
 import { UpdateUser } from '../models/users/update-user.model';
 import { hashEssence } from './authorization.service';
 import { UsersResponse } from '../models/users/users-many-response.model';
-import { PageCountQuery } from '../models/query/user-query.model';
 import { USER_SELECT } from './db/constants/user.select';
 import { Prisma } from '@prisma/client';
+import { UsersQuery } from '../models/query/user-query.model';
 
 export const userService = {
     getCandidate: async (email: string, visible?: boolean, select?: Prisma.UserSelect): Promise<UserResponse | null> => {
@@ -16,16 +16,16 @@ export const userService = {
     getUserById: async (id: number): Promise<UserResponse | null> => {
         return await dbService.getUserById(id);
     },
-    getAllUsers: async ({ page: p, count: c }: PageCountQuery): Promise<UsersResponse> => {
+    getAllUsers: async ({ page: p, count: c, search }: UsersQuery): Promise<UsersResponse> => {
         const page = p ? Number(p) : 1;
         const count = c ? Number(c) : 10;
-        const usersCount = await dbService.usersCount();
+        const usersCount = await dbService.usersCount(search);
 
         return {
             page,
             count,
             pages: Math.ceil(usersCount / count),
-            data: await dbService.allUsers(page, count),
+            data: await dbService.allUsers(page, count, search),
         };
     },
     createUser: async (dto: CreateUser): Promise<UserResponse> => {
