@@ -6,7 +6,7 @@ import { CatalogPage } from './pages/catalog-page/catalog-page.tsx';
 
 import { HomePage } from './pages/home-page/HomePage';
 import { ProfilePage } from './pages/profile/ProfilePage';
-import { UsersPage } from './pages/admin/UsersPage';
+import { UsersPage } from './pages/admin/users-page/UsersPage.tsx';
 import { AdminStatsPage } from './pages/admin/AdminStatsPage';
 import { ServicesPage } from './pages/admin/Services/ServicesPage.tsx';
 import { AdminOrdersPage } from './pages/admin/AdminOrdersPage';
