@@ -15,7 +15,7 @@ const mappedServiceCategories = (data: any[]): CategoryResponse[] => {
 
 export const servicesService = {
     mostUsedServices: async (): Promise<ServiceResponse[] | any> => {
-        return (await dbService.servicesOrderByPostsCount(MOST_USED_ORDERS_COUNT)).map(({ servicesCategories, ...d }) => ({
+        return (await dbService.servicesOrderByPostsCount(MOST_USED_ORDERS_COUNT, true)).map(({ servicesCategories, ...d }) => ({
             ...d,
             categories: mappedServiceCategories(servicesCategories),
         }));
@@ -39,7 +39,7 @@ export const servicesService = {
             page,
             count,
             pages: Math.ceil(servicesCount / count),
-            data: (await dbService.getServices(categories, search, true)).map(({ servicesCategories, ...d }) => ({
+            data: (await dbService.getServices(page, count, categories, search, true)).map(({ servicesCategories, ...d }) => ({
                 ...d,
                 categories: mappedServiceCategories(servicesCategories),
             })),
@@ -64,7 +64,7 @@ export const servicesService = {
     },
     updateService: async (
         id: number,
-        { categories, name, discount, amount, workersCount, duration, description }: UpdateService,
+        { categories, name, discount, amount, workersCount, duration, description, visible }: UpdateService,
     ): Promise<ServiceResponse> => {
         const currentServiceCategories = categories?.length ? await dbService.getServicesCategoriesByServiceId(id) : [];
         const { create: c, deletedIds } = utilsService.returnCreateDelete(
@@ -79,6 +79,7 @@ export const servicesService = {
             workersCount,
             duration,
             description,
+            visible,
             servicesCategories: categories
                 ? {
                       create: c.map((categoryId) => ({ categoryId })),
