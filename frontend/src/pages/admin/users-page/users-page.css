@@ -1,0 +1,25 @@
+.users-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.search-input {
+  width: 100%;
+}
+
+.users-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  width: 100%;
+}
+
+.navigation-menu {
+  display: flex;
+  justify-content: center;
+}
