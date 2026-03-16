@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Pagination, Button } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { Card } from '../../../components/card/card';
@@ -9,16 +10,22 @@ import { SearchInput } from '../../catalog-page/ui/search-input/search-input';
 import { CARDS_ON_PAGE, PAGINATION_STYLE } from '../../catalog-page/constants';
 import { environment } from '../../../assets/environment/environment';
 import catalogStyles from '../../catalog-page/catalog-page.module.css';
+import EditCardModal from '../../../components/modals/EditCardModal/EditCardModal';
 import './ServicesPage.css';
+import type { Service } from '../../../types';
 
 const BASE_URL = environment.baseUrl;
 
 export const ServicesPage = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState<ServicesData>();
   const [category, setCategory] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const loadServices = useCallback(async () => {
     try {
@@ -57,6 +64,11 @@ export const ServicesPage = () => {
     }
   };
 
+  const handleEditClick = (service: Service) => {
+    setSelectedService(service);
+    setIsModalOpen(true);
+  };
+
   return (
     <main className={catalogStyles.main}>
       <section className={catalogStyles.catalog}>
@@ -71,7 +83,7 @@ export const ServicesPage = () => {
               <Button
                 variant="contained"
                 startIcon={<AutoAwesomeIcon />}
-                onClick={() => console.log('Navigate to AI Generation page')}
+                onClick={() => navigate('/admin/create-ai')}
                 sx={{
                   backgroundColor: '#074733',
                   '&:hover': { backgroundColor: '#063526' },
@@ -110,7 +122,7 @@ export const ServicesPage = () => {
                     <Card
                       key={item.id}
                       data={item}
-                      handleClick={() => {}}
+                      handleClick={() => handleEditClick(item)}
                       isAdminMode={true}
                       onDelete={handleDelete}
                       onUpdateSuccess={loadServices}
@@ -133,6 +145,18 @@ export const ServicesPage = () => {
           </div>
         </div>
       </section>
+      {selectedService && (
+        <EditCardModal
+          open={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          service={selectedService}
+          onUpdateSuccess={() => {
+            loadServices();
+            setIsModalOpen(false);
+          }}
+          isDraft={false}
+        />
+      )}
     </main>
   );
 };
