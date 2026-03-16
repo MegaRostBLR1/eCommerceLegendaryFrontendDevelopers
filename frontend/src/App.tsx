@@ -9,6 +9,7 @@ import { ProfilePage } from './pages/profile/ProfilePage';
 import { UsersPage } from './pages/admin/users-page/UsersPage.tsx';
 import { AdminStatsPage } from './pages/admin/AdminStatsPage';
 import { ServicesPage } from './pages/admin/Services/ServicesPage.tsx';
+import { AIGenerationPage } from './pages/admin/AIGenerationPage/AIGenerationPage';
 import { AdminOrdersPage } from './pages/admin/AdminOrdersPage';
 import { UserStatsPage } from './pages/user/UserStatsPage';
 import { UserOrdersPage } from './pages/user/UserOrdersPage';
@@ -28,6 +29,7 @@ export function App() {
           <Route path="/admin/stats" element={<AdminStatsPage />} />
           <Route path="/admin/services" element={<ServicesPage />} />
           <Route path="/admin/orders" element={<AdminOrdersPage />} />
+          <Route path="/admin/create-ai" element={<AIGenerationPage />} />
 
           <Route path="/stats" element={<UserStatsPage />} />
           <Route path="/orders" element={<UserOrdersPage />} />

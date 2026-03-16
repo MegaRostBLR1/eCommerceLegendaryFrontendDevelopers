@@ -4,16 +4,16 @@ export type Category = {
   description?: string;
 };
 
-export type Service = {
+export interface Service {
   id: number;
   name: string;
-  discount?: number;
+  discount: number;
   amount: number;
   workersCount: number;
-  duration: string;
+  duration: number;
   description: string;
   categories: Category[];
-};
+}
 
 export type ServicesData = {
   page: number;
@@ -38,6 +38,12 @@ export type UpdateUserDto = Omit<User, 'id' | 'role'> & {
   role?: UserRole;
 };
 
-export type UpdateServiceDto = Partial<Omit<Service, 'id' | 'categories'>> & {
-  categories?: number[];
-};
+export interface UpdateServiceDto {
+  name: string;
+  discount: number;
+  amount: number;
+  workersCount: number;
+  duration: number;
+  description: string;
+  categories: number[];
+}

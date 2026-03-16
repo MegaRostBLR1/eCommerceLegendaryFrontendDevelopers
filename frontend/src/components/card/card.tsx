@@ -2,11 +2,9 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './card.css';
 import type { Service } from '../../types';
 import { CARD_TEXT } from './constants';
-import EditCardModal from '../modals/EditCardModal/EditCardModal.tsx';
 import { IconButton } from '@mui/material';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useState } from 'react';
 
 interface CardProps {
   data: Service;
@@ -21,10 +19,8 @@ export const Card = ({
   handleClick,
   isAdminMode = false,
   onDelete,
-  onUpdateSuccess,
 }: CardProps) => {
   const formatValue = (num: number) => num.toFixed(2);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     id,
@@ -50,7 +46,7 @@ export const Card = ({
                 className={'edit-card-btn'}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setIsModalOpen(true);
+                  handleClick(data);
                 }}
               >
                 <BorderColorIcon fontSize="small" />
@@ -61,7 +57,6 @@ export const Card = ({
                   e.stopPropagation();
                   onDelete?.(id);
                 }}
-                sx={{ color: '#d32f2f' }}
               >
                 <DeleteIcon fontSize="small" />
               </IconButton>
@@ -133,12 +128,6 @@ export const Card = ({
           </button>
         )}
       </div>
-      <EditCardModal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        service={data}
-        onUpdateSuccess={onUpdateSuccess}
-      />
     </>
   );
 };
