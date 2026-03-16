@@ -30,4 +30,11 @@ export const userService = {
       method: 'DELETE',
     });
   },
+
+  async createService(data: UpdateServiceDto) {
+    return apiClient.request<Service>(`/services`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
 };
