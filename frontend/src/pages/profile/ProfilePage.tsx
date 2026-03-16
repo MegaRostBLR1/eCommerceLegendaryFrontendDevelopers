@@ -168,6 +168,7 @@ export const ProfilePage = () => {
                 type="email"
                 name="email"
                 value={user.email || ''}
+                readOnly={true}
                 onChange={(e) => {
                   handleChange(e);
                   setErrors((prev) => prev.filter((item) => item !== 'email'));
@@ -182,21 +183,18 @@ export const ProfilePage = () => {
               <label>Role</label>
 
               {isAdmin ? (
-                <select
+                <input
                   name="role"
-                  value={user.role}
+                  value={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                   onChange={handleChange}
                   className="profile-select"
-                >
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </select>
+                  readOnly={true}
+                />
               ) : (
                 <input
-                  value={user.role}
-                  readOnly
-                  className="input-readonly"
-                  tabIndex={-1}
+                  value={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                  readOnly={true}
+                  className="profile-select"
                 />
               )}
             </div>
