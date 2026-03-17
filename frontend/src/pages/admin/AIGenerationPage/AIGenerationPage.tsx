@@ -10,7 +10,7 @@ import { userService } from '../../../services/user.service';
 import type { Service, UpdateServiceDto, Category } from '../../../types';
 import './AIGenerationPage.css';
 
-import mockAiData from './mock-ai-data.json';
+import { aiService } from './ai.service';
 
 export const AIGenerationPage = () => {
   const [prompt, setPrompt] = useState('');
@@ -22,7 +22,9 @@ export const AIGenerationPage = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://188.127.251.19:3000/api/categories');
+        const response = await fetch(
+          'http://188.127.251.19:3000/api/categories'
+        );
         const data = await response.json();
         setAllCategories(data);
       } catch (error) {
@@ -45,8 +47,9 @@ export const AIGenerationPage = () => {
         : [],
   });
 
-  const handleGenerate = () => {
-    const normalized = mockAiData.map(mapAiResponseToService);
+  const handleGenerate = async () => {
+    const rawData = await aiService.generateServices(prompt);
+    const normalized = rawData.map(mapAiResponseToService);
     setDrafts(normalized);
   };
 
@@ -84,7 +87,9 @@ export const AIGenerationPage = () => {
   return (
     <main className={catalogStyles.main}>
       <section className={catalogStyles.catalog}>
-        <div className={`${catalogStyles.container} page-container ai-page-column`}>
+        <div
+          className={`${catalogStyles.container} page-container ai-page-column`}
+        >
           <div className="ai-input-wrapper">
             <TextField
               className="ai-text-field"
