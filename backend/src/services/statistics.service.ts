@@ -1,29 +1,37 @@
 import { StatisticsQuery } from '../models/query/statistics-query.model';
-// import { dbService } from './db/db.service';
+import { dbService } from './db/db.service';
 import { utilsService } from './utils.service';
+
+const DEFAULT_DAYS_INTERVAL = 7;
 
 export const statisticsService = {
     totalOrdersByDates: async ({ dateStart, dateEnd }: StatisticsQuery) => {
-        console.log(typeof dateStart, dateStart, dateEnd);
-        const intervals = utilsService.weeksBetween(new Date(dateStart as string), new Date(dateEnd as string));
-        // const data = await Promise.all(
-        //     intervals.map(
-        //         async ({ startDate, endDate }) => ({
-        //             startDate,
-        //             endDate,
-        //             count: await dbService.totalOrdersByDates(startDate, new Date(endDate.setHours(23, 59, 59, 999))),
-        //         }),
-        //     ),
-        // );
+        const intervals = utilsService.splitDateRangeByDays(new Date(dateStart as string), new Date(dateEnd as string), DEFAULT_DAYS_INTERVAL);
+        const data = await Promise.all(
+            intervals.map(async ({ startDate, endDate }) => ({
+                startDate,
+                endDate,
+                count: await dbService.totalOrdersByDates(startDate, endDate),
+            })),
+        );
 
-        return intervals;
+        return data;
     },
-    totalUsersOrdersByDates: async (_q: StatisticsQuery) => {
-        return [];
+    totalUsersOrdersByDates: async ({ dateStart, dateEnd }: StatisticsQuery) => {
+        return (await dbService.totalUsersOrdersByDates(new Date(dateStart as string), new Date(dateEnd as string))).map(({ _count, ...i }) => ({
+            count: _count.orders,
+            ...i,
+        }));
     },
-    userOrdersByDates: async (id: number, _q: StatisticsQuery) => {
-        console.log('ID', id);
+    userOrdersByDates: async (id: number, { dateStart, dateEnd }: StatisticsQuery) => {
+        const intervals = utilsService.splitDateRangeByDays(new Date(dateStart as string), new Date(dateEnd as string), DEFAULT_DAYS_INTERVAL);
 
-        return [];
+        return await Promise.all(
+            intervals.map(async ({ startDate, endDate }) => ({
+                startDate,
+                endDate,
+                count: await dbService.totalOrdersByDates(startDate, endDate, id),
+            })),
+        );
     },
 };
