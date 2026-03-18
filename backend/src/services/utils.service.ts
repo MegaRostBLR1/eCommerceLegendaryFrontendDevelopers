@@ -1,5 +1,11 @@
 import { difference } from 'lodash';
 
+export function addHours(date: Date, hours: number) {
+    date.setHours(date.getHours() + hours);
+
+    return date;
+}
+
 export const utilsService = {
     returnCreateDelete: (previous: number[], current: number[]): { create: number[]; deletedIds: number[] } => {
         if (!current) return { create: [], deletedIds: [] };
@@ -11,26 +17,25 @@ export const utilsService = {
 
         return str.split(',').map((i) => Number(i.trim()));
     },
-    weeksBetween: (dateStart: Date, dateEnd: Date) => {
-        let sDate = new Date(dateStart.getTime());
-        let eDate;
-        const dateArr = [];
-        const oneDayInMs = 24 * 60 * 60 * 1000;
+    splitDateRangeByDays: (start: Date, end: Date, maxDays: number) => {
+        let result = [];
+        let currentStart = new Date(start);
+        console.log('CURRENT START', currentStart);
 
-        while (sDate <= dateEnd) {
-            const dayOfWeek = sDate.getDay();
-            const daysUntilWeekend = 6 - dayOfWeek;
-            const potentialEndDate = new Date(sDate.getTime() + daysUntilWeekend * oneDayInMs);
+        while (currentStart < end) {
+            let potentialEnd = new Date(currentStart.getFullYear(), currentStart.getMonth(), currentStart.getDate() + maxDays);
+            let currentEnd = potentialEnd <= end ? potentialEnd : new Date(end);
 
-            eDate = potentialEndDate > dateEnd ? new Date(dateEnd.getTime()) : potentialEndDate;
-
-            dateArr.push({
-                startDate: new Date(sDate.getTime()),
-                endDate: new Date(eDate.getTime()),
+            const s = currentStart;
+            const e = currentEnd;
+            result.push({
+                startDate: addHours(s, 3),
+                endDate: e,
             });
 
-            sDate.setDate(eDate.getDate() + 1);
+            currentStart = new Date(currentEnd);
         }
-        return dateArr;
+
+        return result;
     },
 };
