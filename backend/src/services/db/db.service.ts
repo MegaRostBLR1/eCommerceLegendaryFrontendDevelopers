@@ -133,9 +133,23 @@ export const dbService = {
     updateOrder: async (id: number, data: Prisma.OrderUncheckedUpdateInput) => {
         return await db.order.update({ where: { id }, data, select: ORDER_SELECT });
     },
-    totalOrdersByDates: async (dateStart: Date, dateEnd: Date): Promise<number> => {
+    totalOrdersByDates: async (dateStart: Date, dateEnd: Date, userId?: number): Promise<number> => {
         return db.order.count({
-            where: { startDate: { gte: dateStart, lte: dateEnd } },
+            where: { startDate: { gte: dateStart, lte: dateEnd }, userId },
+        });
+    },
+    totalUsersOrdersByDates: async (dateStart: Date, dateEnd: Date) => {
+        console.log(dateStart, dateEnd);
+
+        return await db.user.findMany({
+            select: {
+                ...USER_SELECT,
+                _count: {
+                    select: {
+                        orders: true,
+                    },
+                },
+            },
         });
     },
 };
