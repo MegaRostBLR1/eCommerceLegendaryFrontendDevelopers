@@ -13,6 +13,7 @@ import { AIGenerationPage } from './pages/admin/AIGenerationPage/AIGenerationPag
 import { AdminOrdersPage } from './pages/admin/AdminOrdersPage';
 import { UserStatsPage } from './pages/user/UserStatsPage';
 import { UserOrdersPage } from './pages/user/UserOrdersPage';
+import {NotFoundPage} from './pages/NotFoundPage/NotFoundPage.tsx';
 
 export function App() {
   return (
@@ -33,6 +34,7 @@ export function App() {
 
           <Route path="/stats" element={<UserStatsPage />} />
           <Route path="/orders" element={<UserOrdersPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
       <Footer />

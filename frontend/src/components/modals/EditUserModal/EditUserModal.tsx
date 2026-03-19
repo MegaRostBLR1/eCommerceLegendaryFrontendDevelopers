@@ -93,9 +93,12 @@ export default function EditUserModal({
         onClose();
         if (onUpdateSuccess) onUpdateSuccess();
       }, 600);
-    } catch (error: any) {
-      const msg = error.response?.data?.errors?.[0]?.msg || 'Failed to save changes';
-      setSnackMessage(msg);
+    } catch (error) {
+      if (error instanceof Error) {
+        setSnackMessage(error.message);
+      } else {
+        setSnackMessage(String(error));
+      }
       setSnackOpen(true);
     } finally {
       setIsSubmitting(false);
@@ -132,7 +135,7 @@ export default function EditUserModal({
         <DialogContent className="edit-card-modal-dialog-content" sx={{ p: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
           <TextField name="firstName" label="Name" variant="standard" fullWidth value={values.firstName} onChange={handleChange} />
           <TextField name="lastName" label="Last name" variant="standard" fullWidth value={values.lastName} onChange={handleChange} />
-          <TextField name="patronymic" label="Surname" variant="standard" fullWidth value={values.patronymic} onChange={handleChange} />
+          <TextField name="patronymic" label="Patronymic" variant="standard" fullWidth value={values.patronymic} onChange={handleChange} />
           <TextField name="email" label="E-mail" variant="standard" fullWidth value={values.email} onChange={handleChange} />
           <FormControl variant="standard" fullWidth>
             <InputLabel id="role-select-label">Role</InputLabel>
