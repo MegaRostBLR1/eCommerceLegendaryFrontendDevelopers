@@ -27,10 +27,12 @@ export const UsersPage = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [inputValue, setInputValue] = useState('');
+  const [debouncedValue, setDebouncedValue] = useState('');
 
   const loadUsers = useCallback(async () => {
     try {
-      const response = await fetch(`${BASE_URL}/users?page=${page}&count=6`, {
+      const response = await fetch(`${BASE_URL}/users?page=${page}&count=8`, {
         headers: {
           Authorization: `${localStorage.getItem('token')}`,
         },
@@ -46,7 +48,10 @@ export const UsersPage = () => {
   }, [page]);
 
   useEffect(() => {
-    if (!authorizationService.isAuthUser() || !authorizationService.userIsAdmin()) {
+    if (
+      !authorizationService.isAuthUser() ||
+      !authorizationService.userIsAdmin()
+    ) {
       navigate('/', { replace: true });
       return;
     }
@@ -58,12 +63,23 @@ export const UsersPage = () => {
     fetchData();
   }, [navigate, loadUsers]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(inputValue);
+      console.log('Запрос с текстом:', inputValue);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [inputValue]);
+
   return (
     <div className={'users-page-container'} data-testid="users-page-container">
       <div className={'search-input'}>
         <TextField
+          value={inputValue}
           label="Enter user e-mail"
           variant="outlined"
+          onChange={(e) => setInputValue(e.target.value)}
           sx={{
             width: '100%',
             height: '60px',
@@ -79,8 +95,12 @@ export const UsersPage = () => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton edge="end" onClick={() => console.log('Search')} aria-label="Search">
-                  <SearchIcon sx={{ color: '#063526' }} />
+                <IconButton
+                  edge="end"
+                  aria-label="Search"
+                  disabled={true}
+                >
+                  <SearchIcon sx={{ color: '#063526' }}/>
                 </IconButton>
               </InputAdornment>
             ),
@@ -101,7 +121,7 @@ export const UsersPage = () => {
           />
         ))}
       </div>
-      <div className={'navigation-menu'}  data-testid="navigation-menu">
+      <div className={'navigation-menu'} data-testid="navigation-menu">
         <Pagination
           count={totalPages}
           page={page}

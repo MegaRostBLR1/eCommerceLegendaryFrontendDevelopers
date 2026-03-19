@@ -50,7 +50,7 @@ export function HomePage() {
         <div className="page-container">
           <div className="bestseller-header">
             <h2 className="bestseller-title">A HIT OF SALES</h2>
-            <a className="bestseller-link" href="/catalog/services">
+            <a className="bestseller-link" href="/catalog">
               <span>All services</span>
               <ArrowForwardIosIcon className="bestseller-arrow-right" />
             </a>
