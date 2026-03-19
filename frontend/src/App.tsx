@@ -24,7 +24,7 @@ export function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/catalog" element={<CatalogPage />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path='/about' element={<AboutPage />} />
+          <Route path="/about" element={<AboutPage />} />
 
           <Route path="/admin/users/:id" element={<ProfilePage />} />
           <Route path="/admin/users" element={<UsersPage />} />
