@@ -154,7 +154,7 @@ export const ProfilePage = () => {
             </div>
 
             <div className="input-field">
-              <label>Surname</label>
+              <label>Patronymic</label>
               <input
                 name="patronymic"
                 value={user.patronymic || ''}
