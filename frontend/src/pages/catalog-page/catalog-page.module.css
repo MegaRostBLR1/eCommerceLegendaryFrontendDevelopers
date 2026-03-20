@@ -71,3 +71,16 @@
   column-gap: 16px;
   row-gap: 12px;
 }
+
+.loaderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 300px;
+  grid-column: 1 / -1;
+}
+
+.spinner {
+  color: #074733 !important;
+}

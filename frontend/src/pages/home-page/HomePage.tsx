@@ -1,5 +1,6 @@
 import './HomePage.css';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { CircularProgress, Box } from '@mui/material';
 import { Card } from '../../components/card/card';
 import { AnimationCube } from './ui/animation-cube/animation-cube';
 import logoHome from '../../assets/icons/logoHome.svg';
@@ -16,11 +17,19 @@ export function HomePage() {
   const [open, setOpen] = useState(false);
   const [currentService, setCurrentService] = useState<Service>();
   const [data, setData] = useState<Service[]>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch(`${BASE_URL}/services/most/used`)
       .then((response) => response.json())
-      .then((data: Service[]) => setData(data));
+      .then((data: Service[]) => {
+        setData(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
   }, []);
 
   const handleOpenModal = (service: Service) => {
@@ -53,13 +62,19 @@ export function HomePage() {
             </a>
           </div>
           <div className="bestseller-wrapper">
-            {data?.map((item) => (
-              <Card
-                key={item.id}
-                data={item}
-                handleClick={() => handleOpenModal(item)}
-              />
-            ))}
+            {loading ? (
+              <Box className="loader-container">
+                <CircularProgress className="custom-spinner" size={60} />
+              </Box>
+            ) : (
+              data?.map((item) => (
+                <Card
+                  key={item.id}
+                  data={item}
+                  handleClick={() => handleOpenModal(item)}
+                />
+              ))
+            )}
           </div>
         </div>
       </section>
