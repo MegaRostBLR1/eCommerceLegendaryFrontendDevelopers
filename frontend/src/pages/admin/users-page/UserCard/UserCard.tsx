@@ -6,14 +6,14 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 import EditUserModal from '../../../../components/modals/EditUserModal/EditUserModal.tsx';
 
 export const UserCard = ({
-                           userId,
-                           userFirstName,
-                           userLastName,
-                           userEmail,
-                           userRole,
-                           userPatronymic,
-                           onRefresh,
-                         }: {
+  userId,
+  userFirstName,
+  userLastName,
+  userEmail,
+  userRole,
+  userPatronymic,
+  onRefresh,
+}: {
   userId: number;
   userFirstName: string;
   userLastName: string;
@@ -41,7 +41,7 @@ export const UserCard = ({
             <span>{userLastName}</span>
             <span>{userPatronymic}</span>
           </div>
-          <div className={"email-and-role"}>
+          <div className={'email-and-role'}>
             <span>E-mail: {userEmail}</span>
             <span>Role: {userRole}</span>
           </div>

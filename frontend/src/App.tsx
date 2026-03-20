@@ -3,6 +3,7 @@ import Header from './components/header/Header';
 import Footer from './components/footer/Footer';
 import { Routes, Route } from 'react-router-dom';
 import { CatalogPage } from './pages/catalog-page/catalog-page.tsx';
+import { AboutPage } from './pages/about-page/AboutPage.tsx';
 
 import { HomePage } from './pages/home-page/HomePage';
 import { ProfilePage } from './pages/profile/ProfilePage';
@@ -13,6 +14,7 @@ import { AIGenerationPage } from './pages/admin/AIGenerationPage/AIGenerationPag
 import { AdminOrdersPage } from './pages/admin/AdminOrdersPage';
 import { UserStatsPage } from './pages/user/UserStatsPage';
 import { UserOrdersPage } from './pages/user/UserOrdersPage';
+import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage.tsx';
 
 export function App() {
   return (
@@ -23,6 +25,7 @@ export function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/catalog" element={<CatalogPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/about" element={<AboutPage />} />
 
           <Route path="/admin/users/:id" element={<ProfilePage />} />
           <Route path="/admin/users" element={<UsersPage />} />
@@ -33,6 +36,7 @@ export function App() {
 
           <Route path="/stats" element={<UserStatsPage />} />
           <Route path="/orders" element={<UserOrdersPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
       <Footer />

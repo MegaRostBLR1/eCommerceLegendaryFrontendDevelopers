@@ -11,7 +11,6 @@ vi.mock('../../../services/authorization-service.ts', () => ({
 }));
 
 describe('UsersPage Component', () => {
-
   it('should render the main users page container', () => {
     render(
       <MemoryRouter>

@@ -1,0 +1,14 @@
+.not-found-message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #063526;
+  padding-top: 100px;
+}
+
+.not-found-message-container a {
+  text-decoration: none;
+  color: #063526;
+}
