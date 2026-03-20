@@ -40,17 +40,6 @@
   word-wrap: break-word;
 }
 
-/*BESTSELER*/
-.bestseller {
-  /* position: relative; */
-  /* margin-top: 0; */
-}
-
-.bestseller .page-container {
-  /* position: relative;
-  z-index: 2; */
-}
-
 .bestseller-header {
   display: flex;
   justify-content: space-between;
@@ -92,6 +81,18 @@
   align-items: stretch;
   justify-content: center;
   gap: var(--space-lg);
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 300px;
+}
+
+.custom-spinner {
+  color: #074733 !important;
 }
 
 /*MEDIA*/

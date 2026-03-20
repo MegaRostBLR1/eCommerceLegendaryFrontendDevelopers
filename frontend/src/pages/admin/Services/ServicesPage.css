@@ -1,0 +1,29 @@
+.admin-header-block {
+  margin-bottom: 30px;
+}
+
+.ai-gen-button {
+  background-color: #074733 !important;
+  margin-top: 16px !important;
+  text-transform: none !important;
+  border-radius: 8px !important;
+  padding: 10px 20px !important;
+  font-weight: bold !important;
+}
+
+.ai-gen-button:hover {
+  background-color: #063526 !important;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 300px;
+  grid-column: 1 / -1;
+}
+
+.custom-spinner {
+  color: #074733 !important;
+}

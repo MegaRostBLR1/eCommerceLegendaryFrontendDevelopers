@@ -159,8 +159,8 @@ export default function EditCardModal({
         duration: Number(values.duration) || 0,
         description: values.description,
         categories: values.categories.map((id) => {
-           const found = availableCategories.find(c => c.id === id);
-           return found ? found : { id, name: '', description: '' };
+          const found = availableCategories.find((c) => c.id === id);
+          return found ? found : { id, name: '', description: '' };
         }) as Category[],
       };
       await onSendToServer(dataToPublish);

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Pagination, Button } from '@mui/material';
+import { Pagination, Button, CircularProgress, Box } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { Card } from '../../../components/card/card';
 import { userService } from '../../../services/user.service';
@@ -74,25 +74,14 @@ export const ServicesPage = () => {
       <section className={catalogStyles.catalog}>
         <div className={catalogStyles.container + ' page-container'}>
           <div className={catalogStyles.wrapper}>
-            <div
-              className="admin-header-block"
-              style={{ marginBottom: '30px' }}
-            >
+            <div className="admin-header-block">
               <h1 className={catalogStyles.title}>Admin Service Management</h1>
 
               <Button
                 variant="contained"
+                className="ai-gen-button"
                 startIcon={<AutoAwesomeIcon />}
                 onClick={() => navigate('/admin/create-ai')}
-                sx={{
-                  backgroundColor: '#074733',
-                  '&:hover': { backgroundColor: '#063526' },
-                  mt: 2,
-                  textTransform: 'none',
-                  borderRadius: '8px',
-                  padding: '10px 20px',
-                  fontWeight: 'bold',
-                }}
               >
                 AI Generation
               </Button>
@@ -115,8 +104,10 @@ export const ServicesPage = () => {
               </div>
 
               <div className={catalogStyles.cards}>
-                {loading && !data?.data ? (
-                  <p>Loading...</p>
+                {loading ? (
+                  <Box className="loader-container">
+                    <CircularProgress className="custom-spinner" size={60} />
+                  </Box>
                 ) : (
                   data?.data?.map((item) => (
                     <Card

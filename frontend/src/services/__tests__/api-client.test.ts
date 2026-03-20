@@ -63,7 +63,10 @@ describe('ApiClient', () => {
     });
 
     await expect(apiClient.request('/nonexistent')).rejects.toThrow(ApiError);
-    await expect(apiClient.request('/nonexistent')).rejects.toHaveProperty('status', 404);
+    await expect(apiClient.request('/nonexistent')).rejects.toHaveProperty(
+      'status',
+      404
+    );
   });
 
   it('should handle POST request with custom body', async () => {
