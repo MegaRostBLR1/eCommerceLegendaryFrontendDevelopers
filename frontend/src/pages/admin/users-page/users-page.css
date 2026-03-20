@@ -6,6 +6,8 @@
   gap: 32px;
   max-width: 1200px;
   margin: 0 auto;
+  min-height: calc(100vh - 80px);
+  box-sizing: border-box;
 }
 
 .search-input {
@@ -17,9 +19,15 @@
   grid-template-columns: 1fr 1fr;
   gap: 24px;
   width: 100%;
+  min-height: 600px;
+  align-content: start;
+  flex-grow: 1;
 }
 
 .navigation-menu {
   display: flex;
   justify-content: center;
+  align-self: stretch;
+  margin-top: auto;
+  padding-top: 20px;
 }

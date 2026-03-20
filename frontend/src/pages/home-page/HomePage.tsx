@@ -47,7 +47,7 @@ export function HomePage() {
             <h2 className="bestseller-title">
               {HOME_UI.BESTSELLER_BLOCK.TITLE}
             </h2>
-            <a className="bestseller-link" href="/catalog/services">
+            <a className="bestseller-link" href="/catalog">
               <span>{HOME_UI.BESTSELLER_BLOCK.LINK_TEXT}</span>
               <ArrowForwardIosIcon className="bestseller-arrow-right" />
             </a>
