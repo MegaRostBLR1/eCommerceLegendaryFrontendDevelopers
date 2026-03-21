@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import type { Service } from '../../types';
 import { HOME_UI } from './constants';
 import { environment } from '../../assets/environment/environment.ts';
+import { authorizationService } from '../../services/authorization-service.ts';
 
 const BASE_URL = environment.baseUrl;
 
@@ -33,6 +34,10 @@ export function HomePage() {
   }, []);
 
   const handleOpenModal = (service: Service) => {
+    if (!authorizationService.isAuthUser()) {
+      return;
+    }
+
     setCurrentService(service);
     setOpen(true);
   };
@@ -78,7 +83,7 @@ export function HomePage() {
           </div>
         </div>
       </section>
-      {createPortal(
+      {open && createPortal(
         <OpenOrderForm
           open={open}
           onClose={() => setOpen(false)}
