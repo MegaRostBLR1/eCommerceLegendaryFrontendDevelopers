@@ -6,6 +6,7 @@ import { AnimationCube } from './ui/animation-cube/animation-cube';
 import logoHome from '../../assets/icons/logoHome.svg';
 import { createPortal } from 'react-dom';
 import OpenOrderForm from '../../components/modals/OrderForm/OrderForm';
+import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal.tsx';
 import { useEffect, useState } from 'react';
 import type { Service } from '../../types';
 import { HOME_UI } from './constants';
@@ -16,6 +17,7 @@ const BASE_URL = environment.baseUrl;
 
 export function HomePage() {
   const [open, setOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [currentService, setCurrentService] = useState<Service>();
   const [data, setData] = useState<Service[]>();
   const [loading, setLoading] = useState(true);
@@ -34,10 +36,11 @@ export function HomePage() {
   }, []);
 
   const handleOpenModal = (service: Service) => {
-    if (!authorizationService.isAuthUser()) {
+    const isAuth = authorizationService.isAuthUser();
+    if (!isAuth) {
+      setIsAuthModalOpen(true);
       return;
     }
-
     setCurrentService(service);
     setOpen(true);
   };
@@ -88,6 +91,14 @@ export function HomePage() {
           open={open}
           onClose={() => setOpen(false)}
           service={currentService}
+        />,
+        document.body
+      )}
+
+      {createPortal(
+        <AuthorizationModal
+          open={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
         />,
         document.body
       )}
