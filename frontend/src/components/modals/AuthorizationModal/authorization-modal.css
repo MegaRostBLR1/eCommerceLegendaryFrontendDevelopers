@@ -51,3 +51,7 @@
 .MuiButton-root.confirm-send-btn :disabled {
   cursor: not-allowed;
 }
+
+.css-gvsr2d-MuiPaper-root-MuiDialog-paper {
+    padding: 0 0 20px 0 !important;
+}
