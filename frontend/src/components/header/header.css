@@ -142,13 +142,13 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  gap: 4px;
+  gap: 2px;
 }
 
 .profile-email {
   font-size: 10px;
   font-weight: 500;
-  color: #333;
+  color: #063526;
   text-align: center;
   line-height: 1.2;
   max-width: 150px;
