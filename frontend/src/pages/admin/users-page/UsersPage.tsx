@@ -114,7 +114,9 @@ export const UsersPage = () => {
         />
       </div>
       <div className={'users-container'} data-testid="users-container">
-        {isLoading ? (<div className="loader-wrapper">Loading...</div>) : users.length > 0 ? (
+        {isLoading ? (
+          <div className="loader-wrapper">Loading...</div>
+        ) : users.length > 0 ? (
           users.map((user) => (
             <UserCard
               key={user.id}
@@ -128,7 +130,14 @@ export const UsersPage = () => {
             />
           ))
         ) : (
-          <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div
+            style={{
+              gridColumn: '1 / -1',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
             <UserNotFound />
           </div>
         )}

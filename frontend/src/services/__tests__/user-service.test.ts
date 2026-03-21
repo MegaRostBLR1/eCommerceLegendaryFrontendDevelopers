@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { userService } from '../user.service.ts';
 import { apiClient } from '../api-client';
-import type {UpdateServiceDto, UpdateUserDto} from "../../types";
+import type { UpdateServiceDto, UpdateUserDto } from '../../types';
 
 vi.mock('../api-client', () => ({
   apiClient: {

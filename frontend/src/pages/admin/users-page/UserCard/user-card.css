@@ -1,7 +1,7 @@
 .user-card-container {
-  border: 1px solid #E0E0E0;
+  border: 1px solid #e0e0e0;
   padding: 24px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   min-height: 120px;
   display: flex;
   align-items: center;
@@ -34,7 +34,7 @@
   font-size: 18px;
   font-weight: 500;
   color: #063526;
-  border-bottom: 1px solid #E0E0E0;
+  border-bottom: 1px solid #e0e0e0;
   padding-bottom: 8px;
   margin-bottom: 8px;
   display: flex;
@@ -55,7 +55,7 @@
 
 .email-and-role span {
   font-size: 12px;
-  color: #A0A0A0;
+  color: #a0a0a0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
