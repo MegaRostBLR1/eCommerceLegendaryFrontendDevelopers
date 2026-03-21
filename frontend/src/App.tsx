@@ -11,9 +11,8 @@ import { UsersPage } from './pages/admin/users-page/UsersPage.tsx';
 import { AdminStatsPage } from './pages/admin/AdminStatsPage';
 import { ServicesPage } from './pages/admin/Services/ServicesPage.tsx';
 import { AIGenerationPage } from './pages/admin/AIGenerationPage/AIGenerationPage';
-import { AdminOrdersPage } from './pages/admin/AdminOrdersPage';
+import { OrdersPage } from './pages/OrdersPage/OrdersPage.tsx';
 import { UserStatsPage } from './pages/user/UserStatsPage';
-import { UserOrdersPage } from './pages/user/UserOrdersPage';
 import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage.tsx';
 
 export function App() {
@@ -26,16 +25,16 @@ export function App() {
           <Route path="/catalog" element={<CatalogPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/about" element={<AboutPage />} />
-
+          <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/admin/orders" element={<OrdersPage />} />
+          <Route path="/orders/:userId" element={<OrdersPage />} />
           <Route path="/admin/users/:id" element={<ProfilePage />} />
           <Route path="/admin/users" element={<UsersPage />} />
           <Route path="/admin/stats" element={<AdminStatsPage />} />
           <Route path="/admin/services" element={<ServicesPage />} />
-          <Route path="/admin/orders" element={<AdminOrdersPage />} />
           <Route path="/admin/create-ai" element={<AIGenerationPage />} />
 
           <Route path="/stats" element={<UserStatsPage />} />
-          <Route path="/orders" element={<UserOrdersPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>

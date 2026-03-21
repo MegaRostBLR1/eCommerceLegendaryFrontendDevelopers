@@ -66,4 +66,8 @@ export const authorizationService = {
       return null;
     }
   },
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  },
 };
