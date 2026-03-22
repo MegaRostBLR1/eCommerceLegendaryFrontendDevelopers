@@ -1,12 +1,12 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import logo from '../../assets/icons/logo.svg';
 import './header.css';
-import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal.tsx';
-import { authorizationService } from '../../services/authorization-service.ts';
+import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal';
+import { authorizationService } from '../../services/authorization-service';
 
 type Role = 'admin' | 'user';
 type MenuItemType =
@@ -37,16 +37,36 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
 
 const Header = () => {
   const navigate = useNavigate();
-
-  const isAuth = authorizationService.isAuthUser();
-  const isAdmin = authorizationService.userIsAdmin();
-
-const user = authorizationService.getUser();
-const userEmail = user?.email || '';
-
+  const [isAuth, setIsAuth] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const isMenuOpen = Boolean(anchorEl);
+
+  const checkAuth = () => {
+    const auth = authorizationService.isAuthUser();
+    const admin = authorizationService.userIsAdmin();
+    const user = authorizationService.getUser();
+
+    setIsAuth(auth);
+    setIsAdmin(admin);
+    setUserEmail(user?.email || null);
+  };
+
+  useEffect(() => {
+    checkAuth();
+
+    const handleAuthChange = () => {
+      checkAuth();
+    };
+
+    window.addEventListener('auth-change', handleAuthChange);
+
+    return () => {
+      window.removeEventListener('auth-change', handleAuthChange);
+    };
+  }, []);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -61,6 +81,7 @@ const userEmail = user?.email || '';
 
     if (item.isExit) {
       authorizationService.logoutUser();
+      window.dispatchEvent(new CustomEvent('auth-change'));
       const privateRoutes = ['/profile', '/admin', '/orders', '/stats'];
       const isPrivatePage = privateRoutes.some((path) =>
         location.pathname.startsWith(path)
