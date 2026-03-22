@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
@@ -41,18 +41,8 @@ const Header = () => {
   const isAuth = authorizationService.isAuthUser();
   const isAdmin = authorizationService.userIsAdmin();
 
-  const [userEmail, setUserEmail] = useState<string>('');
-
-  useEffect(() => {
-    if (isAuth) {
-      const user = authorizationService.getUser();
-      if (user && user.email) {
-        setUserEmail(user.email);
-      }
-    } else {
-      setUserEmail('');
-    }
-  }, [isAuth]);
+const user = authorizationService.getUser();
+const userEmail = user?.email || '';
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);

@@ -10,6 +10,7 @@ interface CardProps {
   data: Service;
   handleClick: (service: Service) => void;
   isAdminMode?: boolean;
+  isOrderCard?: boolean;
   onDelete?: (id: number) => void;
   onUpdateSuccess?: () => void;
 }
@@ -18,6 +19,7 @@ export const Card = ({
   data,
   handleClick,
   isAdminMode = false,
+  isOrderCard = false,
   onDelete,
 }: CardProps) => {
   const formatValue = (num: number) => num.toFixed(2);
@@ -116,7 +118,7 @@ export const Card = ({
           </div>
         </div>
 
-        {!isAdminMode && (
+        {!isAdminMode && !isOrderCard && (
           <button
             className="bestseller-card-button"
             onClick={() => handleClick(data)}
