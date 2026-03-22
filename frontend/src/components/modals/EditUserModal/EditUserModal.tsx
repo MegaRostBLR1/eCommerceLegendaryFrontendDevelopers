@@ -34,12 +34,7 @@ interface EditUserModalProps {
   onUpdateSuccess?: () => void;
 }
 
-export default function EditUserModal({
-  open,
-  onClose,
-  user,
-  onUpdateSuccess,
-}: EditUserModalProps) {
+export default function EditUserModal({open, onClose, user, onUpdateSuccess, }: EditUserModalProps) {
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,6 +70,13 @@ export default function EditUserModal({
 
   const handleConfirm = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!values.firstName || !values.lastName || !values.email || !values.role) {
+      setSnackMessage('Please fill all required fields');
+      setSnackOpen(true);
+      return;
+    }
+
     setIsSubmitting(true);
 
     const updateData: UpdateUserDto = {
@@ -116,7 +118,13 @@ export default function EditUserModal({
       />
       <Dialog
         open={open}
-        onClose={onClose}
+        onClose={(_event, reason) => {
+          if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+            return;
+          }
+          onClose();
+        }}
+        disableEscapeKeyDown={true}
         PaperProps={{
           component: 'form',
           onSubmit: handleConfirm,
