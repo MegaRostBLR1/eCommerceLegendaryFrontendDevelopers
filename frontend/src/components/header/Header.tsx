@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
@@ -40,6 +40,9 @@ const Header = () => {
 
   const isAuth = authorizationService.isAuthUser();
   const isAdmin = authorizationService.userIsAdmin();
+
+const user = authorizationService.getUser();
+const userEmail = user?.email || '';
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -107,16 +110,24 @@ const Header = () => {
               </IconButton>
             ) : (
               <>
-                <IconButton
-                  aria-label="Profile"
-                  aria-controls={isMenuOpen ? 'profile-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={isMenuOpen ? 'true' : undefined}
-                  onClick={handleOpenMenu}
-                  className="profileIconButton"
-                >
-                  <PersonOutlineIcon />
-                </IconButton>
+                <div className="profile-wrapper" onClick={handleOpenMenu}>
+                  <IconButton
+                    aria-label="Profile"
+                    aria-controls={isMenuOpen ? 'profile-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={isMenuOpen ? 'true' : undefined}
+                    className="profileIconButton"
+                    sx={{ padding: 0, minWidth: 'auto' }}
+                  >
+                    <PersonOutlineIcon />
+                  </IconButton>
+
+                  {userEmail && (
+                    <span className="profile-email">
+                      {userEmail}
+                    </span>
+                  )}
+                </div>
 
                 <Menu
                   id="profile-menu"

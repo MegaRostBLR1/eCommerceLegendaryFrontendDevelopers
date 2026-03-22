@@ -1,9 +1,8 @@
 :root {
-  --bg-gradient: linear-gradient(
-    181deg,
-    #9c9c9d 0%,
-    #fefaf6 50.96%,
-    #d4d4d4 100%
+  --bg-gradient: radial-gradient(
+    circle,
+    #fefaf6 0%,
+    #d4d4d4 80%
   );
   --title-color: #074733;
   --text-shadow-color: rgba(4, 22, 14, 0.5);

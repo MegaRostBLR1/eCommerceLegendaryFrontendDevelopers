@@ -19,10 +19,8 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const BASE_URL = environment.baseUrl;
-export default function OpenLoginModal({
-  open,
-  onClose,
-}: {
+
+export default function OpenLoginModal({open, onClose}: {
   open: boolean;
   onClose: () => void;
 }) {
@@ -52,7 +50,10 @@ export default function OpenLoginModal({
         });
         if (response.ok) {
           const json = await response.json();
-          authorizationService.setUserInLocalStorage(json);
+          authorizationService.setUserInLocalStorage({
+            ...json,
+            email: userEmail,
+          });
           onClose();
         } else if (response.status === 401) {
           setSnackMessage(errorMessages.wrongPasswordOrEmail);
@@ -70,6 +71,7 @@ export default function OpenLoginModal({
       setSnackOpen(true);
     }
   };
+
   return (
     <>
       <Snackbar
@@ -100,12 +102,18 @@ export default function OpenLoginModal({
         }}
       >
         <DialogTitle className={'create-acc-form-title'}>
+          <div className={'order-form-logo'}>
+            <img src={'/page-logo.svg'} alt="logo"/>
+            <span className={'team-name-order'}>
+              Legendary <br/> Frontend
+            </span>
+          </div>
           <div className={'close-create-acc-form-container'}>
             <IconButton
               className={'close-create-acc-form-btn'}
               onClick={onClose}
             >
-              <CloseOutlinedIcon />
+              <CloseOutlinedIcon/>
             </IconButton>
           </div>
         </DialogTitle>
