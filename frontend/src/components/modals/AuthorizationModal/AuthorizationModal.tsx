@@ -19,8 +19,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const BASE_URL = environment.baseUrl;
-
-export default function OpenLoginModal({open, onClose}: {
+export default function OpenLoginModal({open, onClose,}: {
   open: boolean;
   onClose: () => void;
 }) {
@@ -50,10 +49,7 @@ export default function OpenLoginModal({open, onClose}: {
         });
         if (response.ok) {
           const json = await response.json();
-          authorizationService.setUserInLocalStorage({
-            ...json,
-            email: userEmail,
-          });
+          authorizationService.setUserInLocalStorage(json);
           onClose();
         } else if (response.status === 401) {
           setSnackMessage(errorMessages.wrongPasswordOrEmail);
@@ -71,7 +67,6 @@ export default function OpenLoginModal({open, onClose}: {
       setSnackOpen(true);
     }
   };
-
   return (
     <>
       <Snackbar
