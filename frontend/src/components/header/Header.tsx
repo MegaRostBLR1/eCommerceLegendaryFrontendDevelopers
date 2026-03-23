@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import logo from '../../assets/icons/logo.svg';
 import './header.css';
-import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal.tsx';
-import { authorizationService } from '../../services/authorization-service.ts';
+import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal';
+import { authorizationService } from '../../services/authorization-service';
 
 type Role = 'admin' | 'user';
 type MenuItemType =
@@ -22,14 +22,14 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
   admin: [
     { title: 'Profile', path: '/profile' },
     { title: 'Users', path: '/admin/users' },
-    { title: 'Statistics', path: '/admin/stats' },
+    { title: 'Statistics', path: '/admin/statistics' },
     { title: 'Services', path: '/admin/services' },
     { title: 'Orders', path: '/admin/orders' },
     { title: 'Logout', isExit: true },
   ],
   user: [
     { title: 'Profile', path: '/profile' },
-    { title: 'Statistics', path: '/stats' },
+    { title: 'Statistics', path: '/statistics' },
     { title: 'Orders', path: '/orders' },
     { title: 'Logout', isExit: true },
   ],
@@ -37,13 +37,36 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
 
 const Header = () => {
   const navigate = useNavigate();
-
-  const isAuth = authorizationService.isAuthUser();
-  const isAdmin = authorizationService.userIsAdmin();
-
+  const [isAuth, setIsAuth] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const isMenuOpen = Boolean(anchorEl);
+
+  const checkAuth = () => {
+    const auth = authorizationService.isAuthUser();
+    const admin = authorizationService.userIsAdmin();
+    const user = authorizationService.getUser();
+
+    setIsAuth(auth);
+    setIsAdmin(admin);
+    setUserEmail(user?.email || null);
+  };
+
+  useEffect(() => {
+    checkAuth();
+
+    const handleAuthChange = () => {
+      checkAuth();
+    };
+
+    window.addEventListener('auth-change', handleAuthChange);
+
+    return () => {
+      window.removeEventListener('auth-change', handleAuthChange);
+    };
+  }, []);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -58,7 +81,7 @@ const Header = () => {
 
     if (item.isExit) {
       authorizationService.logoutUser();
-      const privateRoutes = ['/profile', '/admin', '/orders', '/stats'];
+      const privateRoutes = ['/profile', '/admin', '/orders', '/statistics'];
       const isPrivatePage = privateRoutes.some((path) =>
         location.pathname.startsWith(path)
       );
@@ -107,16 +130,24 @@ const Header = () => {
               </IconButton>
             ) : (
               <>
-                <IconButton
-                  aria-label="Profile"
-                  aria-controls={isMenuOpen ? 'profile-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={isMenuOpen ? 'true' : undefined}
-                  onClick={handleOpenMenu}
-                  className="profileIconButton"
-                >
-                  <PersonOutlineIcon />
-                </IconButton>
+                <div className="profile-wrapper" onClick={handleOpenMenu}>
+                  <IconButton
+                    aria-label="Profile"
+                    aria-controls={isMenuOpen ? 'profile-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={isMenuOpen ? 'true' : undefined}
+                    className="profileIconButton"
+                    sx={{ padding: 0, minWidth: 'auto' }}
+                  >
+                    <PersonOutlineIcon />
+                  </IconButton>
+
+                  {userEmail && (
+                    <span className="profile-email">
+                      {userEmail}
+                    </span>
+                  )}
+                </div>
 
                 <Menu
                   id="profile-menu"

@@ -7,62 +7,59 @@ import {
   Button,
   IconButton,
   TextField,
+  Snackbar,
+  InputAdornment,
 } from '@mui/material';
 import React, { useState } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import Snackbar from '@mui/material/Snackbar';
-import { authorizationService } from '../../../services/authorization-service.ts';
-import { environment } from '../../../assets/environment/environment.ts';
-import { errorMessages } from '../../../../constants/errors.ts';
-import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { authorizationService } from '../../../services/authorization-service';
+import { apiService } from '../../../services/api-service.ts';
+import { errorMessages } from '../../../../constants/errors';
+import type { IUserToken } from '../../../types';
 
-const BASE_URL = environment.baseUrl;
-export default function OpenLoginModal({
-  open,
-  onClose,
-}: {
+export default function AuthorizationModal({ open, onClose }: {
   open: boolean;
   onClose: () => void;
 }) {
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+    const formValues = Object.fromEntries(formData.entries());
+
     const emailRegexp = /@/;
     const passwordRegexp = /^(?=.*[A-Z])(?=.*\d).{4,10}$/;
-    const userEmail = data.userEmail.toString();
-    const userPassword = data.password.toString();
-    const user = { email: userEmail, password: userPassword };
+
+    const userEmail = formValues.userEmail.toString();
+    const userPassword = formValues.password.toString();
+    const userPayload = { email: userEmail, password: userPassword };
 
     if (emailRegexp.test(userEmail) && passwordRegexp.test(userPassword)) {
       try {
-        const response = await fetch(`${BASE_URL}/login`, {
+        const result = await apiService<IUserToken>('/login', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-          },
-          body: JSON.stringify(user),
+          body: JSON.stringify(userPayload),
         });
-        if (response.ok) {
-          const json = await response.json();
-          authorizationService.setUserInLocalStorage(json);
-          onClose();
-        } else if (response.status === 401) {
-          setSnackMessage(errorMessages.wrongPasswordOrEmail);
-          setSnackOpen(true);
-        } else {
-          setSnackMessage(errorMessages.errorFromServer);
-          setSnackOpen(true);
-        }
+
+        authorizationService.setUserInLocalStorage(result);
+        window.dispatchEvent(new CustomEvent('auth-change'));
+        onClose();
       } catch (error) {
-        setSnackMessage(`${error}`);
+        const errorMessage = error instanceof Error ? error.message : errorMessages.errorFromServer;
+
+        if (errorMessage.includes('401')) {
+          setSnackMessage(errorMessages.wrongPasswordOrEmail);
+        } else {
+          setSnackMessage(errorMessage);
+        }
+
         setSnackOpen(true);
       }
     } else {
@@ -70,6 +67,7 @@ export default function OpenLoginModal({
       setSnackOpen(true);
     }
   };
+
   return (
     <>
       <Snackbar
@@ -100,6 +98,12 @@ export default function OpenLoginModal({
         }}
       >
         <DialogTitle className={'create-acc-form-title'}>
+          <div className={'order-form-logo'}>
+            <img src={'/page-logo.svg'} alt="logo" />
+            <span className={'team-name-order'}>
+              Legendary <br /> Frontend
+            </span>
+          </div>
           <div className={'close-create-acc-form-container'}>
             <IconButton
               className={'close-create-acc-form-btn'}

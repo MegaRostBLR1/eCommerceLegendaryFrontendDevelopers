@@ -47,3 +47,34 @@ export interface UpdateServiceDto {
   description: string;
   categories: number[];
 }
+
+export interface Order {
+  id: number;
+  startDate: string;
+  date: string;
+  status: number;
+  price: number;
+  quantity: number;
+  description: string;
+  name: string;
+  discount: number;
+  user: {
+    id: number;
+    lastName: string;
+    firstName: string;
+    patronymic: string;
+  };
+}
+
+export interface OrdersResponse {
+  data: Order[];
+  pages: number;
+  total: number;
+}
+
+export interface IUserToken {
+  token: string;
+  user: User;
+  status: string;
+  exp: number;
+}

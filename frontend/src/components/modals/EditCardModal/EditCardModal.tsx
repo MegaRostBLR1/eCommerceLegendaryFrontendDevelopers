@@ -35,16 +35,7 @@ interface EditCardModalProps {
   availableCategories?: Category[];
 }
 
-export default function EditCardModal({
-  open,
-  onClose,
-  service,
-  onUpdateSuccess,
-  isDraft,
-  onLocalUpdate,
-  onSendToServer,
-  availableCategories = [],
-}: EditCardModalProps) {
+export default function EditCardModal({open, onClose, service, onUpdateSuccess, isDraft, onLocalUpdate, onSendToServer, availableCategories = [], }: EditCardModalProps) {
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -159,8 +150,8 @@ export default function EditCardModal({
         duration: Number(values.duration) || 0,
         description: values.description,
         categories: values.categories.map((id) => {
-           const found = availableCategories.find(c => c.id === id);
-           return found ? found : { id, name: '', description: '' };
+          const found = availableCategories.find((c) => c.id === id);
+          return found ? found : { id, name: '', description: '' };
         }) as Category[],
       };
       await onSendToServer(dataToPublish);
@@ -188,7 +179,13 @@ export default function EditCardModal({
       />
       <Dialog
         open={open}
-        onClose={onClose}
+        onClose={(_event, reason) => {
+          if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+            return;
+          }
+          onClose();
+        }}
+        disableEscapeKeyDown={true}
         PaperProps={{
           component: 'form',
           onSubmit: handleConfirm,

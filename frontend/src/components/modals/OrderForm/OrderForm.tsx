@@ -1,4 +1,3 @@
-import './order-form.css';
 import {
   Dialog,
   DialogTitle,
@@ -9,60 +8,97 @@ import {
   TextField,
   Snackbar,
 } from '@mui/material';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Dayjs } from 'dayjs';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import dayjs, { Dayjs } from 'dayjs';
 import React from 'react';
 import type { Service } from '../../../types';
-import { environment } from '../../../assets/environment/environment.ts';
+import { apiService } from '../../../services/api-service.ts';
+import './order-form.css';
 
-const BASE_URL = environment.baseUrl;
+interface OpenOrderFormProps {
+  open: boolean;
+  onClose: () => void;
+  service?: Service;
+  orderId?: number;
+  isEdit?: boolean;
+  onRefresh?: () => void;
+  initialDate?: string;
+}
 
 export default function OpenOrderForm({
   open,
   onClose,
   service,
-}: {
-  open: boolean;
-  onClose: () => void;
-  service?: Service;
-}) {
-  const [date, setDate] = useState<Dayjs | null>(null);
+  orderId,
+  isEdit,
+  onRefresh,
+  initialDate,
+}: OpenOrderFormProps) {
+  const defaultDateTime = dayjs()
+    .add(1, 'day')
+    .set('hour', 8)
+    .set('minute', 0)
+    .set('second', 0);
+
+  const [date, setDate] = useState<Dayjs | null>(
+    initialDate ? dayjs(initialDate) : defaultDateTime
+  );
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
 
-  const handleConfirm = (e: React.FormEvent<HTMLFormElement>) => {
+  const descriptionText = service?.description || 'No description provided';
+
+  const isExpired = useMemo(() => {
+    if (!initialDate) return false;
+    return dayjs(initialDate).isBefore(dayjs(), 'day');
+  }, [initialDate]);
+
+  const handleConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const startDate = date ? date.format('DD.MM.YYYY') : '';
-    const serviceId = service?.id;
-    const price = service?.amount;
+    const startDate = date ? date.toISOString() : null;
 
-    fetch(`${BASE_URL}/orders`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-      },
-      body: JSON.stringify({ startDate, serviceId, price, quantity: 1 }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          onClose();
-        } else {
-          response.json().then((errorData) => {
-            setSnackMessage(errorData.message);
-            setSnackOpen(true);
-          });
+    if (!startDate) return;
+
+    const url = isEdit ? `/orders/${orderId}` : `/orders`;
+    const method = isEdit ? 'PATCH' : 'POST';
+
+    const payload = isEdit
+      ? {
+          startDate,
+          quantity: service?.workersCount || 1,
+          price: service?.amount,
         }
-      })
-      .catch((error) => {
-        setSnackMessage(`${error}`);
-        setSnackOpen(true);
+      : {
+          startDate,
+          serviceId: service?.id,
+          quantity: service?.workersCount || 1,
+          price: service?.amount,
+        };
+
+    if (payload.price === undefined || payload.price === null) {
+      console.error('Ошибка: У услуги не указана цена (amount)');
+    }
+    try {
+      await apiService(url, {
+        method: method,
+        body: JSON.stringify(payload),
       });
+
+      onRefresh?.();
+      onClose();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error creating order';
+      setSnackMessage(errorMessage);
+      setSnackOpen(true);
+    }
   };
+
   return (
     <>
       <Snackbar
@@ -74,80 +110,136 @@ export default function OpenOrderForm({
       />
       <Dialog
         open={open}
-        onClose={onClose}
+        onClose={(_, reason) => {
+          if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
+            onClose();
+          }
+        }}
         PaperProps={{
           component: 'form',
           onSubmit: handleConfirm,
-          sx: {
-            width: '466px',
-            height: '604px',
-            padding: '40px',
-            borderRadius: 0,
-          },
+          sx: { width: '466px', p: '40px', borderRadius: 0 },
         }}
       >
-        <DialogTitle className={'order-form-title'}>
-          <div className={'order-form-logo'}>
-            <img src={'/page-logo.svg'} alt="logo" />
-            <span className={'team-name-order'}>
+        <DialogTitle className="order-form-title">
+          <div className="order-form-logo">
+            <img src="/page-logo.svg" alt="logo" />
+            <span className="team-name-order">
               Legendary <br /> Frontend
             </span>
           </div>
-          <div className={'close-order-form-container'}>
-            <IconButton className={'close-order-form-btn'} onClick={onClose}>
+          <div className="close-order-form-container">
+            <IconButton onClick={onClose}>
               <CloseOutlinedIcon />
             </IconButton>
           </div>
         </DialogTitle>
-        <DialogContent className={'dialog-content'}>
-          <div className={'order-title-container'}>
-            <span>to order</span>
+
+        <DialogContent className="dialog-content">
+          <div className="order-title-container">
+            <span>{isEdit ? 'edit order' : 'to order'}</span>
           </div>
+
           <TextField
-            name="userName"
-            label={'Name'}
-            variant={'standard'}
-            required={true}
-            className={'order-form-text-field'}
+            label="Service"
+            variant="standard"
+            value={service?.name || ''}
+            fullWidth
+            InputProps={{ readOnly: true, tabIndex: -1 }}
+            sx={{
+              mb: 2,
+              '& .MuiInput-underline:before': {
+                borderBottom: '1px solid rgba(0,0,0,0.12) !important',
+              },
+              '& .MuiInput-underline:after': { display: 'none' },
+            }}
           />
-          <TextField
-            name="service"
-            label={'Service'}
-            variant={'standard'}
-            required={true}
-            value={service?.name}
-            className={'order-form-text-field'}
-          />
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Date"
-              value={date}
-              onChange={(newValue) => setDate(newValue)}
-              slotProps={{
-                textField: {
-                  required: true,
-                  variant: 'standard',
-                  fullWidth: true,
-                  className: 'order-form-text-field',
-                },
+
+          {!isExpired ? (
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Date"
+                value={date}
+                disablePast
+                onChange={(newValue) => setDate(newValue)}
+                slotProps={{
+                  textField: {
+                    required: true,
+                    variant: 'standard',
+                    fullWidth: true,
+                    sx: { mb: 2 },
+                  },
+                }}
+              />
+              <TimePicker
+                label="Time"
+                value={date}
+                onChange={(newValue) => setDate(newValue)}
+                slotProps={{
+                  textField: {
+                    required: true,
+                    variant: 'standard',
+                    fullWidth: true,
+                    sx: { mb: 2 },
+                  },
+                }}
+              />
+            </LocalizationProvider>
+          ) : (
+            <div
+              style={{
+                color: '#d32f2f',
+                textAlign: 'center',
+                fontSize: '14px',
+                fontWeight: 'bold',
               }}
-            />
-          </LocalizationProvider>
-          <span className={'order-form-message'}>
-            Your order has been created. Please wait for confirmation in your
-            profile.
+            >
+              Order date has arrived.
+            </div>
+          )}
+
+          <TextField
+            label="Description"
+            variant="standard"
+            multiline
+            rows={2}
+            value={descriptionText}
+            fullWidth
+            InputProps={{
+              readOnly: true,
+              tabIndex: -1,
+            }}
+            sx={{
+              mb: 2,
+              '& .MuiInput-underline:after': { display: 'none' },
+              '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+                borderBottom: '1px solid rgba(0,0,0,0.42)',
+              },
+            }}
+          />
+
+          <span
+            className="order-form-message"
+            style={{ display: 'block', fontSize: '12px' }}
+          >
+            {isEdit
+              ? 'You can only change the date and time.'
+              : 'Order created.'}
           </span>
         </DialogContent>
-        <DialogActions sx={{ justifyContent: 'center' }}>
-          <Button
-            type={'submit'}
-            variant="contained"
-            className={'confirm-order-btn'}
-          >
-            confirm
-          </Button>
-          <Button onClick={onClose} className={'cancel-order-btn'}>
-            cancel
+
+        <DialogActions sx={{ justifyContent: 'center', gap: 2, pb: 2 }}>
+          {!isExpired && (
+            <Button
+              type="submit"
+              variant="contained"
+              className="confirm-order-btn"
+            >
+              confirm
+            </Button>
+          )}
+          <Button onClick={onClose} className="cancel-order-btn">
+            {isExpired ? 'close' : 'cancel'}
           </Button>
         </DialogActions>
       </Dialog>

@@ -1,0 +1,48 @@
+.orders-page-container {
+  padding: 20px;
+}
+
+.orders-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 16px;
+  row-gap: 32px;
+  margin-top: 24px;
+}
+
+.order-item-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-status-badge {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.status-text {
+  padding: 2px 0;
+}
+
+.status-text.pending {
+  color: #828282;
+}
+
+.status-text.confirmed {
+  color: #074733;
+}
+
+.order-date-text {
+  color: #828282;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}

@@ -1,18 +1,16 @@
-import { Pagination } from '@mui/material';
+import { Pagination, CircularProgress, Box } from '@mui/material';
 import { Card } from '../../components/card/card';
 import styles from './catalog-page.module.css';
 import { CARDS_ON_PAGE, PAGINATION_STYLE } from './constants';
 import { SelectComponent } from './ui/select-component/select-component';
 import { SearchInput } from './ui/search-input/search-input';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import type { Service, ServicesData } from '../../types';
 import { createPortal } from 'react-dom';
 import OpenOrderForm from '../../components/modals/OrderForm/OrderForm';
-import { environment } from '../../assets/environment/environment.ts';
 import { authorizationService } from '../../services/authorization-service.ts';
 import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal.tsx';
-
-const BASE_URL = environment.baseUrl;
+import { apiService } from '../../services/api-service.ts';
 
 export const CatalogPage = () => {
   const [data, setData] = useState<ServicesData>();
@@ -22,6 +20,7 @@ export const CatalogPage = () => {
   const [open, setOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [currentService, setCurrentService] = useState<Service>();
+  const [loading, setLoading] = useState(true);
 
   const handleOpenModal = (service: Service) => {
     const isAuth = authorizationService.isAuthUser();
@@ -33,25 +32,40 @@ export const CatalogPage = () => {
     }
   };
 
-  const getData = () => {
-    fetch(
-      `${BASE_URL}/services?page=${page}&count=${CARDS_ON_PAGE}${selectedCategories.includes('all') ? '' : `&categories=${selectedCategories.join(',')}`}${search ? `&search=${search}` : ''}`
-    )
-      .then((response) => response.json())
-      .then((data: ServicesData) => setData(data));
-  };
+  const getData = useCallback(async () => {
+    setLoading(true);
+
+    const categoriesParam = selectedCategories.includes('all')
+      ? ''
+      : `&categories=${selectedCategories.join(',')}`;
+
+    const searchParam = search ? `&search=${search}` : '';
+
+    const endpoint = `/services?page=${page}&count=${CARDS_ON_PAGE}${categoriesParam}${searchParam}`;
+
+    try {
+      const data = await apiService<ServicesData>(endpoint);
+      setData(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, selectedCategories, search, CARDS_ON_PAGE]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     getData();
-  }, [selectedCategories, page]);
+  }, [getData]);
 
   useEffect(() => {
+    if (search.trim() === '') return;
     const timer = setTimeout(() => {
       getData();
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [search, getData]);
 
   const handlePageChange = (page: number) => {
     setPage(page);
@@ -75,18 +89,27 @@ export const CatalogPage = () => {
                   <SearchInput search={search} setSearch={setSearch} />
                 </div>
               </div>
+
               <div className={styles.cards}>
-                {data?.data?.map((item) => (
-                  <Card
-                    key={item.id}
-                    data={item}
-                    handleClick={handleOpenModal}
-                  />
-                ))}
+                {loading ? (
+                  <Box className={styles.loaderContainer}>
+                    <CircularProgress className={styles.spinner} size={60} />
+                  </Box>
+                ) : (
+                  data?.data?.map((item) => (
+                    <Card
+                      key={item.id}
+                      data={item}
+                      handleClick={handleOpenModal}
+                    />
+                  ))
+                )}
               </div>
+
               {data && data.pages > 1 && (
                 <Pagination
                   count={data?.pages}
+                  page={page}
                   onChange={(_, page) => handlePageChange(page)}
                   variant="outlined"
                   shape="rounded"

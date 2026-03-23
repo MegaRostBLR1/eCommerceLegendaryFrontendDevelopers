@@ -34,12 +34,7 @@ interface EditUserModalProps {
   onUpdateSuccess?: () => void;
 }
 
-export default function EditUserModal({
-                                        open,
-                                        onClose,
-                                        user,
-                                        onUpdateSuccess,
-                                      }: EditUserModalProps) {
+export default function EditUserModal({open, onClose, user, onUpdateSuccess, }: EditUserModalProps) {
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,6 +70,13 @@ export default function EditUserModal({
 
   const handleConfirm = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!values.firstName || !values.lastName || !values.email || !values.role) {
+      setSnackMessage('Please fill all required fields');
+      setSnackOpen(true);
+      return;
+    }
+
     setIsSubmitting(true);
 
     const updateData: UpdateUserDto = {
@@ -93,9 +95,12 @@ export default function EditUserModal({
         onClose();
         if (onUpdateSuccess) onUpdateSuccess();
       }, 600);
-    } catch (error: any) {
-      const msg = error.response?.data?.errors?.[0]?.msg || 'Failed to save changes';
-      setSnackMessage(msg);
+    } catch (error) {
+      if (error instanceof Error) {
+        setSnackMessage(error.message);
+      } else {
+        setSnackMessage(String(error));
+      }
       setSnackOpen(true);
     } finally {
       setIsSubmitting(false);
@@ -113,7 +118,13 @@ export default function EditUserModal({
       />
       <Dialog
         open={open}
-        onClose={onClose}
+        onClose={(_event, reason) => {
+          if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+            return;
+          }
+          onClose();
+        }}
+        disableEscapeKeyDown={true}
         PaperProps={{
           component: 'form',
           onSubmit: handleConfirm,
@@ -123,27 +134,75 @@ export default function EditUserModal({
         <DialogTitle className="edit-card-modal-title" sx={{ p: 0, mb: 3 }}>
           <div className="order-form-logo">
             <img src="/page-logo.svg" alt="logo" />
-            <span className="team-name-order">Legendary <br /> Frontend</span>
+            <span className="team-name-order">
+              Legendary <br /> Frontend
+            </span>
           </div>
-          <IconButton onClick={onClose} sx={{ position: 'absolute', right: 16, top: 16 }}>
+          <IconButton
+            onClick={onClose}
+            sx={{ position: 'absolute', right: 16, top: 16 }}
+          >
             <CloseOutlinedIcon />
           </IconButton>
         </DialogTitle>
-        <DialogContent className="edit-card-modal-dialog-content" sx={{ p: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <TextField name="firstName" label="Name" variant="standard" fullWidth value={values.firstName} onChange={handleChange} />
-          <TextField name="lastName" label="Last name" variant="standard" fullWidth value={values.lastName} onChange={handleChange} />
-          <TextField name="patronymic" label="Surname" variant="standard" fullWidth value={values.patronymic} onChange={handleChange} />
-          <TextField name="email" label="E-mail" variant="standard" fullWidth value={values.email} onChange={handleChange} />
+        <DialogContent
+          className="edit-card-modal-dialog-content"
+          sx={{ p: 0, display: 'flex', flexDirection: 'column', gap: 2 }}
+        >
+          <TextField
+            name="firstName"
+            label="Name"
+            variant="standard"
+            fullWidth
+            value={values.firstName}
+            onChange={handleChange}
+          />
+          <TextField
+            name="lastName"
+            label="Last name"
+            variant="standard"
+            fullWidth
+            value={values.lastName}
+            onChange={handleChange}
+          />
+          <TextField
+            name="patronymic"
+            label="Patronymic"
+            variant="standard"
+            fullWidth
+            value={values.patronymic}
+            onChange={handleChange}
+          />
+          <TextField
+            name="email"
+            label="E-mail"
+            variant="standard"
+            fullWidth
+            value={values.email}
+            onChange={handleChange}
+          />
           <FormControl variant="standard" fullWidth>
             <InputLabel id="role-select-label">Role</InputLabel>
-            <Select labelId="role-select-label" name="role" value={values.role} onChange={handleRoleChange} label="Role">
+            <Select
+              labelId="role-select-label"
+              name="role"
+              value={values.role}
+              onChange={handleRoleChange}
+              label="Role"
+            >
               <MenuItem value="user">User</MenuItem>
               <MenuItem value="admin">Admin</MenuItem>
             </Select>
           </FormControl>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center', mt: 4, p: 0 }}>
-          <Button type="submit" variant="contained" disabled={isSubmitting} className="confirm-order-btn" sx={{ width: '100%', py: 1.5 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={isSubmitting}
+            className="confirm-order-btn"
+            sx={{ width: '100%', py: 1.5 }}
+          >
             {isSubmitting ? 'Saving...' : 'SAVE CHANGES'}
           </Button>
         </DialogActions>
