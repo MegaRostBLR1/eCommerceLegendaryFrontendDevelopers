@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, Snackbar } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import SaveIcon from '@mui/icons-material/Save';
 import { Card } from '../../../components/card/card';
@@ -8,6 +8,7 @@ import { mapAiResponseToService } from './ai-mapper';
 import catalogStyles from '../../catalog-page/catalog-page.module.css';
 import { userService } from '../../../services/user.service';
 import type { Service, UpdateServiceDto, Category } from '../../../types';
+import { apiService } from '../../../services/api-service.ts';
 import './AIGenerationPage.css';
 
 import { aiService } from './ai.service';
@@ -19,18 +20,21 @@ export const AIGenerationPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [allCategories, setAllCategories] = useState<Category[]>([]);
 
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState('');
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(
-          'http://188.127.251.19:3000/api/categories'
-        );
-        const data = await response.json();
+        const data = await apiService<Category[]>('/categories');
         setAllCategories(data);
       } catch (error) {
-        console.error('Failed to load categories:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Failed to load categories';
+        setSnackMessage(errorMessage);
+        setSnackOpen(true);
       }
     };
+
     fetchCategories();
   }, []);
 
@@ -48,9 +52,15 @@ export const AIGenerationPage = () => {
   });
 
   const handleGenerate = async () => {
-    const rawData = await aiService.generateServices(prompt);
-    const normalized = rawData.map(mapAiResponseToService);
-    setDrafts(normalized);
+    try {
+      const rawData = await aiService.generateServices(prompt);
+      const normalized = rawData.map(mapAiResponseToService);
+      setDrafts(normalized);
+    } catch (error) {
+      console.log(error)
+      setSnackMessage('AI Generation failed');
+      setSnackOpen(true);
+    }
   };
 
   const handleLocalUpdate = (updatedData: Service) => {
@@ -66,8 +76,11 @@ export const AIGenerationPage = () => {
       await userService.createService(dto);
       setDrafts((prev) => prev.filter((d) => d.id !== service.id));
       setIsModalOpen(false);
+      setSnackMessage('Service saved successfully!');
+      setSnackOpen(true);
     } catch {
-      alert('Error saving service (possible duplicate name)');
+      setSnackMessage('Duplicate name)');
+      setSnackOpen(true);
     }
   };
 
@@ -78,18 +91,26 @@ export const AIGenerationPage = () => {
       );
       await Promise.all(promises);
       setDrafts([]);
-      alert('All services have been successfully imported!');
+      setSnackMessage('All services have been successfully imported!');
+      setSnackOpen(true);
     } catch {
-      alert('Error while mass saving - check for duplicate names');
+      setSnackMessage('Check for duplicate names');
+      setSnackOpen(true);
     }
   };
 
   return (
     <main className={catalogStyles.main}>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={snackOpen}
+        autoHideDuration={5000}
+        onClose={() => setSnackOpen(false)}
+        message={snackMessage}
+      />
+
       <section className={catalogStyles.catalog}>
-        <div
-          className={`${catalogStyles.container} page-container ai-page-column`}
-        >
+        <div className={`${catalogStyles.container} page-container ai-page-column`}>
           <div className="ai-input-wrapper">
             <TextField
               className="ai-text-field"

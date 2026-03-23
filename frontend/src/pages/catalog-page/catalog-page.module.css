@@ -9,6 +9,7 @@
   flex-grow: 1;
   margin-top: 60px;
   margin-bottom: 100px;
+  min-height: calc(100vh - 160px);
 }
 
 .container {
@@ -70,6 +71,9 @@
   grid-template-columns: repeat(4, 1fr);
   column-gap: 16px;
   row-gap: 12px;
+  min-height: 1400px;
+  flex-grow: 1;
+  align-content: start;
 }
 
 .loaderContainer {

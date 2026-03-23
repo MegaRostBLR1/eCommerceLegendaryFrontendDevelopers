@@ -96,5 +96,3 @@ export const authorizationService = {
     return localStorage.getItem('token');
   },
 };
-
-
