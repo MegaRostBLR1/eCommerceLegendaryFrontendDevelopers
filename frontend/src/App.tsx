@@ -8,11 +8,11 @@ import { AboutPage } from './pages/about-page/AboutPage.tsx';
 import { HomePage } from './pages/home-page/HomePage';
 import { ProfilePage } from './pages/profile/ProfilePage';
 import { UsersPage } from './pages/admin/users-page/UsersPage.tsx';
-import { AdminStatsPage } from './pages/admin/AdminStatsPage';
+import { AdminStatsPage } from './pages/admin/admin-stats-page/AdminStatsPage.tsx';
 import { ServicesPage } from './pages/admin/Services/ServicesPage.tsx';
 import { AIGenerationPage } from './pages/admin/AIGenerationPage/AIGenerationPage';
 import { AdminOrdersPage } from './pages/admin/AdminOrdersPage';
-import { UserStatsPage } from './pages/user/UserStatsPage';
+import { UserStatsPage } from './pages/user/user-stats-page/UserStatsPage.tsx';
 import { UserOrdersPage } from './pages/user/UserOrdersPage';
 import { NotFoundPage } from './pages/NotFoundPage/NotFoundPage.tsx';
 
