@@ -6,12 +6,12 @@ import { AnimationCube } from './ui/animation-cube/animation-cube';
 import logoHome from '../../assets/icons/logoHome.svg';
 import { createPortal } from 'react-dom';
 import OpenOrderForm from '../../components/modals/OrderForm/OrderForm';
-import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal.tsx';
+import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal';
 import { useEffect, useState } from 'react';
 import type { Service } from '../../types';
 import { HOME_UI } from './constants';
-import { environment } from '../../assets/environment/environment.ts';
-import { authorizationService } from '../../services/authorization-service.ts';
+import { environment } from '../../assets/environment/environment';
+import { authorizationService } from '../../services/authorization-service';
 
 const BASE_URL = environment.baseUrl;
 
@@ -21,6 +21,7 @@ export function HomePage() {
   const [currentService, setCurrentService] = useState<Service>();
   const [data, setData] = useState<Service[]>();
   const [loading, setLoading] = useState(true);
+  const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
     fetch(`${BASE_URL}/services/most/used`)
@@ -35,8 +36,25 @@ export function HomePage() {
       });
   }, []);
 
+  useEffect(() => {
+    const checkAuth = () => {
+      setIsAuth(authorizationService.isAuthUser());
+    };
+
+    checkAuth();
+
+    const handleAuthChange = () => {
+      checkAuth();
+    };
+
+    window.addEventListener('auth-change', handleAuthChange);
+
+    return () => {
+      window.removeEventListener('auth-change', handleAuthChange);
+    };
+  }, []);
+
   const handleOpenModal = (service: Service) => {
-    const isAuth = authorizationService.isAuthUser();
     if (!isAuth) {
       setIsAuthModalOpen(true);
       return;
