@@ -1,6 +1,11 @@
 **Date:** 2026-02-21
 # Project: eCommerceLegendaryFrontendDevelopers
 
+## Video Demonstration (Week 5 Checkpoint)
+
+In this video, we demonstrate the handling of 404 pages, loading states, and API error handling:
+- [Watch Video Demo](https://youtu.be/EbpQGCGB3jc)
+
 ## Live Demo
 
 [Deployed Application](http://188.127.251.19:5000/)
