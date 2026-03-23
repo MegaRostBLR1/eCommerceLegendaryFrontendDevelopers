@@ -11,21 +11,23 @@ import {
 import React, { useState } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import Snackbar from '@mui/material/Snackbar';
-import { authorizationService } from '../../../services/authorization-service.ts';
-import { environment } from '../../../assets/environment/environment.ts';
-import { errorMessages } from '../../../../constants/errors.ts';
+import { authorizationService } from '../../../services/authorization-service';
+import { environment } from '../../../assets/environment/environment';
+import { errorMessages } from '../../../../constants/errors';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const BASE_URL = environment.baseUrl;
-export default function OpenLoginModal({open, onClose,}: {
+
+export default function AuthorizationModal({ open, onClose }: {
   open: boolean;
   onClose: () => void;
 }) {
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -50,6 +52,7 @@ export default function OpenLoginModal({open, onClose,}: {
         if (response.ok) {
           const json = await response.json();
           authorizationService.setUserInLocalStorage(json);
+          window.dispatchEvent(new CustomEvent('auth-change'));
           onClose();
         } else if (response.status === 401) {
           setSnackMessage(errorMessages.wrongPasswordOrEmail);
@@ -67,6 +70,7 @@ export default function OpenLoginModal({open, onClose,}: {
       setSnackOpen(true);
     }
   };
+
   return (
     <>
       <Snackbar
@@ -98,9 +102,9 @@ export default function OpenLoginModal({open, onClose,}: {
       >
         <DialogTitle className={'create-acc-form-title'}>
           <div className={'order-form-logo'}>
-            <img src={'/page-logo.svg'} alt="logo"/>
+            <img src={'/page-logo.svg'} alt="logo" />
             <span className={'team-name-order'}>
-              Legendary <br/> Frontend
+              Legendary <br /> Frontend
             </span>
           </div>
           <div className={'close-create-acc-form-container'}>
@@ -108,7 +112,7 @@ export default function OpenLoginModal({open, onClose,}: {
               className={'close-create-acc-form-btn'}
               onClick={onClose}
             >
-              <CloseOutlinedIcon/>
+              <CloseOutlinedIcon />
             </IconButton>
           </div>
         </DialogTitle>
