@@ -1,6 +1,6 @@
 import './HomePage.css';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { CircularProgress, Box, Snackbar } from '@mui/material'; // Добавил Snackbar
+import { CircularProgress, Box, Snackbar } from '@mui/material';
 import { Card } from '../../components/card/card';
 import { AnimationCube } from './ui/animation-cube/animation-cube';
 import logoHome from '../../assets/icons/logoHome.svg';
@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import type { Service } from '../../types';
 import { HOME_UI } from './constants';
 import { authorizationService } from '../../services/authorization-service';
-import { apiService } from '../../services/api-service.ts'; // Импорт apiService
+import { apiService } from '../../services/api-service.ts';
 
 export function HomePage() {
   const [open, setOpen] = useState(false);
