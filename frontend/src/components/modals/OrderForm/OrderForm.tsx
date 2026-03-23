@@ -17,11 +17,8 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import React from 'react';
 import type { Service } from '../../../types';
-import { environment } from '../../../assets/environment/environment.ts';
-import { authorizationService } from '../../../services/authorization-service';
+import { apiService } from '../../../services/api-service.ts';
 import './order-form.css';
-
-const BASE_URL = environment.baseUrl;
 
 interface OpenOrderFormProps {
   open: boolean;
@@ -64,12 +61,11 @@ export default function OpenOrderForm({
   const handleConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const token = authorizationService.getToken();
     const startDate = date ? date.toISOString() : null;
 
     if (!startDate) return;
 
-    const url = isEdit ? `${BASE_URL}/orders/${orderId}` : `${BASE_URL}/orders`;
+    const url = isEdit ? `/orders/${orderId}` : `/orders`;
     const method = isEdit ? 'PATCH' : 'POST';
 
     const payload = isEdit
@@ -88,28 +84,17 @@ export default function OpenOrderForm({
     if (payload.price === undefined || payload.price === null) {
       console.error('Ошибка: У услуги не указана цена (amount)');
     }
-
     try {
-      const response = await fetch(url, {
+      await apiService(url, {
         method: method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `${token}`,
-        },
         body: JSON.stringify(payload),
       });
 
-      if (response.ok) {
-        onRefresh?.();
-        onClose();
-      } else {
-        const errorData = await response.json().catch(() => ({}));
-        console.log('Server Error Data:', errorData);
-        setSnackMessage(errorData.errors?.[0]?.msg || 'Error creating order');
-        setSnackOpen(true);
-      }
-    } catch {
-      setSnackMessage('Network error');
+      onRefresh?.();
+      onClose();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error creating order';
+      setSnackMessage(errorMessage);
       setSnackOpen(true);
     }
   };
