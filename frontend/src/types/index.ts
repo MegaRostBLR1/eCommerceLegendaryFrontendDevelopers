@@ -71,3 +71,10 @@ export interface OrdersResponse {
   pages: number;
   total: number;
 }
+
+export interface IUserToken {
+  token: string;
+  user: User;
+  status: string;
+  exp: number;
+}

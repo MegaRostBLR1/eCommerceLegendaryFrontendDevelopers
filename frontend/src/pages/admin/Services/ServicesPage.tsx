@@ -1,20 +1,17 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Pagination, Button, CircularProgress, Box } from '@mui/material';
+import { Pagination, Button, CircularProgress, Box, Snackbar } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { Card } from '../../../components/card/card';
 import { userService } from '../../../services/user.service';
-import type { ServicesData } from '../../../types';
+import type { ServicesData, Service } from '../../../types';
 import { SelectComponent } from '../../catalog-page/ui/select-component/select-component';
 import { SearchInput } from '../../catalog-page/ui/search-input/search-input';
 import { CARDS_ON_PAGE, PAGINATION_STYLE } from '../../catalog-page/constants';
-import { environment } from '../../../assets/environment/environment';
 import catalogStyles from '../../catalog-page/catalog-page.module.css';
 import EditCardModal from '../../../components/modals/EditCardModal/EditCardModal';
 import './ServicesPage.css';
-import type { Service } from '../../../types';
-
-const BASE_URL = environment.baseUrl;
+import { apiService } from '../../../services/api-service.ts';
 
 export const ServicesPage = () => {
   const navigate = useNavigate();
@@ -24,21 +21,25 @@ export const ServicesPage = () => {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState('');
+
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const loadServices = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        `${BASE_URL}/services?page=${page}&count=${CARDS_ON_PAGE}${
-          category ? `&categories=${category}` : ''
-        }${search ? `&search=${search}` : ''}`
-      );
-      const result: ServicesData = await response.json();
+      const endpoint = `/services?page=${page}&count=${CARDS_ON_PAGE}${
+        category.length > 0 ? `&categories=${category.join(',')}` : ''
+      }${search ? `&search=${search}` : ''}`;
+
+      const result = await apiService<ServicesData>(endpoint);
       setData(result);
-    } catch (err) {
-      console.error('Failed to load services:', err);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to load services';
+      setSnackMessage(errorMessage);
+      setSnackOpen(true);
     } finally {
       setLoading(false);
     }
@@ -59,7 +60,8 @@ export const ServicesPage = () => {
           });
         }
       } catch {
-        alert('Delete failed');
+        setSnackMessage('Delete failed');
+        setSnackOpen(true);
       }
     }
   };
@@ -71,6 +73,14 @@ export const ServicesPage = () => {
 
   return (
     <main className={catalogStyles.main}>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={snackOpen}
+        autoHideDuration={5000}
+        onClose={() => setSnackOpen(false)}
+        message={snackMessage}
+      />
+
       <section className={catalogStyles.catalog}>
         <div className={catalogStyles.container + ' page-container'}>
           <div className={catalogStyles.wrapper}>

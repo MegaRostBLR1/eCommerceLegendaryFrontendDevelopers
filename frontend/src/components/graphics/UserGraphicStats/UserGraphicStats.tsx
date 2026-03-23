@@ -3,7 +3,7 @@ import { Line } from 'react-chartjs-2';
 import dayjs from 'dayjs';
 import { Snackbar } from '@mui/material';
 import { authorizationService } from '../../../services/authorization-service.ts';
-import { environment } from '../../../assets/environment/environment.ts';
+import { apiService } from '../../../services/api-service.ts';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,8 +17,6 @@ import {
 } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Filler, Legend);
-
-const BASE_URL = environment.baseUrl;
 
 interface DailyDataItem {
   date?: string;
@@ -43,18 +41,10 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
 
       const dateStart = startDate.format('YYYY-MM-DD');
       const dateEnd = endDate.format('YYYY-MM-DD');
+      const endpoint = `/statistics/users/${userId}?dateStart=${dateStart}&dateEnd=${dateEnd}`;
 
       try {
-        const response = await fetch(`${BASE_URL}/statistics/users/${userId}?dateStart=${dateStart}&dateEnd=${dateEnd}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!response.ok) throw new Error('Server Error');
-        const result: DailyDataItem[] = await response.json();
+        const result = await apiService<DailyDataItem[]>(endpoint);
 
         const fullWeekDays = Array.from({ length: 7 }).map((_, i) => startDate.add(i, 'day'));
 
@@ -80,13 +70,13 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
           ],
         });
       } catch (error) {
-        setSnackMessage(error instanceof Error ? error.message : 'error');
+        setSnackMessage(error instanceof Error ? error.message : 'Error fetching user stats');
         setSnackOpen(true);
       }
     };
 
     fetchUserStats();
-  }, [startDate, endDate, userId]);
+  }, [userId, startDate, endDate]);
 
   return (
     <div className="chart-container" style={{ padding: '20px', borderRadius: '12px', height: '300px', width: '500px' }}>
