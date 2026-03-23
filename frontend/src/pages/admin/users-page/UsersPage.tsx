@@ -1,18 +1,13 @@
 import './users-page.css';
-import { TextField } from '@mui/material';
-import { IconButton } from '@mui/material';
+import { TextField, IconButton, InputAdornment, Pagination, Snackbar } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import InputAdornment from '@mui/material/InputAdornment';
 import { UserCard } from './UserCard/UserCard.tsx';
-import { Pagination } from '@mui/material';
 import { PAGINATION_STYLE } from '../../catalog-page/constants.tsx';
-import { environment } from '../../../assets/environment/environment.ts';
 import { authorizationService } from '../../../services/authorization-service.ts';
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserNotFound } from './UserNorFound/UserNotFound.tsx';
-
-const BASE_URL = environment.baseUrl;
+import { apiService } from '../../../services/api-service.ts';
 
 interface User {
   id: number;
@@ -21,6 +16,12 @@ interface User {
   lastName: string | null;
   firstName: string | null;
   patronymic: string | null;
+}
+
+interface UsersResponse {
+  data: User[];
+  pages: number;
+  total: number;
 }
 
 export const UsersPage = () => {
@@ -32,51 +33,38 @@ export const UsersPage = () => {
   const [inputValue, setInputValue] = useState('');
   const [debouncedValue, setDebouncedValue] = useState('');
 
+  const [snackOpen, setSnackOpen] = useState(false);
+  const [snackMessage, setSnackMessage] = useState('');
+
   const loadUsers = useCallback(async () => {
     setIsLoading(true);
     try {
       const searchParam = debouncedValue ? `&search=${debouncedValue}` : '';
-      const response = await fetch(
-        `${BASE_URL}/users?page=${page}&count=8${searchParam}`,
-        {
-          headers: {
-            Authorization: `${localStorage.getItem('token')}`,
-          },
-        }
-      );
+      const result = await apiService<UsersResponse>(`/users?page=${page}&count=8${searchParam}`);
 
-      if (response.ok) {
-        const result = await response.json();
-        setUsers(result.data);
-        setTotalPages(result.pages);
-      }
+      setUsers(result.data);
+      setTotalPages(result.pages);
     } catch (error) {
-      console.log(error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to load users';
+      setSnackMessage(errorMessage);
+      setSnackOpen(true);
     } finally {
       setIsLoading(false);
     }
   }, [page, debouncedValue]);
 
   useEffect(() => {
-    if (
-      !authorizationService.isAuthUser() ||
-      !authorizationService.userIsAdmin()
-    ) {
+    if (!authorizationService.isAuthUser() || !authorizationService.userIsAdmin()) {
       navigate('/', { replace: true });
       return;
     }
-
-    const fetchData = async () => {
-      await loadUsers();
-    };
-
-    fetchData();
+    loadUsers();
   }, [navigate, loadUsers]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedValue(inputValue);
-      setPage((prev) => (prev !== 1 ? 1 : prev));
+      setPage(1);
     }, 500);
 
     return () => clearTimeout(timer);
@@ -84,6 +72,14 @@ export const UsersPage = () => {
 
   return (
     <div className={'users-page-container'} data-testid="users-page-container">
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={snackOpen}
+        autoHideDuration={5000}
+        onClose={() => setSnackOpen(false)}
+        message={snackMessage}
+      />
+
       <div className={'search-input'}>
         <TextField
           value={inputValue}
@@ -113,6 +109,7 @@ export const UsersPage = () => {
           }}
         />
       </div>
+
       <div className={'users-container'} data-testid="users-container">
         {isLoading ? (
           <div className="loader-wrapper">Loading...</div>
@@ -130,18 +127,12 @@ export const UsersPage = () => {
             />
           ))
         ) : (
-          <div
-            style={{
-              gridColumn: '1 / -1',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
+          <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <UserNotFound />
           </div>
         )}
       </div>
+
       <div className={'navigation-menu'} data-testid="navigation-menu">
         <Pagination
           count={totalPages}

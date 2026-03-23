@@ -7,18 +7,17 @@ import {
   Button,
   IconButton,
   TextField,
+  Snackbar,
+  InputAdornment,
 } from '@mui/material';
 import React, { useState } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import Snackbar from '@mui/material/Snackbar';
-import { authorizationService } from '../../../services/authorization-service';
-import { environment } from '../../../assets/environment/environment';
-import { errorMessages } from '../../../../constants/errors';
-import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
-const BASE_URL = environment.baseUrl;
+import { authorizationService } from '../../../services/authorization-service';
+import { apiService } from '../../../services/api-service.ts';
+import { errorMessages } from '../../../../constants/errors';
+import type { IUserToken } from '../../../types';
 
 export default function AuthorizationModal({ open, onClose }: {
   open: boolean;
@@ -33,36 +32,34 @@ export default function AuthorizationModal({ open, onClose }: {
   const handleConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+    const formValues = Object.fromEntries(formData.entries());
+
     const emailRegexp = /@/;
     const passwordRegexp = /^(?=.*[A-Z])(?=.*\d).{4,10}$/;
-    const userEmail = data.userEmail.toString();
-    const userPassword = data.password.toString();
-    const user = { email: userEmail, password: userPassword };
+
+    const userEmail = formValues.userEmail.toString();
+    const userPassword = formValues.password.toString();
+    const userPayload = { email: userEmail, password: userPassword };
 
     if (emailRegexp.test(userEmail) && passwordRegexp.test(userPassword)) {
       try {
-        const response = await fetch(`${BASE_URL}/login`, {
+        const result = await apiService<IUserToken>('/login', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-          },
-          body: JSON.stringify(user),
+          body: JSON.stringify(userPayload),
         });
-        if (response.ok) {
-          const json = await response.json();
-          authorizationService.setUserInLocalStorage(json);
-          window.dispatchEvent(new CustomEvent('auth-change'));
-          onClose();
-        } else if (response.status === 401) {
-          setSnackMessage(errorMessages.wrongPasswordOrEmail);
-          setSnackOpen(true);
-        } else {
-          setSnackMessage(errorMessages.errorFromServer);
-          setSnackOpen(true);
-        }
+
+        authorizationService.setUserInLocalStorage(result);
+        window.dispatchEvent(new CustomEvent('auth-change'));
+        onClose();
       } catch (error) {
-        setSnackMessage(`${error}`);
+        const errorMessage = error instanceof Error ? error.message : errorMessages.errorFromServer;
+
+        if (errorMessage.includes('401')) {
+          setSnackMessage(errorMessages.wrongPasswordOrEmail);
+        } else {
+          setSnackMessage(errorMessage);
+        }
+
         setSnackOpen(true);
       }
     } else {

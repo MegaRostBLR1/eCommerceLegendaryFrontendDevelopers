@@ -3,7 +3,7 @@ import { Bar } from 'react-chartjs-2';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { Snackbar } from '@mui/material';
-import { environment } from '../../../assets/environment/environment.ts';
+import { apiService } from '../../../services/api-service.ts';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -19,7 +19,6 @@ dayjs.extend(isoWeek);
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const BASE_URL = environment.baseUrl;
 
 interface StatDataItem {
   startDate: string;
@@ -36,19 +35,10 @@ export const AdminOrdersChart = () => {
     const fetchAdminStats = async () => {
       const dateStart = '2026-03-01';
       const dateEnd = dayjs().endOf('isoWeek').format('YYYY-MM-DD');
+      const endpoint = `/statistics/total?dateStart=${dateStart}&dateEnd=${dateEnd}`;
 
       try {
-        const response = await fetch(`${BASE_URL}/statistics/total?dateStart=${dateStart}&dateEnd=${dateEnd}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!response.ok) throw new Error('Server Error');
-        const result: StatDataItem[] = await response.json();
-
+        const result = await apiService<StatDataItem[]>(endpoint);
         const cleanResult = result.filter(d => d.startDate !== d.endDate);
 
         setChartData({
@@ -67,7 +57,7 @@ export const AdminOrdersChart = () => {
           ],
         });
       } catch (error) {
-        setSnackMessage(error instanceof Error ? error.message : 'error');
+        setSnackMessage(error instanceof Error ? error.message : 'Error fetching stats');
         setSnackOpen(true);
       }
     };

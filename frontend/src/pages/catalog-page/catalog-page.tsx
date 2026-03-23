@@ -8,11 +8,9 @@ import { useEffect, useState, useCallback } from 'react';
 import type { Service, ServicesData } from '../../types';
 import { createPortal } from 'react-dom';
 import OpenOrderForm from '../../components/modals/OrderForm/OrderForm';
-import { environment } from '../../assets/environment/environment.ts';
 import { authorizationService } from '../../services/authorization-service.ts';
 import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal.tsx';
-
-const BASE_URL = environment.baseUrl;
+import { apiService } from '../../services/api-service.ts';
 
 export const CatalogPage = () => {
   const [data, setData] = useState<ServicesData>();
@@ -34,26 +32,26 @@ export const CatalogPage = () => {
     }
   };
 
-  const getData = useCallback(() => {
+  const getData = useCallback(async () => {
     setLoading(true);
 
-    fetch(
-      `${BASE_URL}/services?page=${page}&count=${CARDS_ON_PAGE}${
-        selectedCategories.includes('all')
-          ? ''
-          : `&categories=${selectedCategories.join(',')}`
-      }${search ? `&search=${search}` : ''}`
-    )
-      .then((response) => response.json())
-      .then((data: ServicesData) => {
-        setData(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, [page, selectedCategories, search]);
+    const categoriesParam = selectedCategories.includes('all')
+      ? ''
+      : `&categories=${selectedCategories.join(',')}`;
+
+    const searchParam = search ? `&search=${search}` : '';
+
+    const endpoint = `/services?page=${page}&count=${CARDS_ON_PAGE}${categoriesParam}${searchParam}`;
+
+    try {
+      const data = await apiService<ServicesData>(endpoint);
+      setData(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, selectedCategories, search, CARDS_ON_PAGE]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
