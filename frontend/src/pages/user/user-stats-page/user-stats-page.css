@@ -1,5 +1,4 @@
 .stats-preview {
-  /* Убираем жесткую высоту, если она была, и ограничиваем по экрану */
   min-height: calc(100vh - 160px);
   display: flex;
   flex-direction: column;
