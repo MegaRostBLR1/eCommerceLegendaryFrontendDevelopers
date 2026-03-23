@@ -22,14 +22,14 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
   admin: [
     { title: 'Profile', path: '/profile' },
     { title: 'Users', path: '/admin/users' },
-    { title: 'Statistics', path: '/admin/stats' },
+    { title: 'Statistics', path: '/admin/statistics' },
     { title: 'Services', path: '/admin/services' },
     { title: 'Orders', path: '/admin/orders' },
     { title: 'Logout', isExit: true },
   ],
   user: [
     { title: 'Profile', path: '/profile' },
-    { title: 'Statistics', path: '/stats' },
+    { title: 'Statistics', path: '/statistics' },
     { title: 'Orders', path: '/orders' },
     { title: 'Logout', isExit: true },
   ],
@@ -61,7 +61,7 @@ const userEmail = user?.email || '';
 
     if (item.isExit) {
       authorizationService.logoutUser();
-      const privateRoutes = ['/profile', '/admin', '/orders', '/stats'];
+      const privateRoutes = ['/profile', '/admin', '/orders', '/statistics'];
       const isPrivatePage = privateRoutes.some((path) =>
         location.pathname.startsWith(path)
       );
