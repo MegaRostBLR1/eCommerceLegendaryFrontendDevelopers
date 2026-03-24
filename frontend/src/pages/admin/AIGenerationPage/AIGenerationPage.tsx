@@ -29,7 +29,8 @@ export const AIGenerationPage = () => {
         const data = await apiService<Category[]>('/categories');
         setAllCategories(data);
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Failed to load categories';
+        const errorMessage =
+          error instanceof Error ? error.message : 'Failed to load categories';
         setSnackMessage(errorMessage);
         setSnackOpen(true);
       }
@@ -57,7 +58,7 @@ export const AIGenerationPage = () => {
       const normalized = rawData.map(mapAiResponseToService);
       setDrafts(normalized);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       setSnackMessage('AI Generation failed');
       setSnackOpen(true);
     }
@@ -110,7 +111,9 @@ export const AIGenerationPage = () => {
       />
 
       <section className={catalogStyles.catalog}>
-        <div className={`${catalogStyles.container} page-container ai-page-column`}>
+        <div
+          className={`${catalogStyles.container} page-container ai-page-column`}
+        >
           <div className="ai-input-wrapper">
             <TextField
               className="ai-text-field"

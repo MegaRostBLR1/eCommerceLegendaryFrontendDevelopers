@@ -16,9 +16,9 @@ import { TEXT_SELECT } from './constants';
 import { apiService } from '../../../../services/api-service.ts';
 
 export const SelectComponent = ({
-                                  selectedCategories = [],
-                                  setSelectedCategories = () => {},
-                                }: {
+  selectedCategories = [],
+  setSelectedCategories = () => {},
+}: {
   selectedCategories: string[];
   setSelectedCategories: (value: string[]) => void;
 }) => {
@@ -56,7 +56,8 @@ export const SelectComponent = ({
         const data = await apiService<Category[]>('/categories');
         setCategories(data);
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Failed to load categories';
+        const errorMessage =
+          error instanceof Error ? error.message : 'Failed to load categories';
         setSnackMessage(errorMessage);
         setSnackOpen(true);
       }

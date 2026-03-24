@@ -53,7 +53,7 @@ export const OrdersPage = () => {
     discount: order.discount,
     description: order.description || 'No description provided',
     workersCount: order.quantity,
-    duration: 0,
+    duration: order.duration || 0,
     categories: [],
   });
 
@@ -122,6 +122,7 @@ export const OrdersPage = () => {
 
       {selectedOrder && (
         <OpenOrderForm
+          key={selectedOrder ? `edit-${selectedOrder.id}` : 'new-order'}
           open={isModalOpen}
           onClose={() => {
             setIsModalOpen(false);
