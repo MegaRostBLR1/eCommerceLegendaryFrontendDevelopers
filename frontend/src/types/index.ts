@@ -54,6 +54,7 @@ export interface Order {
   date: string;
   status: number;
   price: number;
+  duration: number;
   quantity: number;
   description: string;
   name: string;

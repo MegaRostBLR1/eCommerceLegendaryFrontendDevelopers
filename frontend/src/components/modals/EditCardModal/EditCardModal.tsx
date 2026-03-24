@@ -35,7 +35,16 @@ interface EditCardModalProps {
   availableCategories?: Category[];
 }
 
-export default function EditCardModal({open, onClose, service, onUpdateSuccess, isDraft, onLocalUpdate, onSendToServer, availableCategories = [], }: EditCardModalProps) {
+export default function EditCardModal({
+  open,
+  onClose,
+  service,
+  onUpdateSuccess,
+  isDraft,
+  onLocalUpdate,
+  onSendToServer,
+  availableCategories = [],
+}: EditCardModalProps) {
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);

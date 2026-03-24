@@ -19,7 +19,10 @@ import { apiService } from '../../../services/api-service.ts';
 import { errorMessages } from '../../../../constants/errors';
 import type { IUserToken } from '../../../types';
 
-export default function AuthorizationModal({ open, onClose }: {
+export default function AuthorizationModal({
+  open,
+  onClose,
+}: {
   open: boolean;
   onClose: () => void;
 }) {
@@ -52,7 +55,10 @@ export default function AuthorizationModal({ open, onClose }: {
         window.dispatchEvent(new CustomEvent('auth-change'));
         onClose();
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : errorMessages.errorFromServer;
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : errorMessages.errorFromServer;
 
         if (errorMessage.includes('401')) {
           setSnackMessage(errorMessages.wrongPasswordOrEmail);

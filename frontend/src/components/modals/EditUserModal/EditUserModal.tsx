@@ -34,7 +34,12 @@ interface EditUserModalProps {
   onUpdateSuccess?: () => void;
 }
 
-export default function EditUserModal({open, onClose, user, onUpdateSuccess, }: EditUserModalProps) {
+export default function EditUserModal({
+  open,
+  onClose,
+  user,
+  onUpdateSuccess,
+}: EditUserModalProps) {
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -71,7 +76,12 @@ export default function EditUserModal({open, onClose, user, onUpdateSuccess, }: 
   const handleConfirm = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!values.firstName || !values.lastName || !values.email || !values.role) {
+    if (
+      !values.firstName ||
+      !values.lastName ||
+      !values.email ||
+      !values.role
+    ) {
       setSnackMessage('Please fill all required fields');
       setSnackOpen(true);
       return;

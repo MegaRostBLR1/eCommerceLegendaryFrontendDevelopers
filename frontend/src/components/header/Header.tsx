@@ -37,32 +37,30 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
 
 const Header = () => {
   const navigate = useNavigate();
-  const [isAuth, setIsAuth] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isAuth, setIsAuth] = useState(() => authorizationService.isAuthUser());
+  const [isAdmin, setIsAdmin] = useState(() =>
+    authorizationService.userIsAdmin()
+  );
+  const [userEmail, setUserEmail] = useState<string | null>(
+    () => authorizationService.getUser()?.email || null
+  );
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const isMenuOpen = Boolean(anchorEl);
 
-  const checkAuth = () => {
-    const auth = authorizationService.isAuthUser();
-    const admin = authorizationService.userIsAdmin();
-    const user = authorizationService.getUser();
-
-    setIsAuth(auth);
-    setIsAdmin(admin);
-    setUserEmail(user?.email || null);
+  const updateAuthStatus = () => {
+    setIsAuth(authorizationService.isAuthUser());
+    setIsAdmin(authorizationService.userIsAdmin());
+    setUserEmail(authorizationService.getUser()?.email || null);
   };
 
   useEffect(() => {
-    checkAuth();
-
     const handleAuthChange = () => {
-      checkAuth();
+      updateAuthStatus();
     };
 
     window.addEventListener('auth-change', handleAuthChange);
-
     return () => {
       window.removeEventListener('auth-change', handleAuthChange);
     };
@@ -143,9 +141,7 @@ const Header = () => {
                   </IconButton>
 
                   {userEmail && (
-                    <span className="profile-email">
-                      {userEmail}
-                    </span>
+                    <span className="profile-email">{userEmail}</span>
                   )}
                 </div>
 

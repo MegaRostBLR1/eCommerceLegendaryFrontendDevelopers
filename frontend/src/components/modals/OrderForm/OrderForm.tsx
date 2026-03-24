@@ -50,6 +50,12 @@ export default function OpenOrderForm({
   );
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
+  const [quantity, setQuantity] = useState(() => {
+    if (isEdit && service?.workersCount) {
+      return service.workersCount;
+    }
+    return 1;
+  });
 
   const descriptionText = service?.description || 'No description provided';
 
@@ -60,29 +66,23 @@ export default function OpenOrderForm({
 
   const handleConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const startDate = date ? date.toISOString() : null;
-
     if (!startDate) return;
 
     const url = isEdit ? `/orders/${orderId}` : `/orders`;
     const method = isEdit ? 'PATCH' : 'POST';
 
-    const payload = isEdit
-      ? {
-          startDate,
-          quantity: service?.workersCount || 1,
-          price: service?.amount,
-        }
-      : {
-          startDate,
-          serviceId: service?.id,
-          quantity: service?.workersCount || 1,
-          price: service?.amount,
-        };
-
+    const payload = {
+      startDate,
+      quantity,
+      duration: service?.duration || 0,
+      price: service?.amount,
+      ...(isEdit ? {} : { serviceId: service?.id }),
+    };
     if (payload.price === undefined || payload.price === null) {
-      console.error('Ошибка: У услуги не указана цена (amount)');
+      console.error(
+        'Error: The service does not have a price (amount) specified'
+      );
     }
     try {
       await apiService(url, {
@@ -93,7 +93,8 @@ export default function OpenOrderForm({
       onRefresh?.();
       onClose();
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Error creating order';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Error creating order';
       setSnackMessage(errorMessage);
       setSnackOpen(true);
     }
@@ -197,6 +198,17 @@ export default function OpenOrderForm({
               Order date has arrived.
             </div>
           )}
+
+          <TextField
+            label="Quantity"
+            type="number"
+            variant="standard"
+            value={quantity}
+            onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+            fullWidth
+            inputProps={{ min: 1 }}
+            sx={{ mb: 2 }}
+          />
 
           <TextField
             label="Description"

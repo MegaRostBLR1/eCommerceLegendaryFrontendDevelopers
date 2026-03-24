@@ -16,7 +16,15 @@ import {
   type ChartData,
 } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Filler, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Filler,
+  Legend
+);
 
 interface DailyDataItem {
   date?: string;
@@ -46,15 +54,19 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
       try {
         const result = await apiService<DailyDataItem[]>(endpoint);
 
-        const fullWeekDays = Array.from({ length: 7 }).map((_, i) => startDate.add(i, 'day'));
+        const fullWeekDays = Array.from({ length: 7 }).map((_, i) =>
+          startDate.add(i, 'day')
+        );
 
-        const normalizedCounts = fullWeekDays.map(day => {
-          const found = result.find(d => dayjs(d.date || d.startDate).isSame(day, 'day'));
+        const normalizedCounts = fullWeekDays.map((day) => {
+          const found = result.find((d) =>
+            dayjs(d.date || d.startDate).isSame(day, 'day')
+          );
           return found ? found.count : 0;
         });
 
         setChartData({
-          labels: fullWeekDays.map(day => day.format('ddd DD/MM')),
+          labels: fullWeekDays.map((day) => day.format('ddd DD/MM')),
           datasets: [
             {
               fill: true,
@@ -70,7 +82,9 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
           ],
         });
       } catch (error) {
-        setSnackMessage(error instanceof Error ? error.message : 'Error fetching user stats');
+        setSnackMessage(
+          error instanceof Error ? error.message : 'Error fetching user stats'
+        );
         setSnackOpen(true);
       }
     };
@@ -79,8 +93,21 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
   }, [userId, startDate, endDate]);
 
   return (
-    <div className="chart-container" style={{ padding: '20px', borderRadius: '12px', height: '300px', width: '500px' }}>
-      <h3 className="stats-title" style={{ marginBottom: '20px', fontFamily: 'Montserrat' }}>Weekly Personal Activity</h3>
+    <div
+      className="chart-container"
+      style={{
+        padding: '20px',
+        borderRadius: '12px',
+        height: '300px',
+        width: '500px',
+      }}
+    >
+      <h3
+        className="stats-title"
+        style={{ marginBottom: '20px', fontFamily: 'Montserrat' }}
+      >
+        Weekly Personal Activity
+      </h3>
       {chartData && (
         <Line
           data={chartData}
@@ -91,9 +118,9 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
               y: {
                 beginAtZero: true,
                 ticks: { stepSize: 1, precision: 0 },
-                suggestedMax: 5
-              }
-            }
+                suggestedMax: 5,
+              },
+            },
           }}
         />
       )}

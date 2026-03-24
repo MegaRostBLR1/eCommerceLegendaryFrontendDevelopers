@@ -1,5 +1,11 @@
 import './users-page.css';
-import { TextField, IconButton, InputAdornment, Pagination, Snackbar } from '@mui/material';
+import {
+  TextField,
+  IconButton,
+  InputAdornment,
+  Pagination,
+  Snackbar,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { UserCard } from './UserCard/UserCard.tsx';
 import { PAGINATION_STYLE } from '../../catalog-page/constants.tsx';
@@ -40,12 +46,15 @@ export const UsersPage = () => {
     setIsLoading(true);
     try {
       const searchParam = debouncedValue ? `&search=${debouncedValue}` : '';
-      const result = await apiService<UsersResponse>(`/users?page=${page}&count=8${searchParam}`);
+      const result = await apiService<UsersResponse>(
+        `/users?page=${page}&count=8${searchParam}`
+      );
 
       setUsers(result.data);
       setTotalPages(result.pages);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to load users';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to load users';
       setSnackMessage(errorMessage);
       setSnackOpen(true);
     } finally {
@@ -54,7 +63,10 @@ export const UsersPage = () => {
   }, [page, debouncedValue]);
 
   useEffect(() => {
-    if (!authorizationService.isAuthUser() || !authorizationService.userIsAdmin()) {
+    if (
+      !authorizationService.isAuthUser() ||
+      !authorizationService.userIsAdmin()
+    ) {
       navigate('/', { replace: true });
       return;
     }
@@ -127,7 +139,14 @@ export const UsersPage = () => {
             />
           ))
         ) : (
-          <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div
+            style={{
+              gridColumn: '1 / -1',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
             <UserNotFound />
           </div>
         )}

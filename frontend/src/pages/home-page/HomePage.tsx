@@ -30,7 +30,8 @@ export function HomePage() {
         const result = await apiService<Service[]>('/services/most/used');
         setData(result);
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Failed to load services';
+        const errorMessage =
+          error instanceof Error ? error.message : 'Failed to load services';
         setSnackMessage(errorMessage);
         setSnackOpen(true);
       } finally {
@@ -118,14 +119,15 @@ export function HomePage() {
         </div>
       </section>
 
-      {open && createPortal(
-        <OpenOrderForm
-          open={open}
-          onClose={() => setOpen(false)}
-          service={currentService}
-        />,
-        document.body
-      )}
+      {open &&
+        createPortal(
+          <OpenOrderForm
+            open={open}
+            onClose={() => setOpen(false)}
+            service={currentService}
+          />,
+          document.body
+        )}
 
       {createPortal(
         <AuthorizationModal

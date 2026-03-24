@@ -21,12 +21,17 @@ export const AdminStatsPage = () => {
   const handleNextWeek = () => setStartDate(startDate.add(1, 'week'));
 
   const endDate = startDate.endOf('isoWeek');
-  const isLastAvailableWeek = startDate.isSame(currentWeekStart, 'day') || startDate.isAfter(currentWeekStart);
+  const isLastAvailableWeek =
+    startDate.isSame(currentWeekStart, 'day') ||
+    startDate.isAfter(currentWeekStart);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!authorizationService.isAuthUser() || !authorizationService.userIsAdmin()){
+    if (
+      !authorizationService.isAuthUser() ||
+      !authorizationService.userIsAdmin()
+    ) {
       navigate('/');
     }
   }, [navigate]);
@@ -43,14 +48,22 @@ export const AdminStatsPage = () => {
               alignItems: 'center',
               p: 0.5,
               borderRadius: 2,
-              bgcolor: 'background.paper'
+              bgcolor: 'background.paper',
             }}
           >
             <IconButton onClick={handlePrevWeek} size="small">
               <ArrowBackIosNewIcon fontSize="small" />
             </IconButton>
 
-            <Typography sx={{ mx: 2, fontWeight: 500, minWidth: '180px', textAlign: 'center', textTransform: 'capitalize' }}>
+            <Typography
+              sx={{
+                mx: 2,
+                fontWeight: 500,
+                minWidth: '180px',
+                textAlign: 'center',
+                textTransform: 'capitalize',
+              }}
+            >
               {startDate.format('DD MMM')} — {endDate.format('DD MMM YYYY')}
             </Typography>
 
@@ -61,7 +74,9 @@ export const AdminStatsPage = () => {
             >
               <ArrowForwardIosIcon
                 fontSize="small"
-                sx={{ color: isLastAvailableWeek ? 'action.disabled' : 'inherit' }}
+                sx={{
+                  color: isLastAvailableWeek ? 'action.disabled' : 'inherit',
+                }}
               />
             </IconButton>
           </Paper>
