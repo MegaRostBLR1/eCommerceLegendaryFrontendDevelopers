@@ -4,8 +4,10 @@ import { LogoUser } from '../../../../assets/icons/LogoUser.tsx';
 import { IconButton, Tooltip } from '@mui/material';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import EditUserModal from '../../../../components/modals/EditUserModal/EditUserModal.tsx';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 export const UserCard = ({
   userId,
@@ -37,6 +39,15 @@ export const UserCard = ({
     navigate(`/orders/${userId}`);
   };
 
+  const handleStatsClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    const start = dayjs().startOf('month').format('YYYY-MM-DD');
+    const end = dayjs().endOf('month').format('YYYY-MM-DD');
+
+    navigate(`/admin/statistics/${userId}?dateStart=${start}&dateEnd=${end}`);
+  };
+
   return (
     <div className={'user-card-container'}>
       <div className={'users-card'}>
@@ -59,6 +70,14 @@ export const UserCard = ({
           className="user-card-actions"
           style={{ display: 'flex', gap: '4px' }}
         >
+          {/* Новая кнопка: Статистика */}
+          <Tooltip title="User Statistics">
+            <IconButton onClick={handleStatsClick}>
+              <AssessmentIcon fontSize="small" sx={{ color: '#063526' }} />
+            </IconButton>
+          </Tooltip>
+
+          {/* Кнопка: Заказы */}
           <Tooltip title="View User Orders">
             <IconButton
               className={'orders-card-btn'}
@@ -68,6 +87,7 @@ export const UserCard = ({
             </IconButton>
           </Tooltip>
 
+          {/* Кнопка: Редактирование */}
           <Tooltip title="Edit User">
             <IconButton className={'edit-card-btn'} onClick={handleEditClick}>
               <BorderColorIcon fontSize="small" />
