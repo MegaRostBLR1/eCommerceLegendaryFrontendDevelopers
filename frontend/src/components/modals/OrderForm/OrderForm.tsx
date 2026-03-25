@@ -8,7 +8,7 @@ import {
   TextField,
   Snackbar,
 } from '@mui/material';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -18,6 +18,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import React from 'react';
 import type { Service } from '../../../types';
 import { apiService } from '../../../services/api-service.ts';
+import { useAuth } from '../../../context/useAuth.ts';
 import './order-form.css';
 
 interface OpenOrderFormProps {
@@ -39,6 +40,8 @@ export default function OpenOrderForm({
   onRefresh,
   initialDate,
 }: OpenOrderFormProps) {
+  const { isAuth, setLoginModalOpen } = useAuth();
+
   const defaultDateTime = dayjs()
     .add(1, 'day')
     .set('hour', 8)
@@ -64,6 +67,13 @@ export default function OpenOrderForm({
     return dayjs(initialDate).isBefore(dayjs(), 'day');
   }, [initialDate]);
 
+  useEffect(() => {
+    if (open && !isAuth && !isEdit) {
+      onClose();
+      setLoginModalOpen(true);
+    }
+  }, [open, isAuth, isEdit, onClose, setLoginModalOpen]);
+
   const handleConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const startDate = date ? date.toISOString() : null;
@@ -79,11 +89,7 @@ export default function OpenOrderForm({
       price: service?.amount,
       ...(isEdit ? {} : { serviceId: service?.id }),
     };
-    if (payload.price === undefined || payload.price === null) {
-      console.error(
-        'Error: The service does not have a price (amount) specified'
-      );
-    }
+
     try {
       await apiService(url, {
         method: method,
@@ -217,10 +223,7 @@ export default function OpenOrderForm({
             rows={2}
             value={descriptionText}
             fullWidth
-            InputProps={{
-              readOnly: true,
-              tabIndex: -1,
-            }}
+            InputProps={{ readOnly: true, tabIndex: -1 }}
             sx={{
               mb: 2,
               '& .MuiInput-underline:after': { display: 'none' },
