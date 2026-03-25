@@ -51,10 +51,9 @@ export const CatalogPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, selectedCategories, search, CARDS_ON_PAGE]);
+  }, [page, selectedCategories, search]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     getData();
   }, [getData]);
 

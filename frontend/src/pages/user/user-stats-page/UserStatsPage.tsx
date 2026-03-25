@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import isoWeek from 'dayjs/plugin/isoWeek';
@@ -11,14 +11,31 @@ import './user-stats-page.css';
 dayjs.extend(isoWeek);
 
 export const UserStatsPage = () => {
-  const currentWeekStart = dayjs().startOf('isoWeek');
-  const [startDate, setStartDate] = useState(currentWeekStart);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const handlePrevWeek = () => setStartDate(startDate.subtract(1, 'week'));
-  const handleNextWeek = () => setStartDate(startDate.add(1, 'week'));
+  const dateStartParam = searchParams.get('dateStart');
+  const dateEndParam = searchParams.get('dateEnd');
 
-  const endDate = startDate.endOf('isoWeek');
-  const isLastAvailableWeek = startDate.isSame(currentWeekStart, 'day') || startDate.isAfter(currentWeekStart);
+  const startDate = dateStartParam
+    ? dayjs(dateStartParam)
+    : dayjs().startOf('month');
+
+  const endDate = dateEndParam ? dayjs(dateEndParam) : dayjs().endOf('month');
+
+  const updatePeriod = (newStart: dayjs.Dayjs) => {
+    setSearchParams({
+      dateStart: newStart.format('YYYY-MM-DD'),
+      dateEnd: newStart.endOf('isoWeek').format('YYYY-MM-DD'),
+    });
+  };
+
+  const handlePrevWeek = () =>
+    updatePeriod(startDate.subtract(1, 'week').startOf('isoWeek'));
+  const handleNextWeek = () =>
+    updatePeriod(startDate.add(1, 'week').startOf('isoWeek'));
+
+  const isLastAvailableWeek =
+    startDate.isAfter(dayjs(), 'week') || startDate.isSame(dayjs(), 'week');
 
   return (
     <section className="stats-preview">
@@ -33,14 +50,22 @@ export const UserStatsPage = () => {
                 alignItems: 'center',
                 p: 0.5,
                 borderRadius: 2,
-                bgcolor: 'background.paper'
+                bgcolor: 'background.paper',
               }}
             >
               <IconButton onClick={handlePrevWeek} size="small">
                 <ArrowBackIosNewIcon fontSize="small" />
               </IconButton>
 
-              <Typography sx={{ mx: 2, fontWeight: 500, minWidth: '180px', textAlign: 'center', textTransform: 'capitalize' }}>
+              <Typography
+                sx={{
+                  mx: 2,
+                  fontWeight: 500,
+                  minWidth: '180px',
+                  textAlign: 'center',
+                  textTransform: 'capitalize',
+                }}
+              >
                 {startDate.format('DD MMM')} — {endDate.format('DD MMM YYYY')}
               </Typography>
 
@@ -51,7 +76,9 @@ export const UserStatsPage = () => {
               >
                 <ArrowForwardIosIcon
                   fontSize="small"
-                  sx={{ color: isLastAvailableWeek ? 'action.disabled' : 'inherit' }}
+                  sx={{
+                    color: isLastAvailableWeek ? 'action.disabled' : 'inherit',
+                  }}
                 />
               </IconButton>
             </Paper>

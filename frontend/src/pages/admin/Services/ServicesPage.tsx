@@ -1,6 +1,12 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Pagination, Button, CircularProgress, Box, Snackbar } from '@mui/material';
+import {
+  Pagination,
+  Button,
+  CircularProgress,
+  Box,
+  Snackbar,
+} from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { Card } from '../../../components/card/card';
 import { userService } from '../../../services/user.service';
@@ -37,7 +43,8 @@ export const ServicesPage = () => {
       const result = await apiService<ServicesData>(endpoint);
       setData(result);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to load services';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to load services';
       setSnackMessage(errorMessage);
       setSnackOpen(true);
     } finally {

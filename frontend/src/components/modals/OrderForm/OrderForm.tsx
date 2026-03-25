@@ -8,7 +8,7 @@ import {
   TextField,
   Snackbar,
 } from '@mui/material';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -18,6 +18,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import React from 'react';
 import type { Service } from '../../../types';
 import { apiService } from '../../../services/api-service.ts';
+import { useAuth } from '../../../context/useAuth.ts';
 import './order-form.css';
 
 interface OpenOrderFormProps {
@@ -39,6 +40,8 @@ export default function OpenOrderForm({
   onRefresh,
   initialDate,
 }: OpenOrderFormProps) {
+  const { isAuth, setLoginModalOpen } = useAuth();
+
   const defaultDateTime = dayjs()
     .add(1, 'day')
     .set('hour', 8)
@@ -50,6 +53,12 @@ export default function OpenOrderForm({
   );
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
+  const [quantity, setQuantity] = useState(() => {
+    if (isEdit && service?.workersCount) {
+      return service.workersCount;
+    }
+    return 1;
+  });
 
   const descriptionText = service?.description || 'No description provided';
 
@@ -58,32 +67,29 @@ export default function OpenOrderForm({
     return dayjs(initialDate).isBefore(dayjs(), 'day');
   }, [initialDate]);
 
+  useEffect(() => {
+    if (open && !isAuth && !isEdit) {
+      onClose();
+      setLoginModalOpen(true);
+    }
+  }, [open, isAuth, isEdit, onClose, setLoginModalOpen]);
+
   const handleConfirm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const startDate = date ? date.toISOString() : null;
-
     if (!startDate) return;
 
     const url = isEdit ? `/orders/${orderId}` : `/orders`;
     const method = isEdit ? 'PATCH' : 'POST';
 
-    const payload = isEdit
-      ? {
-          startDate,
-          quantity: service?.workersCount || 1,
-          price: service?.amount,
-        }
-      : {
-          startDate,
-          serviceId: service?.id,
-          quantity: service?.workersCount || 1,
-          price: service?.amount,
-        };
+    const payload = {
+      startDate,
+      quantity,
+      duration: service?.duration || 0,
+      price: service?.amount,
+      ...(isEdit ? {} : { serviceId: service?.id }),
+    };
 
-    if (payload.price === undefined || payload.price === null) {
-      console.error('Ошибка: У услуги не указана цена (amount)');
-    }
     try {
       await apiService(url, {
         method: method,
@@ -93,7 +99,8 @@ export default function OpenOrderForm({
       onRefresh?.();
       onClose();
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Error creating order';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Error creating order';
       setSnackMessage(errorMessage);
       setSnackOpen(true);
     }
@@ -199,16 +206,24 @@ export default function OpenOrderForm({
           )}
 
           <TextField
+            label="Quantity"
+            type="number"
+            variant="standard"
+            value={quantity}
+            onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+            fullWidth
+            inputProps={{ min: 1 }}
+            sx={{ mb: 2 }}
+          />
+
+          <TextField
             label="Description"
             variant="standard"
             multiline
             rows={2}
             value={descriptionText}
             fullWidth
-            InputProps={{
-              readOnly: true,
-              tabIndex: -1,
-            }}
+            InputProps={{ readOnly: true, tabIndex: -1 }}
             sx={{
               mb: 2,
               '& .MuiInput-underline:after': { display: 'none' },
