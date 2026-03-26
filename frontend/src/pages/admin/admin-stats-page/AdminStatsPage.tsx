@@ -1,93 +1,104 @@
-import { useState, useEffect } from 'react';
-import dayjs from 'dayjs';
+import { useEffect } from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/ru';
-import isoWeek from 'dayjs/plugin/isoWeek';
+import { Paper } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { UserGraphicOrdersStats } from '../../../components/graphics/UserGraphicOrdersStats/UserGraphicOrdersStats.tsx';
 import { AdminOrdersChart } from '../../../components/graphics/AdminGraphicStats/AdminGraphicStats.tsx';
-import { IconButton, Typography, Paper } from '@mui/material';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import './admin-stats-page.css';
-import { UserOrdersChart } from '../../../components/graphics/UserGraphicStats/UserGraphicStats.tsx';
 import { authorizationService } from '../../../services/authorization-service.ts';
-import { useNavigate } from 'react-router-dom';
-
-dayjs.extend(isoWeek);
+import './admin-stats-page.css';
 
 export const AdminStatsPage = () => {
-  const currentWeekStart = dayjs().startOf('isoWeek');
-  const [startDate, setStartDate] = useState(currentWeekStart);
-
-  const handlePrevWeek = () => setStartDate(startDate.subtract(1, 'week'));
-  const handleNextWeek = () => setStartDate(startDate.add(1, 'week'));
-
-  const endDate = startDate.endOf('isoWeek');
-  const isLastAvailableWeek =
-    startDate.isSame(currentWeekStart, 'day') ||
-    startDate.isAfter(currentWeekStart);
-
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const startDateParam = searchParams.get('startDate');
+  const endDateParam = searchParams.get('endDate');
+
+  const startDate = startDateParam ? dayjs(startDateParam) : dayjs().startOf('month');
+  const endDate = endDateParam ? dayjs(endDateParam) : dayjs().endOf('month');
+
+  const dateStartStr = startDate.format('YYYY-MM-DD');
+  const dateEndStr = endDate.format('YYYY-MM-DD');
 
   useEffect(() => {
-    if (
-      !authorizationService.isAuthUser() ||
-      !authorizationService.userIsAdmin()
-    ) {
+    if (!authorizationService.isAuthUser() || !authorizationService.userIsAdmin()) {
       navigate('/');
+      return;
     }
-  }, [navigate]);
+
+    if (!startDateParam || !endDateParam) {
+      setSearchParams((prev) => {
+        if (!startDateParam) prev.set('startDate', dateStartStr);
+        if (!endDateParam) prev.set('endDate', dateEndStr);
+        return prev;
+      }, { replace: true });
+    }
+  }, [navigate, startDateParam, endDateParam, dateStartStr, dateEndStr, setSearchParams]);
+
+  const handleStartDateChange = (newValue: Dayjs | null) => {
+    if (newValue) {
+      setSearchParams((prev) => {
+        prev.set('startDate', newValue.format('YYYY-MM-DD'));
+        return prev;
+      });
+    }
+  };
+
+  const handleEndDateChange = (newValue: Dayjs | null) => {
+    if (newValue) {
+      setSearchParams((prev) => {
+        prev.set('endDate', newValue.format('YYYY-MM-DD'));
+        return prev;
+      });
+    }
+  };
 
   return (
     <section className="stats-preview">
       <div className="stats-page-container">
         <div className="weekpicker-container">
-          <Paper
-            elevation={0}
-            variant="outlined"
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              p: 0.5,
-              borderRadius: 2,
-              bgcolor: 'background.paper',
-            }}
-          >
-            <IconButton onClick={handlePrevWeek} size="small">
-              <ArrowBackIosNewIcon fontSize="small" />
-            </IconButton>
-
-            <Typography
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
+            <Paper
+              elevation={0}
+              variant="outlined"
               sx={{
-                mx: 2,
-                fontWeight: 500,
-                minWidth: '180px',
-                textAlign: 'center',
-                textTransform: 'capitalize',
+                display: 'flex',
+                gap: 2,
+                p: 2,
+                borderRadius: 2,
+                bgcolor: 'background.paper',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
               }}
             >
-              {startDate.format('DD MMM')} — {endDate.format('DD MMM YYYY')}
-            </Typography>
-
-            <IconButton
-              onClick={handleNextWeek}
-              size="small"
-              disabled={isLastAvailableWeek}
-            >
-              <ArrowForwardIosIcon
-                fontSize="small"
-                sx={{
-                  color: isLastAvailableWeek ? 'action.disabled' : 'inherit',
-                }}
+              <DatePicker
+                label="Date Start"
+                value={startDate}
+                onChange={handleStartDateChange}
+                slotProps={{ textField: { size: 'small' } }}
               />
-            </IconButton>
-          </Paper>
+
+              <DatePicker
+                label="Date End"
+                value={endDate}
+                onChange={handleEndDateChange}
+                minDate={startDate}
+                slotProps={{ textField: { size: 'small' } }}
+              />
+            </Paper>
+          </LocalizationProvider>
         </div>
 
-        <div className="graphic-container">
-          <div className="stats-card">
-            <UserOrdersChart startDate={startDate} endDate={endDate} />
-          </div>
+        <div className="graphic-container" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div className="stats-card">
             <AdminOrdersChart />
+          </div>
+          <div className="stats-card">
+            <UserGraphicOrdersStats startDate={dateStartStr} endDate={dateEndStr} />
           </div>
         </div>
       </div>
