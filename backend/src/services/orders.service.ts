@@ -60,6 +60,7 @@ const mappedOrder = (data: OrderData | null): OrderDataResponse | null => {
     return {
         ...d,
         description: description || '',
+        duration: service.duration,
         name: service.name,
         discount: service.discount || 0,
         user: { id: user?.id || 0, lastName: user?.lastName || '', firstName: user?.firstName || '', patronymic: user?.patronymic || '' },

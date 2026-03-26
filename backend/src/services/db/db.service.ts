@@ -139,9 +139,10 @@ export const dbService = {
         });
     },
     totalUsersOrdersByDates: async (dateStart: Date, dateEnd: Date) => {
-        console.log(dateStart, dateEnd);
-
         return await db.user.findMany({
+            where: {
+                orders: { some: { startDate: { gte: dateStart, lte: dateEnd } } },
+            },
             select: {
                 ...USER_SELECT,
                 _count: {
