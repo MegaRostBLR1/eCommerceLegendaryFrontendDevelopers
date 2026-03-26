@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import isoWeek from 'dayjs/plugin/isoWeek';
@@ -11,6 +11,7 @@ import './user-stats-page.css';
 dayjs.extend(isoWeek);
 
 export const UserStatsPage = () => {
+  const { userId } = useParams<{ userId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const dateStartParam = searchParams.get('dateStart');
@@ -88,7 +89,11 @@ export const UserStatsPage = () => {
         <div className="stats-grid">
           <div className="stats-card">
             <div className="chart-wrapper">
-              <UserOrdersChart startDate={startDate} endDate={endDate} />
+              <UserOrdersChart 
+                startDate={startDate} 
+                endDate={endDate} 
+                userId={userId ? Number(userId) : undefined} 
+              />
             </div>
           </div>
         </div>
