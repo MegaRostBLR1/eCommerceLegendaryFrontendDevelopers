@@ -93,7 +93,7 @@ export const UserGraphicOrdersStats = ({
       const clickedUser = rawUsers[index];
 
       navigate(
-        `/statistics/users/${clickedUser.id}?dateStart=${startDate}&dateEnd=${endDate}`
+        `/orders/${clickedUser.id}`
       );
     }
   };
