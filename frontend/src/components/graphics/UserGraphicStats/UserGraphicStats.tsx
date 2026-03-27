@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { Snackbar } from '@mui/material';
 import { authorizationService } from '../../../services/authorization-service.ts';
 import { apiService } from '../../../services/api-service.ts';
+import { useTranslation } from 'react-i18next';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -38,6 +39,7 @@ interface UserChartProps {
 }
 
 export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
+  const { t, i18n } = useTranslation();
   const [chartData, setChartData] = useState<ChartData<'line'> | null>(null);
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
@@ -66,11 +68,13 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
         });
 
         setChartData({
-          labels: fullWeekDays.map((day) => day.format('ddd DD/MM')),
+          labels: fullWeekDays.map((day) =>
+            day.locale(i18n.language).format('ddd DD/MM')
+          ),
           datasets: [
             {
               fill: true,
-              label: 'Daily Orders',
+              label: t('stats.dailyOrders'),
               data: normalizedCounts,
               borderColor: '#1a3e2b',
               backgroundColor: 'rgba(26, 62, 43, 0.15)',
@@ -81,16 +85,14 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
             },
           ],
         });
-      } catch (error) {
-        setSnackMessage(
-          error instanceof Error ? error.message : 'Error fetching user stats'
-        );
+      } catch {
+        setSnackMessage(t('stats.errorLoad'));
         setSnackOpen(true);
       }
     };
 
     fetchUserStats();
-  }, [userId, startDate, endDate]);
+  }, [userId, startDate, endDate, i18n.language, t]);
 
   return (
     <div
@@ -106,7 +108,7 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
         className="stats-title"
         style={{ marginBottom: '20px', fontFamily: 'Montserrat' }}
       >
-        Weekly Personal Activity
+        {t('stats.title')}
       </h3>
       {chartData && (
         <Line

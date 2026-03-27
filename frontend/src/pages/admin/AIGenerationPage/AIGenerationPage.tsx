@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Button, TextField, Snackbar } from '@mui/material';
+import {
+  Button,
+  TextField,
+  Snackbar,
+  CircularProgress,
+  Box,
+} from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import SaveIcon from '@mui/icons-material/Save';
 import { Card } from '../../../components/card/card';
@@ -10,16 +16,17 @@ import { userService } from '../../../services/user.service';
 import type { Service, UpdateServiceDto, Category } from '../../../types';
 import { apiService } from '../../../services/api-service.ts';
 import './AIGenerationPage.css';
-
+import { useTranslation } from 'react-i18next';
 import { aiService } from './ai.service';
 
 export const AIGenerationPage = () => {
+  const { t } = useTranslation();
   const [prompt, setPrompt] = useState('');
   const [drafts, setDrafts] = useState<Service[]>([]);
   const [selectedDraft, setSelectedDraft] = useState<Service | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [allCategories, setAllCategories] = useState<Category[]>([]);
-
+  const [loading, setLoading] = useState(false);
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
 
@@ -30,14 +37,13 @@ export const AIGenerationPage = () => {
         setAllCategories(data);
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : 'Failed to load categories';
+          error instanceof Error ? error.message : t('ai.categoryError');
         setSnackMessage(errorMessage);
         setSnackOpen(true);
       }
     };
-
     fetchCategories();
-  }, []);
+  }, [t]);
 
   const formatForBackend = (service: Service): UpdateServiceDto => ({
     name: service.name,
@@ -46,21 +52,20 @@ export const AIGenerationPage = () => {
     duration: Number(service.duration),
     workersCount: service.workersCount,
     discount: service.discount ?? 0,
-    categories:
-      service.categories && service.categories.length
-        ? service.categories.map((c) => c.id)
-        : [],
+    categories: service.categories?.map((c) => c.id) || [],
   });
 
   const handleGenerate = async () => {
+    if (!prompt.trim()) return;
     try {
+      setLoading(true);
       const rawData = await aiService.generateServices(prompt);
-      const normalized = rawData.map(mapAiResponseToService);
-      setDrafts(normalized);
-    } catch (error) {
-      console.log(error);
-      setSnackMessage('AI Generation failed');
+      setDrafts(rawData.map(mapAiResponseToService));
+    } catch {
+      setSnackMessage(t('ai.generateError'));
       setSnackOpen(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,35 +78,33 @@ export const AIGenerationPage = () => {
 
   const handleSendOneToServer = async (service: Service) => {
     try {
-      const dto = formatForBackend(service);
-      await userService.createService(dto);
+      await userService.createService(formatForBackend(service));
       setDrafts((prev) => prev.filter((d) => d.id !== service.id));
       setIsModalOpen(false);
-      setSnackMessage('Service saved successfully!');
+      setSnackMessage(t('ai.saveSuccess'));
       setSnackOpen(true);
     } catch {
-      setSnackMessage('Duplicate name)');
+      setSnackMessage(t('ai.duplicateError'));
       setSnackOpen(true);
     }
   };
 
   const handleSaveAll = async () => {
     try {
-      const promises = drafts.map((d) =>
-        userService.createService(formatForBackend(d))
+      await Promise.all(
+        drafts.map((d) => userService.createService(formatForBackend(d)))
       );
-      await Promise.all(promises);
       setDrafts([]);
-      setSnackMessage('All services have been successfully imported!');
+      setSnackMessage(t('ai.saveAllSuccess'));
       setSnackOpen(true);
     } catch {
-      setSnackMessage('Check for duplicate names');
+      setSnackMessage(t('ai.duplicateError'));
       setSnackOpen(true);
     }
   };
 
   return (
-    <main className={catalogStyles.main}>
+    <main className={`${catalogStyles.main} no-scroll`}>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={snackOpen}
@@ -110,64 +113,79 @@ export const AIGenerationPage = () => {
         message={snackMessage}
       />
 
-      <section className={catalogStyles.catalog}>
+      <section
+        className={catalogStyles.catalog}
+        style={{ paddingTop: 10, marginTop: 0 }}
+      >
         <div
           className={`${catalogStyles.container} page-container ai-page-column`}
         >
-          <div className="ai-input-wrapper">
-            <TextField
-              className="ai-text-field"
-              fullWidth
-              multiline
-              placeholder="Enter your query..."
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              variant="standard"
-              InputProps={{ disableUnderline: true }}
-            />
-            <Button
-              variant="contained"
-              onClick={handleGenerate}
-              className="ai-generate-button"
-            >
-              <AutoAwesomeIcon />
-            </Button>
-          </div>
-
-          {drafts.length > 0 && (
-            <div className="ai-actions-row">
+          <div className="ai-controls-row">
+            <div className="ai-input-wrapper">
+              <TextField
+                className="ai-text-field"
+                fullWidth
+                multiline
+                placeholder={t('ai.placeholder')}
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                variant="standard"
+                InputProps={{ disableUnderline: true }}
+              />
               <Button
                 variant="contained"
-                className="ai-save-all-btn"
+                onClick={handleGenerate}
+                className="ai-generate-button"
+                disabled={loading}
+              >
+                {<AutoAwesomeIcon />}
+              </Button>
+            </div>
+
+            {!loading && drafts.length > 0 && (
+              <Button
+                variant="contained"
+                className="ai-save-all-header-btn"
                 onClick={handleSaveAll}
                 startIcon={<SaveIcon />}
               >
-                Save All to Server
+                {t('ai.saveAllBtn')}
               </Button>
-            </div>
-          )}
-
-          <div className={`${catalogStyles.cards} ai-cards-grid`}>
-            {drafts.map((draft) => (
-              <Card
-                key={draft.id}
-                data={draft}
-                isAdminMode
-                handleClick={() => {
-                  setSelectedDraft(draft);
-                  setIsModalOpen(true);
-                }}
-                onDelete={() =>
-                  setDrafts((prev) => prev.filter((d) => d.id !== draft.id))
-                }
-              />
-            ))}
+            )}
           </div>
 
-          {drafts.length === 0 && (
-            <p className="ai-empty-text">
-              Generate services with AI to start editing
-            </p>
+          {loading ? (
+            <Box className="ai-loader-container">
+              <CircularProgress size={80} sx={{ color: '#074733' }} />
+            </Box>
+          ) : (
+            <>
+              <div
+                className={`ai-scroll-container ${drafts.length > 0 ? 'has-content' : ''}`}
+              >
+                <div className={`${catalogStyles.cards} ai-cards-grid`}>
+                  {drafts.map((draft) => (
+                    <Card
+                      key={draft.id}
+                      data={draft}
+                      isAdminMode
+                      handleClick={() => {
+                        setSelectedDraft(draft);
+                        setIsModalOpen(true);
+                      }}
+                      onDelete={() =>
+                        setDrafts((prev) =>
+                          prev.filter((d) => d.id !== draft.id)
+                        )
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+              {drafts.length === 0 && (
+                <p className="ai-empty-text">{t('ai.emptyText')}</p>
+              )}
+            </>
           )}
         </div>
       </section>

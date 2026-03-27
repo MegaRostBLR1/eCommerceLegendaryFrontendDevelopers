@@ -1,6 +1,7 @@
 import logo from '../../assets/icons/logo.svg';
 import './footer.css';
 import type { Developer, InformationLink } from './FooterTypes';
+import { useTranslation } from 'react-i18next';
 
 const developers: Developer[] = [
   { name: 'bssier', ghLink: 'https://github.com/bssier' },
@@ -25,12 +26,13 @@ const developers: Developer[] = [
 const informationLinks: InformationLink[] = [
   { linkName: 'RS School', link: 'https://rs.school/' },
   {
-    linkName: 'The Repository',
+    linkName: 'footer.repository',
     link: 'https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/tree/feature/add-mui/frontend',
   },
 ];
 
 function Footer() {
+  const { t } = useTranslation();
   return (
     <footer>
       <div className="footer-wrapper">
@@ -41,7 +43,7 @@ function Footer() {
           </span>
         </div>
         <div className={'developers-container'}>
-          <span className={'developers-header'}>Developers</span>
+          <span className={'developers-header'}>{t('footer.developers')}</span>
           <div className={'developers-list'}>
             {developers.map((developer: Developer) => (
               <a
@@ -65,7 +67,7 @@ function Footer() {
               className={'information-link'}
               rel="noreferrer"
             >
-              {link.linkName}
+              {t(link.linkName)}
             </a>
           ))}
         </div>

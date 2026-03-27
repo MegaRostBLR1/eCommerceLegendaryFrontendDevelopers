@@ -10,10 +10,12 @@ import './admin-stats-page.css';
 import { UserOrdersChart } from '../../../components/graphics/UserGraphicStats/UserGraphicStats.tsx';
 import { authorizationService } from '../../../services/authorization-service.ts';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 dayjs.extend(isoWeek);
 
 export const AdminStatsPage = () => {
+  const { i18n } = useTranslation();
   const currentWeekStart = dayjs().startOf('isoWeek');
   const [startDate, setStartDate] = useState(currentWeekStart);
 
@@ -64,7 +66,8 @@ export const AdminStatsPage = () => {
                 textTransform: 'capitalize',
               }}
             >
-              {startDate.format('DD MMM')} — {endDate.format('DD MMM YYYY')}
+              {startDate.locale(i18n.language).format('DD MMM')} —{' '}
+              {endDate.locale(i18n.language).format('DD MMM YYYY')}
             </Typography>
 
             <IconButton

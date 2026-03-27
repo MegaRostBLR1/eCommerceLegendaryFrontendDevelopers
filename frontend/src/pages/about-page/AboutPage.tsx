@@ -1,6 +1,4 @@
-import { useState } from 'react';
-import LanguageIcon from '@mui/icons-material/Language';
-import { IconButton, Tooltip } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { ABOUT_TEXT } from './AboutData';
 import './AboutPage.css';
 
@@ -26,26 +24,13 @@ const AboutSection = ({
 );
 
 export const AboutPage = () => {
-  const [lang, setLang] = useState<'ru' | 'en'>('ru');
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language.startsWith('ru') ? 'ru' : 'en';
 
-  const toggleLang = () => setLang((prev) => (prev === 'ru' ? 'en' : 'ru'));
-  const t = ABOUT_TEXT[lang];
+  const t = ABOUT_TEXT[currentLang];
 
   return (
     <div className="about-page">
-      <div className="lang-switcher">
-        <Tooltip
-          title={lang === 'ru' ? 'Switch to English' : 'Переключить на русский'}
-        >
-          <IconButton onClick={toggleLang} color="inherit">
-            <LanguageIcon />
-            <span style={{ fontSize: '14px', marginLeft: '5px' }}>
-              {lang.toUpperCase()}
-            </span>
-          </IconButton>
-        </Tooltip>
-      </div>
-
       <div className="about-container">
         <h1 className="about-title">{t.title}</h1>
 
