@@ -36,22 +36,23 @@ interface DailyDataItem {
 interface UserChartProps {
   startDate: dayjs.Dayjs;
   endDate: dayjs.Dayjs;
+  userId?: number;
 }
 
-export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
-  const { t, i18n } = useTranslation();
+export const UserOrdersChart = ({ startDate, endDate, userId: propsUserId }: UserChartProps) => {
   const [chartData, setChartData] = useState<ChartData<'line'> | null>(null);
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
-  const userId = authorizationService.getUserId();
+
+  const UserId = propsUserId || authorizationService.getUserId();
 
   useEffect(() => {
     const fetchUserStats = async () => {
-      if (!userId) return;
+      if (!UserId) return;
 
       const dateStart = startDate.format('YYYY-MM-DD');
       const dateEnd = endDate.format('YYYY-MM-DD');
-      const endpoint = `/statistics/users/${userId}?dateStart=${dateStart}&dateEnd=${dateEnd}`;
+      const endpoint = `/statistics/users/${UserId}?dateStart=${dateStart}&dateEnd=${dateEnd}`;
 
       try {
         const result = await apiService<DailyDataItem[]>(endpoint);
@@ -92,7 +93,7 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
     };
 
     fetchUserStats();
-  }, [userId, startDate, endDate, i18n.language, t]);
+  }, [UserId, startDate, endDate]);
 
   return (
     <div
@@ -108,7 +109,7 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
         className="stats-title"
         style={{ marginBottom: '20px', fontFamily: 'Montserrat' }}
       >
-        {t('stats.title')}
+        Weekly Activity
       </h3>
       {chartData && (
         <Line

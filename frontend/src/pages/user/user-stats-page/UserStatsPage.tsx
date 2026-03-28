@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import isoWeek from 'dayjs/plugin/isoWeek';
@@ -15,6 +16,8 @@ dayjs.extend(isoWeek);
 
 export const UserStatsPage = () => {
   const { i18n } = useTranslation();
+  const { userId } = useParams<{ userId: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     dayjs.locale(i18n.language);
@@ -88,7 +91,11 @@ export const UserStatsPage = () => {
         <div className="stats-grid">
           <div className="stats-card">
             <div className="chart-wrapper">
-              <UserOrdersChart startDate={startDate} endDate={endDate} />
+              <UserOrdersChart 
+                startDate={startDate} 
+                endDate={endDate} 
+                userId={userId ? Number(userId) : undefined} 
+              />
             </div>
           </div>
         </div>

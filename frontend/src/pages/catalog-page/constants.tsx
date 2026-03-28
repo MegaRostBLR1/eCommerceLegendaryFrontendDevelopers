@@ -1,5 +1,5 @@
 export const PAGINATION_STYLE = {
-  'margin-top': 'auto',
+  marginTop: 'auto',
   '& .MuiPagination-ul': {
     justifyContent: 'center',
   },
@@ -41,7 +41,7 @@ export const LABEL_STYLE = {
 };
 
 export const SELECT_STYLE = {
-  '& .MuiSelect-select': { 'padding-right': '47px !important' },
+  '& .MuiSelect-select': { paddingRight: '47px !important' },
   '& fieldset': {
     borderColor: '#063526 !important',
   },
