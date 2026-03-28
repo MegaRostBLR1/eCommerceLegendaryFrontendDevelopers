@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import dayjs from 'dayjs';
 import { Snackbar } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { authorizationService } from '../../../services/authorization-service.ts';
 import { apiService } from '../../../services/api-service.ts';
-import { useTranslation } from 'react-i18next';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -39,7 +39,12 @@ interface UserChartProps {
   userId?: number;
 }
 
-export const UserOrdersChart = ({ startDate, endDate, userId: propsUserId }: UserChartProps) => {
+export const UserOrdersChart = ({
+  startDate,
+  endDate,
+  userId: propsUserId,
+}: UserChartProps) => {
+  const { t } = useTranslation();
   const [chartData, setChartData] = useState<ChartData<'line'> | null>(null);
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
@@ -69,9 +74,7 @@ export const UserOrdersChart = ({ startDate, endDate, userId: propsUserId }: Use
         });
 
         setChartData({
-          labels: fullWeekDays.map((day) =>
-            day.locale(i18n.language).format('ddd DD/MM')
-          ),
+          labels: fullWeekDays.map((day) => day.format('ddd DD/MM')),
           datasets: [
             {
               fill: true,
@@ -86,14 +89,16 @@ export const UserOrdersChart = ({ startDate, endDate, userId: propsUserId }: Use
             },
           ],
         });
-      } catch {
-        setSnackMessage(t('stats.errorLoad'));
+      } catch (error) {
+        setSnackMessage(
+          error instanceof Error ? error.message : t('stats.errorLoad')
+        );
         setSnackOpen(true);
       }
     };
 
     fetchUserStats();
-  }, [UserId, startDate, endDate]);
+  }, [UserId, startDate, endDate, t]);
 
   return (
     <div
@@ -109,7 +114,7 @@ export const UserOrdersChart = ({ startDate, endDate, userId: propsUserId }: Use
         className="stats-title"
         style={{ marginBottom: '20px', fontFamily: 'Montserrat' }}
       >
-        Weekly Activity
+        {t('stats.title')}
       </h3>
       {chartData && (
         <Line

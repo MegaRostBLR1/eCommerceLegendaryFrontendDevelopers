@@ -99,7 +99,9 @@
     "errorLoad": "Error fetching stats",
     "week": "week",
     "globalTitle": "Global System Statistics",
-    "totalSystemOrders": "Total System Orders"
+    "totalSystemOrders": "Total System Orders",
+    "userActivityTitle": "User Activity",
+    "myActivityTitle": "Your Activity"
   },
   "common": {
     "loading": "Loading..."

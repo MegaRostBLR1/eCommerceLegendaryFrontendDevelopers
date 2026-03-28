@@ -9,16 +9,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { UserGraphicOrdersStats } from '../../../components/graphics/UserGraphicOrdersStats/UserGraphicOrdersStats.tsx';
 import { AdminOrdersChart } from '../../../components/graphics/AdminGraphicStats/AdminGraphicStats.tsx';
 import { authorizationService } from '../../../services/authorization-service.ts';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import './admin-stats-page.css';
-
-dayjs.extend(isoWeek);
-
-export const AdminStatsPage = () => {
-  const { i18n } = useTranslation();
-  const currentWeekStart = dayjs().startOf('isoWeek');
-  const [startDate, setStartDate] = useState(currentWeekStart);
 
 export const AdminStatsPage = () => {
   const navigate = useNavigate();
@@ -27,26 +18,41 @@ export const AdminStatsPage = () => {
   const startDateParam = searchParams.get('startDate');
   const endDateParam = searchParams.get('endDate');
 
-  const startDate = startDateParam ? dayjs(startDateParam) : dayjs().startOf('month');
+  const startDate = startDateParam
+    ? dayjs(startDateParam)
+    : dayjs().startOf('month');
   const endDate = endDateParam ? dayjs(endDateParam) : dayjs().endOf('month');
 
   const dateStartStr = startDate.format('YYYY-MM-DD');
   const dateEndStr = endDate.format('YYYY-MM-DD');
 
   useEffect(() => {
-    if (!authorizationService.isAuthUser() || !authorizationService.userIsAdmin()) {
+    if (
+      !authorizationService.isAuthUser() ||
+      !authorizationService.userIsAdmin()
+    ) {
       navigate('/');
       return;
     }
 
     if (!startDateParam || !endDateParam) {
-      setSearchParams((prev) => {
-        if (!startDateParam) prev.set('startDate', dateStartStr);
-        if (!endDateParam) prev.set('endDate', dateEndStr);
-        return prev;
-      }, { replace: true });
+      setSearchParams(
+        (prev) => {
+          if (!startDateParam) prev.set('startDate', dateStartStr);
+          if (!endDateParam) prev.set('endDate', dateEndStr);
+          return prev;
+        },
+        { replace: true }
+      );
     }
-  }, [navigate, startDateParam, endDateParam, dateStartStr, dateEndStr, setSearchParams]);
+  }, [
+    navigate,
+    startDateParam,
+    endDateParam,
+    dateStartStr,
+    dateEndStr,
+    setSearchParams,
+  ]);
 
   const handleStartDateChange = (newValue: Dayjs | null) => {
     if (newValue) {
@@ -102,12 +108,18 @@ export const AdminStatsPage = () => {
           </LocalizationProvider>
         </div>
 
-        <div className="graphic-container" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div
+          className="graphic-container"
+          style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
+        >
           <div className="stats-card">
             <AdminOrdersChart />
           </div>
           <div className="stats-card">
-            <UserGraphicOrdersStats startDate={dateStartStr} endDate={dateEndStr} />
+            <UserGraphicOrdersStats
+              startDate={dateStartStr}
+              endDate={dateEndStr}
+            />
           </div>
         </div>
       </div>
