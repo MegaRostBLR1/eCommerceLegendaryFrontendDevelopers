@@ -99,7 +99,9 @@
     "errorLoad": "Ошибка при загрузке статистики",
     "week": "неделя",
     "globalTitle": "Глобальная статистика системы",
-    "totalSystemOrders": "Всего заказов в системе"
+    "totalSystemOrders": "Всего заказов в системе",
+    "userActivityTitle": "Активность пользователя",
+    "myActivityTitle": "Ваша активность"
   },
   "common": {
     "loading": "Загрузка..."

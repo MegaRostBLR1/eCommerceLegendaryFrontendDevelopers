@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 import isoWeek from 'dayjs/plugin/isoWeek';
@@ -7,29 +7,20 @@ import { UserOrdersChart } from '../../../components/graphics/UserGraphicStats/U
 import { IconButton, Typography, Paper } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { authorizationService } from '../../../services/authorization-service.ts';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './user-stats-page.css';
 
 dayjs.extend(isoWeek);
 
 export const UserStatsPage = () => {
-  const { i18n } = useTranslation();
+  const { t } = useTranslation();
   const { userId } = useParams<{ userId: string }>();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  useEffect(() => {
-    dayjs.locale(i18n.language);
-  }, [i18n.language]);
 
   const currentWeekStart = dayjs().startOf('isoWeek');
   const [startDate, setStartDate] = useState(currentWeekStart);
 
-  const handlePrevWeek = () =>
-    setStartDate(startDate.subtract(1, 'week').startOf('isoWeek'));
-  const handleNextWeek = () =>
-    setStartDate(startDate.add(1, 'week').startOf('isoWeek'));
+  const handlePrevWeek = () => setStartDate(startDate.subtract(1, 'week'));
+  const handleNextWeek = () => setStartDate(startDate.add(1, 'week'));
 
   const endDate = startDate.endOf('isoWeek');
 
@@ -37,19 +28,28 @@ export const UserStatsPage = () => {
     startDate.isSame(currentWeekStart, 'day') ||
     startDate.isAfter(currentWeekStart);
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!authorizationService.isAuthUser()) {
-      navigate('/');
-    }
-  }, [navigate]);
-
   return (
     <section className="stats-preview">
       <div className="page-container">
         <div className="stats-header">
-          <div className="weekpicker-container">
+          <Typography
+            variant="h5"
+            sx={{
+              mr: 3,
+              mb: 2,
+              fontFamily: 'Montserrat',
+              fontWeight: 600,
+            }}
+          >
+            {userId
+              ? `${t('stats.userActivityTitle', 'Активность пользователя')} (ID: ${userId})`
+              : t('stats.myActivityTitle', 'Ваша активность')}
+          </Typography>
+
+          <div
+            className="weekpicker-container"
+            style={{ marginBottom: '20px' }}
+          >
             <Paper
               elevation={0}
               variant="outlined"
@@ -58,6 +58,8 @@ export const UserStatsPage = () => {
                 alignItems: 'center',
                 p: 0.5,
                 borderRadius: 2,
+                bgcolor: 'background.paper',
+                width: 'fit-content',
               }}
             >
               <IconButton onClick={handlePrevWeek} size="small">
@@ -68,13 +70,12 @@ export const UserStatsPage = () => {
                 sx={{
                   mx: 2,
                   fontWeight: 500,
-                  minWidth: '200px',
+                  minWidth: '180px',
                   textAlign: 'center',
                   textTransform: 'capitalize',
                 }}
               >
-                {startDate.locale(i18n.language).format('DD MMM')} —{' '}
-                {endDate.locale(i18n.language).format('DD MMM YYYY')}
+                {startDate.format('DD MMM')} — {endDate.format('DD MMM YYYY')}
               </Typography>
 
               <IconButton
@@ -82,7 +83,12 @@ export const UserStatsPage = () => {
                 size="small"
                 disabled={isLastAvailableWeek}
               >
-                <ArrowForwardIosIcon fontSize="small" />
+                <ArrowForwardIosIcon
+                  fontSize="small"
+                  sx={{
+                    color: isLastAvailableWeek ? 'action.disabled' : 'inherit',
+                  }}
+                />
               </IconButton>
             </Paper>
           </div>
@@ -90,13 +96,11 @@ export const UserStatsPage = () => {
 
         <div className="stats-grid">
           <div className="stats-card">
-            <div className="chart-wrapper">
-              <UserOrdersChart 
-                startDate={startDate} 
-                endDate={endDate} 
-                userId={userId ? Number(userId) : undefined} 
-              />
-            </div>
+            <UserOrdersChart
+              startDate={startDate}
+              endDate={endDate}
+              userId={userId ? Number(userId) : undefined}
+            />
           </div>
         </div>
       </div>

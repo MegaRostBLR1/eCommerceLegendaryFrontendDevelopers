@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { Snackbar } from '@mui/material';
 import { apiService } from '../../../services/api-service.ts';
-import { useTranslation } from 'react-i18next';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -34,7 +33,6 @@ interface StatDataItem {
 }
 
 export const AdminOrdersChart = () => {
-  const { t, i18n } = useTranslation();
   const [chartData, setChartData] = useState<ChartData<'bar'> | null>(null);
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
@@ -47,7 +45,9 @@ export const AdminOrdersChart = () => {
 
       try {
         const result = await apiService<StatDataItem[]>(endpoint);
-        const cleanResult = result.filter((date) => date.startDate !== date.endDate);
+        const cleanResult = result.filter(
+          (date) => date.startDate !== date.endDate
+        );
 
         setChartData({
           labels: cleanResult.map((date) => {
@@ -57,7 +57,7 @@ export const AdminOrdersChart = () => {
           }),
           datasets: [
             {
-              label: t('stats.totalSystemOrders'),
+              label: 'Total System Orders',
               data: cleanResult.map((d) => d.count),
               backgroundColor: '#1a3e2b',
               borderRadius: 4,
@@ -66,14 +66,14 @@ export const AdminOrdersChart = () => {
         });
       } catch (error) {
         setSnackMessage(
-          error instanceof Error ? error.message : t('stats.errorLoad')
+          error instanceof Error ? error.message : 'Error fetching stats'
         );
         setSnackOpen(true);
       }
     };
 
     fetchAdminStats();
-  }, [i18n.language, t]);
+  }, []);
 
   return (
     <div
@@ -94,7 +94,7 @@ export const AdminOrdersChart = () => {
           fontSize: '18px',
         }}
       >
-        {t('stats.globalTitle')}
+        Global System Statistics
       </h3>
 
       {chartData ? (
@@ -133,7 +133,11 @@ export const AdminOrdersChart = () => {
             }}
           />
         </div>
-      ) : <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading chart...</div>}
+      ) : (
+        <div style={{ textAlign: 'center', marginTop: '50px' }}>
+          Loading chart...
+        </div>
+      )}
 
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
