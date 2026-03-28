@@ -11,8 +11,10 @@ import OpenOrderForm from '../../components/modals/OrderForm/OrderForm';
 import { authorizationService } from '../../services/authorization-service.ts';
 import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal.tsx';
 import { apiService } from '../../services/api-service.ts';
+import { useTranslation } from 'react-i18next';
 
 export const CatalogPage = () => {
+  const { t } = useTranslation();
   const [data, setData] = useState<ServicesData>();
   const [selectedCategories, setSelectedCategories] = useState(['all']);
   const [page, setPage] = useState(1);
@@ -75,7 +77,7 @@ export const CatalogPage = () => {
       <section className={styles.catalog}>
         <div className={styles.container + ' page-container'}>
           <div className={styles.wrapper}>
-            <h1 className={styles.title}>services</h1>
+            <h1 className={styles.title}>{t('catalog.title')}</h1>
             <div className={styles.content}>
               <div className={styles.filters}>
                 <div className={styles.categories}>

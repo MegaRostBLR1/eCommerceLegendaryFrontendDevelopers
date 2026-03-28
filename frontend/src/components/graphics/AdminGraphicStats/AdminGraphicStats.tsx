@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { Snackbar } from '@mui/material';
 import { apiService } from '../../../services/api-service.ts';
+import { useTranslation } from 'react-i18next';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -33,6 +34,7 @@ interface StatDataItem {
 }
 
 export const AdminOrdersChart = () => {
+  const { t, i18n } = useTranslation();
   const [chartData, setChartData] = useState<ChartData<'bar'> | null>(null);
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
@@ -55,7 +57,7 @@ export const AdminOrdersChart = () => {
           }),
           datasets: [
             {
-              label: 'Total System Orders',
+              label: t('stats.totalSystemOrders'),
               data: cleanResult.map((d) => d.count),
               backgroundColor: '#1a3e2b',
               borderRadius: 4,
@@ -64,14 +66,14 @@ export const AdminOrdersChart = () => {
         });
       } catch (error) {
         setSnackMessage(
-          error instanceof Error ? error.message : 'Error fetching stats'
+          error instanceof Error ? error.message : t('stats.errorLoad')
         );
         setSnackOpen(true);
       }
     };
 
     fetchAdminStats();
-  }, []);
+  }, [i18n.language, t]);
 
   return (
     <div
@@ -92,7 +94,7 @@ export const AdminOrdersChart = () => {
           fontSize: '18px',
         }}
       >
-        Global System Statistics
+        {t('stats.globalTitle')}
       </h3>
 
       {chartData ? (

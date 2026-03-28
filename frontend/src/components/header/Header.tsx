@@ -7,36 +7,39 @@ import logo from '../../assets/icons/logo.svg';
 import './header.css';
 import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal';
 import { useAuth } from '../../context/useAuth';
+import LanguageIcon from '@mui/icons-material/Language';
+import { useTranslation } from 'react-i18next';
 
 type Role = 'admin' | 'user';
 type MenuItemType =
   | { title: string; path: string; isExit?: false }
-  | { title: 'Logout'; isExit: true };
+  | { title: string; isExit: true };
 
 const NAV_LINKS = [
-  { id: 'catalog', title: 'Catalog', path: '/catalog' },
-  { id: 'about', title: 'About', path: '/about' },
+  { id: 'catalog', title: 'nav.catalog', path: '/catalog' },
+  { id: 'about', title: 'nav.about', path: '/about' },
 ];
 
 const MENU_ITEMS: Record<Role, MenuItemType[]> = {
   admin: [
-    { title: 'Profile', path: '/profile' },
-    { title: 'Users', path: '/admin/users' },
-    { title: 'Statistics', path: '/admin/statistics' },
-    { title: 'Services', path: '/admin/services' },
-    { title: 'Orders', path: '/admin/orders' },
-    { title: 'Logout', isExit: true },
+    { title: 'menu.profile', path: '/profile' },
+    { title: 'menu.users', path: '/admin/users' },
+    { title: 'menu.statistics', path: '/admin/statistics' },
+    { title: 'menu.services', path: '/admin/services' },
+    { title: 'menu.orders', path: '/admin/orders' },
+    { title: 'menu.logout', isExit: true },
   ],
   user: [
-    { title: 'Profile', path: '/profile' },
-    { title: 'Statistics', path: '/statistics' },
-    { title: 'Orders', path: '/orders' },
-    { title: 'Logout', isExit: true },
+    { title: 'menu.profile', path: '/profile' },
+    { title: 'menu.statistics', path: '/statistics' },
+    { title: 'menu.orders', path: '/orders' },
+    { title: 'menu.logout', isExit: true },
   ],
 };
 
 const Header = () => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   const {
     isAuth,
@@ -49,6 +52,11 @@ const Header = () => {
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const isMenuOpen = Boolean(anchorEl);
+
+  const toggleLanguage = () => {
+    const nextLang = i18n.language === 'ru' ? 'en' : 'ru';
+    i18n.changeLanguage(nextLang);
+  };
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -96,7 +104,7 @@ const Header = () => {
           <nav className="nav">
             {NAV_LINKS.map((link) => (
               <Link key={link.id} to={link.path} className="navLink">
-                {link.title}
+                {t(link.title)}
               </Link>
             ))}
           </nav>
@@ -114,16 +122,11 @@ const Header = () => {
               <>
                 <div className="profile-wrapper" onClick={handleOpenMenu}>
                   <IconButton
-                    aria-label="Profile"
-                    aria-controls={isMenuOpen ? 'profile-menu' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={isMenuOpen ? 'true' : undefined}
                     className="profileIconButton"
                     sx={{ padding: 0, minWidth: 'auto' }}
                   >
                     <PersonOutlineIcon />
                   </IconButton>
-
                   {userEmail && (
                     <span className="profile-email">{userEmail}</span>
                   )}
@@ -142,12 +145,19 @@ const Header = () => {
                       onClick={() => handleMenuItemClick(item)}
                       className={`profileMenuItem ${item.isExit ? 'profileMenuItemExit' : ''}`}
                     >
-                      {item.title}
+                      {t(item.title)}
                     </MenuItem>
                   ))}
                 </Menu>
               </>
             )}
+
+            <div className="lang-switcher" onClick={toggleLanguage}>
+              <IconButton className="lang-icon-btn" color="inherit">
+                <LanguageIcon className="lang-icon" />
+              </IconButton>
+              <span className="lang-text">{i18n.language}</span>
+            </div>
           </div>
         </div>
       </header>

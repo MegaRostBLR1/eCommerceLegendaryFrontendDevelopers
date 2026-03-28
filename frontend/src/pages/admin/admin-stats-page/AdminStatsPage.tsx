@@ -9,7 +9,16 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { UserGraphicOrdersStats } from '../../../components/graphics/UserGraphicOrdersStats/UserGraphicOrdersStats.tsx';
 import { AdminOrdersChart } from '../../../components/graphics/AdminGraphicStats/AdminGraphicStats.tsx';
 import { authorizationService } from '../../../services/authorization-service.ts';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './admin-stats-page.css';
+
+dayjs.extend(isoWeek);
+
+export const AdminStatsPage = () => {
+  const { i18n } = useTranslation();
+  const currentWeekStart = dayjs().startOf('isoWeek');
+  const [startDate, setStartDate] = useState(currentWeekStart);
 
 export const AdminStatsPage = () => {
   const navigate = useNavigate();

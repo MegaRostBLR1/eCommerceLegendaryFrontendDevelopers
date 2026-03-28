@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
@@ -6,37 +7,43 @@ import { UserOrdersChart } from '../../../components/graphics/UserGraphicStats/U
 import { IconButton, Typography, Paper } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { authorizationService } from '../../../services/authorization-service.ts';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './user-stats-page.css';
 
 dayjs.extend(isoWeek);
 
 export const UserStatsPage = () => {
+  const { i18n } = useTranslation();
   const { userId } = useParams<{ userId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const dateStartParam = searchParams.get('dateStart');
-  const dateEndParam = searchParams.get('dateEnd');
+  useEffect(() => {
+    dayjs.locale(i18n.language);
+  }, [i18n.language]);
 
-  const startDate = dateStartParam
-    ? dayjs(dateStartParam)
-    : dayjs().startOf('month');
-
-  const endDate = dateEndParam ? dayjs(dateEndParam) : dayjs().endOf('month');
-
-  const updatePeriod = (newStart: dayjs.Dayjs) => {
-    setSearchParams({
-      dateStart: newStart.format('YYYY-MM-DD'),
-      dateEnd: newStart.endOf('isoWeek').format('YYYY-MM-DD'),
-    });
-  };
+  const currentWeekStart = dayjs().startOf('isoWeek');
+  const [startDate, setStartDate] = useState(currentWeekStart);
 
   const handlePrevWeek = () =>
-    updatePeriod(startDate.subtract(1, 'week').startOf('isoWeek'));
+    setStartDate(startDate.subtract(1, 'week').startOf('isoWeek'));
   const handleNextWeek = () =>
-    updatePeriod(startDate.add(1, 'week').startOf('isoWeek'));
+    setStartDate(startDate.add(1, 'week').startOf('isoWeek'));
+
+  const endDate = startDate.endOf('isoWeek');
 
   const isLastAvailableWeek =
-    startDate.isAfter(dayjs(), 'week') || startDate.isSame(dayjs(), 'week');
+    startDate.isSame(currentWeekStart, 'day') ||
+    startDate.isAfter(currentWeekStart);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authorizationService.isAuthUser()) {
+      navigate('/');
+    }
+  }, [navigate]);
 
   return (
     <section className="stats-preview">
@@ -51,7 +58,6 @@ export const UserStatsPage = () => {
                 alignItems: 'center',
                 p: 0.5,
                 borderRadius: 2,
-                bgcolor: 'background.paper',
               }}
             >
               <IconButton onClick={handlePrevWeek} size="small">
@@ -62,12 +68,13 @@ export const UserStatsPage = () => {
                 sx={{
                   mx: 2,
                   fontWeight: 500,
-                  minWidth: '180px',
+                  minWidth: '200px',
                   textAlign: 'center',
                   textTransform: 'capitalize',
                 }}
               >
-                {startDate.format('DD MMM')} — {endDate.format('DD MMM YYYY')}
+                {startDate.locale(i18n.language).format('DD MMM')} —{' '}
+                {endDate.locale(i18n.language).format('DD MMM YYYY')}
               </Typography>
 
               <IconButton
@@ -75,12 +82,7 @@ export const UserStatsPage = () => {
                 size="small"
                 disabled={isLastAvailableWeek}
               >
-                <ArrowForwardIosIcon
-                  fontSize="small"
-                  sx={{
-                    color: isLastAvailableWeek ? 'action.disabled' : 'inherit',
-                  }}
-                />
+                <ArrowForwardIosIcon fontSize="small" />
               </IconButton>
             </Paper>
           </div>

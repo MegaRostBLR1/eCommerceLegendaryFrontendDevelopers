@@ -1,0 +1,145 @@
+{
+  "nav": {
+    "catalog": "Catalog",
+    "about": "About"
+  },
+  "menu": {
+    "profile": "Profile",
+    "users": "Users",
+    "statistics": "Statistics",
+    "services": "Services",
+    "orders": "Orders",
+    "logout": "Logout"
+  },
+  "footer": {
+    "developers": "Developers",
+    "repository": "The Repositories"
+  },
+  "auth": {
+    "title": "Authorization",
+    "email": "Email",
+    "password": "Password",
+    "send": "Send"
+  },
+  "home": {
+    "title": "Services from AI",
+    "bestsellerTitle": "A HIT OF SALES",
+    "allServices": "All services",
+    "errorLoad": "Failed to load services"
+  },
+  "orderForm": {
+    "editOrder": "Edit order",
+    "toOrder": "To order",
+    "service": "Service",
+    "date": "Date",
+    "time": "Time",
+    "expired": "Order date has arrived.",
+    "quantity": "Quantity",
+    "description": "Description",
+    "noDescription": "No description provided",
+    "editHint": "You can only change the date and time.",
+    "createHint": "Order will be created.",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "close": "Close",
+    "error": "Error creating order"
+  },
+  "catalog": {
+    "title": "Services",
+    "searchPlaceholder": "Search services...",
+    "categories": "Categories",
+    "all": "All",
+    "errorCategories": "Failed to load categories"
+  },
+  "orders": {
+    "myOrders": "My Orders",
+    "userOrders": "User Orders",
+    "noOrders": "No orders found for this user.",
+    "noDescription": "No description provided"
+  },
+  "card": {
+    "currency": "USD",
+    "employees": "EMPLOYEES",
+    "specialists": "specialists",
+    "duration": "DURATION",
+    "orderNow": "ORDER NOW"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Oops! The page you are looking for was not found.",
+    "backLink": "Back to main page"
+  },
+  "profile": {
+    "personalData": "PERSONAL DATA",
+    "editUser": "EDIT USER",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "patronymic": "Patronymic",
+    "email": "E-mail",
+    "roleLabel": "Role",
+    "roles": {
+      "admin": "Admin",
+      "user": "User"
+    },
+    "saveChanges": "SAVE CHANGES",
+    "saving": "Saving...",
+    "userNotFound": "User not found",
+    "success": {
+      "update": "Data updated successfully"
+    },
+    "errors": {
+      "load": "Error loading profile",
+      "fields": "Fill in the red fields!",
+      "save": "Failed to save changes"
+    }
+  },
+  "stats": {
+    "title": "Weekly Personal Activity",
+    "dailyOrders": "Daily Orders",
+    "errorLoad": "Error fetching stats",
+    "week": "week",
+    "globalTitle": "Global System Statistics",
+    "totalSystemOrders": "Total System Orders"
+  },
+  "common": {
+    "loading": "Loading..."
+  },
+  "users": {
+    "searchLabel": "Enter user e-mail",
+    "loadError": "Failed to load users",
+    "email": "E-mail",
+    "role": "Role",
+    "notFound": "Sorry, we couldn't find a user matching your request.",
+    "tooltipStats": "User Statistics",
+    "tooltipOrders": "View User Orders",
+    "tooltipEdit": "Edit User"
+  },
+  "editModal": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "patronymic": "Patronymic",
+    "roleUser": "User",
+    "roleAdmin": "Admin",
+    "saveBtn": "SAVE CHANGES",
+    "saving": "Saving...",
+    "fillRequired": "Please fill all required fields",
+    "success": "Data updated successfully"
+  },
+  "services": {
+    "adminTitle": "Admin Service Management",
+    "aiGenBtn": "AI Generation",
+    "loadError": "Failed to load services",
+    "deleteConfirm": "Are you sure you want to delete this service?",
+    "deleteError": "Delete failed"
+  },
+  "ai": {
+    "placeholder": "Enter your query to create services...",
+    "categoryError": "Failed to load categories",
+    "generateError": "AI Generation failed",
+    "saveSuccess": "Service saved successfully!",
+    "saveAllSuccess": "All services have been successfully imported!",
+    "duplicateError": "Error: check for duplicate names",
+    "saveAllBtn": "Save All to Server",
+    "emptyText": "Generate services with AI to start editing"
+  }
+}

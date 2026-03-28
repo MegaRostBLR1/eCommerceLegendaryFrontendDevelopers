@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { Snackbar } from '@mui/material';
 import { authorizationService } from '../../../services/authorization-service.ts';
 import { apiService } from '../../../services/api-service.ts';
+import { useTranslation } from 'react-i18next';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -68,11 +69,13 @@ export const UserOrdersChart = ({ startDate, endDate, userId: propsUserId }: Use
         });
 
         setChartData({
-          labels: fullWeekDays.map((day) => day.format('ddd DD/MM')),
+          labels: fullWeekDays.map((day) =>
+            day.locale(i18n.language).format('ddd DD/MM')
+          ),
           datasets: [
             {
               fill: true,
-              label: 'Daily Orders',
+              label: t('stats.dailyOrders'),
               data: normalizedCounts,
               borderColor: '#1a3e2b',
               backgroundColor: 'rgba(26, 62, 43, 0.15)',
@@ -83,10 +86,8 @@ export const UserOrdersChart = ({ startDate, endDate, userId: propsUserId }: Use
             },
           ],
         });
-      } catch (error) {
-        setSnackMessage(
-          error instanceof Error ? error.message : 'Error fetching user stats'
-        );
+      } catch {
+        setSnackMessage(t('stats.errorLoad'));
         setSnackOpen(true);
       }
     };

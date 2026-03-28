@@ -14,6 +14,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserNotFound } from './UserNorFound/UserNotFound.tsx';
 import { apiService } from '../../../services/api-service.ts';
+import { useTranslation } from 'react-i18next';
 
 interface User {
   id: number;
@@ -31,6 +32,7 @@ interface UsersResponse {
 }
 
 export const UsersPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -54,13 +56,13 @@ export const UsersPage = () => {
       setTotalPages(result.pages);
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : 'Failed to load users';
+        error instanceof Error ? error.message : t('users.loadError');
       setSnackMessage(errorMessage);
       setSnackOpen(true);
     } finally {
       setIsLoading(false);
     }
-  }, [page, debouncedValue]);
+  }, [page, debouncedValue, t]);
 
   useEffect(() => {
     if (
@@ -95,7 +97,7 @@ export const UsersPage = () => {
       <div className={'search-input'}>
         <TextField
           value={inputValue}
-          label="Enter user e-mail"
+          label={t('users.searchLabel')}
           variant="outlined"
           onChange={(e) => setInputValue(e.target.value)}
           sx={{
@@ -124,7 +126,7 @@ export const UsersPage = () => {
 
       <div className={'users-container'} data-testid="users-container">
         {isLoading ? (
-          <div className="loader-wrapper">Loading...</div>
+          <div className="loader-wrapper">{t('common.loading')}</div>
         ) : users.length > 0 ? (
           users.map((user) => (
             <UserCard

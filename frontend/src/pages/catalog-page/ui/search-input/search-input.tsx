@@ -1,6 +1,7 @@
 import { Search } from '@mui/icons-material';
 import styles from './search-input.module.css';
 import { useState, type ChangeEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const SearchInput = ({
   search,
@@ -9,6 +10,7 @@ export const SearchInput = ({
   search: string;
   setSearch: (value: string) => void;
 }) => {
+  const { t } = useTranslation();
   const [value, setValue] = useState(search);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +29,7 @@ export const SearchInput = ({
         name="serviceName"
         className={styles.search_input}
         type="text"
-        placeholder="Enter the name of the service"
+        placeholder={t('catalog.searchPlaceholder')}
       />
       <Search className={styles.search_icon} />
     </>
