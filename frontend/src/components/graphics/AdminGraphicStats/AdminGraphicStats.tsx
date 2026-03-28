@@ -40,17 +40,17 @@ export const AdminOrdersChart = () => {
   useEffect(() => {
     const fetchAdminStats = async () => {
       const dateStart = '2026-03-01';
-      const dateEnd = dayjs().endOf('isoWeek').format('YYYY-MM-DD');
+      const dateEnd = '2026-09-30';
       const endpoint = `/statistics/total?dateStart=${dateStart}&dateEnd=${dateEnd}`;
 
       try {
         const result = await apiService<StatDataItem[]>(endpoint);
-        const cleanResult = result.filter((d) => d.startDate !== d.endDate);
+        const cleanResult = result.filter((date) => date.startDate !== date.endDate);
 
         setChartData({
-          labels: cleanResult.map((d) => {
-            const start = dayjs(d.startDate).format('DD/MM');
-            const end = dayjs(d.endDate).format('DD/MM/YYYY');
+          labels: cleanResult.map((date) => {
+            const start = dayjs(date.startDate).format('DD/MM');
+            const end = dayjs(date.endDate).format('DD/MM/YYYY');
             return `${start} - ${end}`;
           }),
           datasets: [
@@ -95,7 +95,7 @@ export const AdminOrdersChart = () => {
         Global System Statistics
       </h3>
 
-      {chartData && (
+      {chartData ? (
         <div style={{ flex: 1, position: 'relative' }}>
           <Bar
             data={chartData}
@@ -119,10 +119,7 @@ export const AdminOrdersChart = () => {
                 x: {
                   grid: { display: false },
                   ticks: {
-                    maxRotation: 0,
-                    autoSkip: false,
-                    padding: 8,
-                    font: { size: 9 },
+                    display: false,
                   },
                 },
               },
@@ -134,7 +131,7 @@ export const AdminOrdersChart = () => {
             }}
           />
         </div>
-      )}
+      ) : <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading chart...</div>}
 
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
