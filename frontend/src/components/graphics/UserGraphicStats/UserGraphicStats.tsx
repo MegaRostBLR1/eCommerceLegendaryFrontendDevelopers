@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import dayjs from 'dayjs';
 import { Snackbar } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { authorizationService } from '../../../services/authorization-service.ts';
 import { apiService } from '../../../services/api-service.ts';
 import {
@@ -38,7 +39,12 @@ interface UserChartProps {
   userId?: number;
 }
 
-export const UserOrdersChart = ({ startDate, endDate, userId: propsUserId }: UserChartProps) => {
+export const UserOrdersChart = ({
+  startDate,
+  endDate,
+  userId: propsUserId,
+}: UserChartProps) => {
+  const { t } = useTranslation();
   const [chartData, setChartData] = useState<ChartData<'line'> | null>(null);
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
@@ -72,7 +78,7 @@ export const UserOrdersChart = ({ startDate, endDate, userId: propsUserId }: Use
           datasets: [
             {
               fill: true,
-              label: 'Daily Orders',
+              label: t('stats.dailyOrders'),
               data: normalizedCounts,
               borderColor: '#1a3e2b',
               backgroundColor: 'rgba(26, 62, 43, 0.15)',
@@ -85,14 +91,14 @@ export const UserOrdersChart = ({ startDate, endDate, userId: propsUserId }: Use
         });
       } catch (error) {
         setSnackMessage(
-          error instanceof Error ? error.message : 'Error fetching user stats'
+          error instanceof Error ? error.message : t('stats.errorLoad')
         );
         setSnackOpen(true);
       }
     };
 
     fetchUserStats();
-  }, [UserId, startDate, endDate]);
+  }, [UserId, startDate, endDate, t]);
 
   return (
     <div
@@ -108,7 +114,7 @@ export const UserOrdersChart = ({ startDate, endDate, userId: propsUserId }: Use
         className="stats-title"
         style={{ marginBottom: '20px', fontFamily: 'Montserrat' }}
       >
-        Weekly Activity
+        {t('stats.title')}
       </h3>
       {chartData && (
         <Line

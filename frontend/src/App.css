@@ -58,18 +58,6 @@ body {
   overflow-x: hidden;
 }
 
-.page-container {
-  margin: 0 auto;
-  max-width: 1200px;
-  width: 100%;
-  box-sizing: border-box;
-  overflow-x: hidden;
-  padding-left: 15px;
-  padding-right: 15px;
-  max-width: var(--container-width);
-  margin: 0 auto;
-}
-
 .app-wrapper {
   display: flex;
   flex-direction: column;
@@ -77,12 +65,11 @@ body {
 }
 
 .page-container {
+  overflow-x: hidden;
   flex: 1;
   max-width: var(--container-width);
   width: 100%;
   margin: 0 auto;
-  padding-left: 15px;
-  padding-right: 15px;
   box-sizing: border-box;
 }
 

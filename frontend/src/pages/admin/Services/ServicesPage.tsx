@@ -18,8 +18,10 @@ import catalogStyles from '../../catalog-page/catalog-page.module.css';
 import EditCardModal from '../../../components/modals/EditCardModal/EditCardModal';
 import './ServicesPage.css';
 import { apiService } from '../../../services/api-service.ts';
+import { useTranslation } from 'react-i18next';
 
 export const ServicesPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [data, setData] = useState<ServicesData>();
   const [category, setCategory] = useState<string[]>([]);
@@ -44,20 +46,20 @@ export const ServicesPage = () => {
       setData(result);
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : 'Failed to load services';
+        error instanceof Error ? error.message : t('services.loadError');
       setSnackMessage(errorMessage);
       setSnackOpen(true);
     } finally {
       setLoading(false);
     }
-  }, [page, category, search]);
+  }, [page, category, search, t]);
 
   useEffect(() => {
     loadServices();
   }, [loadServices]);
 
   const handleDelete = async (id: number) => {
-    if (window.confirm('Are you sure you want to delete this service?')) {
+    if (window.confirm(t('services.deleteConfirm'))) {
       try {
         await userService.deleteService(id);
         if (data?.data) {
@@ -67,7 +69,7 @@ export const ServicesPage = () => {
           });
         }
       } catch {
-        setSnackMessage('Delete failed');
+        setSnackMessage(t('services.deleteError'));
         setSnackOpen(true);
       }
     }
@@ -92,7 +94,9 @@ export const ServicesPage = () => {
         <div className={catalogStyles.container + ' page-container'}>
           <div className={catalogStyles.wrapper}>
             <div className="admin-header-block">
-              <h1 className={catalogStyles.title}>Admin Service Management</h1>
+              <h1 className={catalogStyles.title}>
+                {t('services.adminTitle')}
+              </h1>
 
               <Button
                 variant="contained"
@@ -100,7 +104,7 @@ export const ServicesPage = () => {
                 startIcon={<AutoAwesomeIcon />}
                 onClick={() => navigate('/admin/create-ai')}
               >
-                AI Generation
+                {t('services.aiGenBtn')}
               </Button>
             </div>
 

@@ -19,6 +19,7 @@ import { apiService } from '../../../services/api-service.ts';
 import { errorMessages } from '../../../../constants/errors';
 import type { IUserToken } from '../../../types';
 import { useAuth } from '../../../context/useAuth';
+import { useTranslation } from 'react-i18next';
 
 export default function AuthorizationModal({
   open,
@@ -27,6 +28,7 @@ export default function AuthorizationModal({
   open: boolean;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   const { updateAuth } = useAuth();
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
@@ -125,11 +127,11 @@ export default function AuthorizationModal({
         </DialogTitle>
         <DialogContent className={'create-acc-form-dialog-content'}>
           <div className={'create-acc-title-container'}>
-            <span>Authorization</span>
+            <span> {t('auth.title')} </span>
           </div>
           <TextField
             name="userEmail"
-            label={'Email'}
+            label={t('auth.email')}
             variant={'standard'}
             required={true}
             type={'email'}
@@ -137,7 +139,7 @@ export default function AuthorizationModal({
           />
           <TextField
             name="password"
-            label={'Password'}
+            label={t('auth.password')}
             variant={'standard'}
             type={showPassword ? 'text' : 'password'}
             InputProps={{
@@ -164,7 +166,7 @@ export default function AuthorizationModal({
             variant="contained"
             className={'confirm-send-btn'}
           >
-            Send
+            {t('auth.send')}
           </Button>
         </DialogActions>
       </Dialog>

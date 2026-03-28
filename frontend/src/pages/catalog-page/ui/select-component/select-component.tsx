@@ -12,8 +12,8 @@ import { LABEL_STYLE, SELECT_STYLE } from '../../constants';
 import { Burger } from '../../../../assets/icons/burger';
 import { useEffect, useState } from 'react';
 import type { Category } from '../../../../types';
-import { TEXT_SELECT } from './constants';
 import { apiService } from '../../../../services/api-service.ts';
+import { useTranslation } from 'react-i18next';
 
 export const SelectComponent = ({
   selectedCategories = [],
@@ -22,6 +22,7 @@ export const SelectComponent = ({
   selectedCategories: string[];
   setSelectedCategories: (value: string[]) => void;
 }) => {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState<Category[]>([]);
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
@@ -57,13 +58,13 @@ export const SelectComponent = ({
         setCategories(data);
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : 'Failed to load categories';
+          error instanceof Error ? error.message : t('catalog.errorCategories');
         setSnackMessage(errorMessage);
         setSnackOpen(true);
       }
     };
     fetchCategories();
-  }, []);
+  }, [t]);
 
   return (
     <>
@@ -77,7 +78,7 @@ export const SelectComponent = ({
 
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label" sx={LABEL_STYLE}>
-          {TEXT_SELECT.CATEGORIES}
+          {t('catalog.categories')}
         </InputLabel>
         <Select
           multiple
@@ -85,12 +86,12 @@ export const SelectComponent = ({
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           value={selectedCategories || []}
-          label="categories"
+          label={t('catalog.categories')}
           onChange={handleChange}
           sx={SELECT_STYLE}
           renderValue={(selected) => {
             if (categories.length > 0 && selected.length === categories.length)
-              return 'All';
+              return t('catalog.all');
             return categories
               .filter((item) => selected.includes(item.id.toString()))
               .map((c) => c.name)
@@ -104,7 +105,7 @@ export const SelectComponent = ({
                 selectedCategories.length === categories.length
               }
             />
-            <ListItemText primary="All" />
+            <ListItemText primary={t('catalog.all')} />
           </MenuItem>
           {categories.map((item) => (
             <MenuItem key={item.id} value={item.id.toString()}>
