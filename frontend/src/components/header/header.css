@@ -181,10 +181,26 @@
   }
 }
 
-@media (max-width: 480px) {
-  .container {
-    padding-left: 10px;
-    padding-right: 10px;
+@media (max-width: 405px) {
+  .brandName {
+    display: none;
+  }
+  .navLink {
+    font-size: 11px;
+  }
+
+  .profile-email {
+    font-size: 7px;
+  }
+}
+
+@media (max-width: 375px) {
+  .profile-email{
+    font-size: 6px;
+  }
+
+  .navLink {
+    font-size: 10px;
   }
 }
 
