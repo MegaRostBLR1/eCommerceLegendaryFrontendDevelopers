@@ -31,3 +31,51 @@
   margin-top: auto;
   padding-top: 20px;
 }
+
+@media (max-width: 405px) {
+  .users-page-container {
+    padding: 20px 16px;
+    gap: 20px;
+  }
+
+  .users-container {
+    gap: 16px;
+    min-height: auto;
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .users-container > * {
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .navigation-menu {
+    padding-top: 10px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 375px) {
+  .users-page-container {
+    padding: 15px 10px;
+    gap: 16px;
+  }
+
+  .users-container {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 12px;
+    min-height: auto;
+  }
+
+  .users-container > * {
+    width: 100%;
+    max-width: 290px;
+  }
+
+  .navigation-menu {
+    padding-top: 8px;
+    width: 100%;
+  }
+}

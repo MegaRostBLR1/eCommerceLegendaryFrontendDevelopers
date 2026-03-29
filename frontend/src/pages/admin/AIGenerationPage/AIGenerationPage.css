@@ -101,3 +101,44 @@
   flex: 1;
   width: 100%;
 }
+
+@media (max-width: 405px) {
+  .no-scroll {
+    height: auto;
+    overflow-y: visible;
+  }
+
+  .ai-controls-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .ai-input-wrapper {
+    max-height: none;
+    padding: 8px 12px;
+  }
+
+  .ai-save-all-header-btn {
+    height: 45px;
+    width: 100%;
+    order: -1;
+  }
+
+  .ai-generate-button {
+    margin-left: 8px !important;
+  }
+
+  .ai-text-field textarea {
+    font-size: 14px !important;
+  }
+
+  .ai-scroll-container.has-content {
+    padding-bottom: 60px;
+  }
+
+  .ai-empty-text {
+    margin-top: 30px !important;
+    font-size: 14px;
+  }
+}

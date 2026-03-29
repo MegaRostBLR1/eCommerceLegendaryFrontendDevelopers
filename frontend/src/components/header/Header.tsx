@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import { IconButton, Menu, MenuItem, useMediaQuery } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import logo from '../../assets/icons/logo.svg';
@@ -40,6 +40,7 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
 const Header = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const isMobile = useMediaQuery('(max-width:405px)');
 
   const {
     isAuth,
@@ -86,7 +87,13 @@ const Header = () => {
   };
 
   const role: Role = isAdmin ? 'admin' : 'user';
-  const currentMenuItems = MENU_ITEMS[role];
+
+  const currentMenuItems = MENU_ITEMS[role].filter(item => {
+    if (isMobile && !item.isExit && item.path.includes('statistics')) {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <>
