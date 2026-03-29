@@ -60,3 +60,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+@media (max-width: 405px) {
+  .stats-btn {
+    display: none !important;
+  }
+}

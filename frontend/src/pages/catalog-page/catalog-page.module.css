@@ -88,3 +88,32 @@
 .spinner {
   color: #074733 !important;
 }
+
+
+@media (max-width: 405px) {
+  .catalog {
+    margin-top: 20px;
+    margin-bottom: 40px;
+    min-height: auto;
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .search {
+    grid-column: span 1;
+  }
+
+  .title {
+    font-size: 40px !important;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    min-height: auto;
+    row-gap: 20px;
+  }
+}
