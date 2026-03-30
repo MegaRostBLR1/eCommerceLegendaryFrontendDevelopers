@@ -2,19 +2,20 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
+import 'dayjs/locale/en';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { UserOrdersChart } from '../../../components/graphics/UserGraphicStats/UserGraphicStats.tsx';
 import { IconButton, Typography, Paper } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'; // Добавляем хук
 import './user-stats-page.css';
 
 dayjs.extend(isoWeek);
 
 export const UserStatsPage = () => {
-  const { t } = useTranslation();
   const { userId } = useParams<{ userId: string }>();
+  const { i18n } = useTranslation();
 
   const currentWeekStart = dayjs().startOf('isoWeek');
   const [startDate, setStartDate] = useState(currentWeekStart);
@@ -24,28 +25,10 @@ export const UserStatsPage = () => {
 
   const endDate = startDate.endOf('isoWeek');
 
-  const isLastAvailableWeek =
-    startDate.isSame(currentWeekStart, 'day') ||
-    startDate.isAfter(currentWeekStart);
-
   return (
     <section className="stats-preview">
       <div className="page-container">
         <div className="stats-header">
-          <Typography
-            variant="h5"
-            sx={{
-              mr: 3,
-              mb: 2,
-              fontFamily: 'Montserrat',
-              fontWeight: 600,
-            }}
-          >
-            {userId
-              ? `${t('stats.userActivityTitle', 'Активность пользователя')} (ID: ${userId})`
-              : t('stats.myActivityTitle', 'Ваша активность')}
-          </Typography>
-
           <div
             className="weekpicker-container"
             style={{ marginBottom: '20px' }}
@@ -75,20 +58,14 @@ export const UserStatsPage = () => {
                   textTransform: 'capitalize',
                 }}
               >
-                {startDate.format('DD MMM')} — {endDate.format('DD MMM YYYY')}
+                {startDate.locale(i18n.language).format('DD MMM')} — {endDate.locale(i18n.language).format('DD MMM YYYY')}
               </Typography>
 
               <IconButton
                 onClick={handleNextWeek}
                 size="small"
-                disabled={isLastAvailableWeek}
               >
-                <ArrowForwardIosIcon
-                  fontSize="small"
-                  sx={{
-                    color: isLastAvailableWeek ? 'action.disabled' : 'inherit',
-                  }}
-                />
+                <ArrowForwardIosIcon fontSize="small" />
               </IconButton>
             </Paper>
           </div>

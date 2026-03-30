@@ -1,17 +1,20 @@
 import { useEffect } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import 'dayjs/locale/ru';
+import 'dayjs/locale/en';
 import { Paper } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { UserGraphicOrdersStats } from '../../../components/graphics/UserGraphicOrdersStats/UserGraphicOrdersStats.tsx';
 import { AdminOrdersChart } from '../../../components/graphics/AdminGraphicStats/AdminGraphicStats.tsx';
 import { authorizationService } from '../../../services/authorization-service.ts';
 import './admin-stats-page.css';
 
 export const AdminStatsPage = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -76,7 +79,10 @@ export const AdminStatsPage = () => {
     <section className="stats-preview">
       <div className="stats-page-container">
         <div className="weekpicker-container">
-          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
+          <LocalizationProvider
+            dateAdapter={AdapterDayjs}
+            adapterLocale={i18n.language}
+          >
             <Paper
               elevation={0}
               variant="outlined"
@@ -91,17 +97,19 @@ export const AdminStatsPage = () => {
               }}
             >
               <DatePicker
-                label="Date Start"
+                label={t('stats.dateFrom')}
                 value={startDate}
                 onChange={handleStartDateChange}
+                format="DD.MM.YYYY"
                 slotProps={{ textField: { size: 'small' } }}
               />
 
               <DatePicker
-                label="Date End"
+                label={t('stats.tillDate')}
                 value={endDate}
                 onChange={handleEndDateChange}
                 minDate={startDate}
+                format="DD.MM.YYYY"
                 slotProps={{ textField: { size: 'small' } }}
               />
             </Paper>

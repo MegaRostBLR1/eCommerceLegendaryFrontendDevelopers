@@ -101,7 +101,12 @@
     "globalTitle": "Глобальная статистика системы",
     "totalSystemOrders": "Всего заказов в системе",
     "userActivityTitle": "Активность пользователя",
-    "myActivityTitle": "Ваша активность"
+    "myActivityTitle": "Ваша активность",
+    "dateFrom": "Дата с",
+    "tillDate": "Дата по",
+    "allStatsTitle": "Глобальная статистика",
+    "orders": "Всего заказов",
+    "userChartTitle": "Статистика пользователей за период"
   },
   "common": {
     "loading": "Загрузка..."
