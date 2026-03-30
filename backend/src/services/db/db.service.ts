@@ -143,6 +143,7 @@ export const dbService = {
             where: {
                 orders: { some: { startDate: { gte: dateStart, lte: dateEnd } } },
             },
+
             select: {
                 ...USER_SELECT,
                 _count: {
