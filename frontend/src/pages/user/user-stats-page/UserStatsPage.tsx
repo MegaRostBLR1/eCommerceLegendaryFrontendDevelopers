@@ -8,7 +8,7 @@ import { UserOrdersChart } from '../../../components/graphics/UserGraphicStats/U
 import { IconButton, Typography, Paper } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { useTranslation } from 'react-i18next'; // Добавляем хук
+import { useTranslation } from 'react-i18next';
 import './user-stats-page.css';
 
 dayjs.extend(isoWeek);
