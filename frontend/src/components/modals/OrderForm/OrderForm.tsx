@@ -21,6 +21,7 @@ import { apiService } from '../../../services/api-service.ts';
 import { useAuth } from '../../../context/useAuth.ts';
 import './order-form.css';
 import { useTranslation } from 'react-i18next';
+import { ModalLogo } from '../../../assets/icons/ModalLogo.tsx';
 
 interface OpenOrderFormProps {
   open: boolean;
@@ -132,7 +133,7 @@ export default function OpenOrderForm({
       >
         <DialogTitle className="order-form-title">
           <div className="order-form-logo">
-            <img src="/page-logo.svg" alt="logo" />
+            <ModalLogo/>
             <span className="team-name-order">
               Legendary <br /> Frontend
             </span>
