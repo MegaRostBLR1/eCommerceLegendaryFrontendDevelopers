@@ -164,7 +164,8 @@
     display: none;
   }
 
-  .developers-container, .information-links-container {
+  .developers-container,
+  .information-links-container {
     padding-left: 0 !important;
   }
 
@@ -178,7 +179,6 @@
     min-width: 0;
   }
 }
-
 
 @media (max-width: 375px) {
   .bestseller-wrapper {

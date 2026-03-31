@@ -48,7 +48,6 @@
 }
 
 @media (max-width: 405px) {
-
   .orders-grid-layout {
     grid-template-columns: 1fr;
     justify-items: center;

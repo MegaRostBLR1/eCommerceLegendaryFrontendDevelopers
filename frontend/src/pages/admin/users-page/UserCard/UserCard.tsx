@@ -75,7 +75,7 @@ export const UserCard = ({
           style={{ display: 'flex', gap: '4px' }}
         >
           <Tooltip title={t('users.tooltipStats')}>
-            <IconButton onClick={handleStatsClick} className={"stats-btn"}>
+            <IconButton onClick={handleStatsClick} className={'stats-btn'}>
               <AssessmentIcon fontSize="small" sx={{ color: '#063526' }} />
             </IconButton>
           </Tooltip>

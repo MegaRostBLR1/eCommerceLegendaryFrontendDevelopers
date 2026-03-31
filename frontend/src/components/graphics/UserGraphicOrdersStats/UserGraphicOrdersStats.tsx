@@ -92,9 +92,7 @@ export const UserGraphicOrdersStats = ({
       const { index } = element[0];
       const clickedUser = rawUsers[index];
 
-      navigate(
-        `/orders/${clickedUser.id}`
-      );
+      navigate(`/orders/${clickedUser.id}`);
     }
   };
 
