@@ -1,4 +1,5 @@
 @import '../../App.css';
+@import '../../assets/styles/variables.css';
 
 .page-main {
   display: flex;
@@ -95,7 +96,7 @@
   color: #074733 !important;
 }
 
-/*MEDIA*/
+
 @media (max-width: 1024px) {
   .title-section-title {
     font-size: 72px;
@@ -148,12 +149,20 @@
 }
 
 @media (max-width: 405px) {
+  .bestseller-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-content: center;
+    justify-content: center;
+    justify-items: center;
+  }
+
   .title-section-title {
-    font-size: 40px;
+    font-size: var(--space-lg);
   }
 
   .title-logo {
-    width: 180px;
+    width: calc(var(--space-xxxl) + 10px);
   }
 
   .cube-right {
@@ -168,26 +177,41 @@
     padding-left: 0 !important;
   }
 
-  .bestseller-wrapper {
-    flex-direction: column;
-    align-items: center;
-  }
 
   .bestseller-card {
-    width: 70%;
+    width: 100%;
     min-width: 0;
   }
-}
 
-
-@media (max-width: 375px) {
-  .bestseller-wrapper {
-    flex-direction: column;
-    align-items: center;
+  .bestseller-card-title {
+    font-size: var(--text-base);
   }
 
-  .bestseller-card {
-    width: 70%;
-    min-width: 0;
+  .bestseller-current-price {
+    font-size: calc(var(--text-small) - 2px) ;
+  }
+
+  .bestseller-card-description{
+    font-size: var(--space-xs);
+  }
+
+  .details-value {
+    font-size: calc(var(--space-xs) + 2px);
+  }
+
+  .details-label {
+    font-size: calc(var(--space-xs) - 2px);
+  }
+
+  .bestseller-card-button-text{
+    font-size: var(--space-xs);
+  }
+
+  .bestseller-discount-badge {
+    font-size: var(--space-xs);
+  }
+
+  .bestseller-card-details {
+    gap: var(--space-xs);
   }
 }
