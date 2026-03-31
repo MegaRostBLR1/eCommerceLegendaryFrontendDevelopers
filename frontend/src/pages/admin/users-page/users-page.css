@@ -19,7 +19,6 @@
   grid-template-columns: 1fr 1fr;
   gap: 24px;
   width: 100%;
-  min-height: 600px;
   align-content: start;
   flex-grow: 1;
 }
@@ -30,4 +29,10 @@
   align-self: stretch;
   margin-top: auto;
   padding-top: 20px;
+}
+
+@media (max-width: 1140px) {
+  .users-container {
+    grid-template-columns: 1fr;
+  }
 }

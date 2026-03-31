@@ -106,3 +106,12 @@
     font-size: 32px;
   }
 }
+
+@media (max-width: 480px) {
+  .about-page {
+    padding: 20px;
+  }
+  .about-container {
+    padding: 30px;
+  }
+}

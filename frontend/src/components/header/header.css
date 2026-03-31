@@ -175,15 +175,17 @@
     padding: 10px 15px;
     border-bottom: 1px solid #d1c7bc;
   }
-  .actions {
-    margin-left: 0;
-    justify-content: center;
-  }
 }
 
 @media (max-width: 480px) {
   .container {
     padding-left: 10px;
     padding-right: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .brandName {
+    display: none;
   }
 }
