@@ -34,12 +34,22 @@
 
 @media (max-width: 405px) {
   .users-page-container {
-    padding: 20px 16px;
-    gap: 20px;
+    padding: var(--space-sm) calc(var(--space-sm) - 4px);
+    gap: var(--space-md);
+  }
+
+  .MuiPagination-ul {
+    flex-wrap: nowrap !important;
+  }
+
+  .MuiPagination-root .MuiPaginationItem-root {
+    min-width: var(--space-sm);
+    height: calc(var(--space-sm) + 5px);
+    font-size: calc(var(--space-xs) - 5px);
   }
 
   .users-container {
-    gap: 16px;
+    gap: calc(var(--space-md) - 4px);
     min-height: auto;
     grid-template-columns: 1fr;
     justify-items: center;
@@ -57,6 +67,24 @@
 }
 
 @media (max-width: 375px) {
+
+  .MuiPagination-ul {
+    flex-wrap: nowrap !important;
+    gap: calc(var(--space-xs) - 6px) !important;
+    justify-content: center;
+  }
+
+  .MuiPagination-root .MuiPaginationItem-root {
+    width: calc(var(--space-sm) + 2px) !important;
+    height: calc(var(--space-sm) + 2px) !important;
+    min-width: calc(var(--space-sm) + 2px) !important;
+    font-size: calc(var(--space-sm) - 10px) !important;
+  }
+
+  .MuiPagination-root .MuiPaginationItem-root .MuiSvgIcon-root {
+    font-size: calc(var(--space-xs) + 4px) !important;
+  }
+
   .users-page-container {
     padding: 15px 10px;
     gap: 16px;

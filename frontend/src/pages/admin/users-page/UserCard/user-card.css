@@ -65,4 +65,8 @@
   .stats-btn {
     display: none !important;
   }
+
+  .user-full-name {
+    font-size: var(--space-xs);
+  }
 }
