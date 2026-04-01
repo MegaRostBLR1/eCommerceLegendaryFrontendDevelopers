@@ -34,6 +34,7 @@ export function App() {
               path="/admin/statistics/:userId"
               element={<UserStatsPage />}
             />
+            <Route path="/statistics/users/:userId" element={<UserStatsPage />} />
             <Route path="/admin/services" element={<ServicesPage />} />
             <Route path="/admin/create-ai" element={<AIGenerationPage />} />
             <Route path="/statistics" element={<UserStatsPage />} />

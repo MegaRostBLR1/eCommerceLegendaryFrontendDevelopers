@@ -18,6 +18,7 @@ import React, { useState, useEffect } from 'react';
 import { userService } from '../../../services/user.service.ts';
 import type { UpdateUserDto } from '../../../types';
 import { useTranslation } from 'react-i18next';
+import { ModalLogo } from '../../../assets/icons/ModalLogo.tsx';
 
 type UserRole = 'user' | 'admin';
 
@@ -141,7 +142,7 @@ export default function EditUserModal({
       >
         <DialogTitle className="edit-card-modal-title" sx={{ p: 0, mb: 3 }}>
           <div className="order-form-logo">
-            <img src="/page-logo.svg" alt="logo" />
+            <ModalLogo/>
             <span className="team-name-order">
               Legendary <br /> Frontend
             </span>

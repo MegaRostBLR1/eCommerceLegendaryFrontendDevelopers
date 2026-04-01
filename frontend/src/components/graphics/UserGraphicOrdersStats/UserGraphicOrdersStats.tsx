@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Bar, getElementAtEvent } from 'react-chartjs-2';
 import { Snackbar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { apiService } from '../../../services/api-service.ts';
 import {
   Chart as ChartJS,
@@ -40,6 +41,7 @@ export const UserGraphicOrdersStats = ({
   startDate: string;
   endDate: string;
 }) => {
+  const { t, i18n } = useTranslation();
   const [chartData, setChartData] = useState<ChartData<'bar'> | null>(null);
   const [rawUsers, setRawUsers] = useState<UserStatItem[]>([]);
   const [snackOpen, setSnackOpen] = useState(false);
@@ -63,7 +65,7 @@ export const UserGraphicOrdersStats = ({
           labels: result.map((user) => user.email),
           datasets: [
             {
-              label: 'Orders Count',
+              label: t('stats.ordersCount'),
               data: result.map((u) => u.count),
               backgroundColor: '#1a3e2b',
               hoverBackgroundColor: '#2d6a4f',
@@ -80,7 +82,7 @@ export const UserGraphicOrdersStats = ({
     };
 
     fetchUserStats();
-  }, [startDate, endDate]);
+  }, [startDate, endDate, t, i18n.language]);
 
   const handleChartClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     const { current: chart } = chartRef;
@@ -91,8 +93,7 @@ export const UserGraphicOrdersStats = ({
     if (element.length > 0) {
       const { index } = element[0];
       const clickedUser = rawUsers[index];
-
-      navigate(`/orders/${clickedUser.id}`);
+      navigate(`/statistics/users/${clickedUser.id}`);
     }
   };
 
@@ -116,7 +117,7 @@ export const UserGraphicOrdersStats = ({
           fontSize: '18px',
         }}
       >
-        Users Period Orders Statistics
+        {t('stats.userChartTitle')}
       </h3>
 
       <div style={{ flex: 1, position: 'relative' }}>
@@ -143,7 +144,7 @@ export const UserGraphicOrdersStats = ({
                 tooltip: {
                   enabled: true,
                   callbacks: {
-                    label: (context) => `Orders: ${context.raw}`,
+                    label: (context) => `${t('stats.orders')}: ${context.raw}`,
                   },
                 },
               },
@@ -174,7 +175,7 @@ export const UserGraphicOrdersStats = ({
           />
         ) : (
           <div style={{ textAlign: 'center', marginTop: '50px' }}>
-            Loading chart...
+            {t('common.loading')}
           </div>
         )}
       </div>

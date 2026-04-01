@@ -15,6 +15,7 @@ import type { Service, Category, UpdateServiceDto } from '../../../types';
 import { validationRules } from '../../../../constants/validation-rules.ts';
 import { userService } from '../../../services/user.service.ts';
 import { SelectComponent } from '../../../pages/catalog-page/ui/select-component/select-component.tsx';
+import { ModalLogo } from '../../../assets/icons/ModalLogo.tsx';
 
 interface ServerError {
   response?: {
@@ -203,7 +204,7 @@ export default function EditCardModal({
       >
         <DialogTitle sx={{ p: 0, mb: 3 }}>
           <div className="order-form-logo">
-            <img src="/page-logo.svg" alt="logo" />
+            <ModalLogo/>
             <span className="team-name-order">
               Legendary <br /> Frontend
             </span>
