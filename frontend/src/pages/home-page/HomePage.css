@@ -173,7 +173,8 @@
     display: none;
   }
 
-  .developers-container, .information-links-container {
+  .developers-container,
+  .information-links-container {
     padding-left: 0 !important;
   }
 
@@ -181,6 +182,15 @@
   .bestseller-card {
     width: 100%;
     min-width: 0;
+  }
+}
+
+
+@media (max-width: 375px) {
+  .bestseller-wrapper {
+    flex-direction: column;
+    align-items: center;
+    display: flex;
   }
 
   .bestseller-card-title {

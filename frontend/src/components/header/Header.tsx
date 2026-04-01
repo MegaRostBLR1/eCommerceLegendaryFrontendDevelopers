@@ -88,7 +88,7 @@ const Header = () => {
 
   const role: Role = isAdmin ? 'admin' : 'user';
 
-  const currentMenuItems = MENU_ITEMS[role].filter(item => {
+  const currentMenuItems = MENU_ITEMS[role].filter((item) => {
     if (isMobile && !item.isExit && item.path.includes('statistics')) {
       return false;
     }
