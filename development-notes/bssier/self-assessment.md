@@ -1,5 +1,7 @@
 # Self-Assessment: bssier [GitHub](https://github.com/bssier)
 
+Ссылка на PR: [click](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/pull/101)
+
 ## 1) Таблица фич которые я реализовал: 
 
 |                                             PR                                              | PR feature description                                                                                                                                                                                                                                                                                                                                                                    |
