@@ -67,6 +67,24 @@
 }
 
 @media (max-width: 375px) {
+
+  .MuiPagination-ul {
+    flex-wrap: nowrap !important;
+    gap: calc(var(--space-xs) - 6px) !important;
+    justify-content: center;
+  }
+
+  .MuiPagination-root .MuiPaginationItem-root {
+    width: calc(var(--space-sm) + 2px) !important;
+    height: calc(var(--space-sm) + 2px) !important;
+    min-width: calc(var(--space-sm) + 2px) !important;
+    font-size: calc(var(--space-sm) - 10px) !important;
+  }
+
+  .MuiPagination-root .MuiPaginationItem-root .MuiSvgIcon-root {
+    font-size: calc(var(--space-xs) + 4px) !important;
+  }
+
   .users-page-container {
     padding: 15px 10px;
     gap: 16px;
