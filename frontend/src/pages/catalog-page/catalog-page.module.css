@@ -93,8 +93,11 @@
 @media (max-width: 405px) {
   .catalog {
     margin-top: 20px;
-    margin-bottom: 40px;
     min-height: auto;
+  }
+
+  .wrapper {
+    gap: calc(var(--space-xs) - 5px);
   }
 
   .filters {
@@ -111,9 +114,9 @@
   }
 
   .cards {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     justify-items: center;
     min-height: auto;
-    row-gap: 20px;
+    row-gap: var(--space-md);
   }
 }

@@ -20,6 +20,7 @@ import { errorMessages } from '../../../../constants/errors';
 import type { IUserToken } from '../../../types';
 import { useAuth } from '../../../context/useAuth';
 import { useTranslation } from 'react-i18next';
+import { ModalLogo } from '../../../assets/icons/ModalLogo.tsx';
 
 export default function AuthorizationModal({
   open,
@@ -111,7 +112,7 @@ export default function AuthorizationModal({
       >
         <DialogTitle className={'create-acc-form-title'}>
           <div className={'order-form-logo'}>
-            <img src={'/page-logo.svg'} alt="logo" />
+            <ModalLogo/>
             <span className={'team-name-order'}>
               Legendary <br /> Frontend
             </span>

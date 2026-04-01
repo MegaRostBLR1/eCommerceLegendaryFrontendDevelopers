@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import dayjs from 'dayjs';
+import 'dayjs/locale/ru';
+import 'dayjs/locale/en';
 import { Snackbar } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { authorizationService } from '../../../services/authorization-service.ts';
@@ -44,7 +46,7 @@ export const UserOrdersChart = ({
   endDate,
   userId: propsUserId,
 }: UserChartProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [chartData, setChartData] = useState<ChartData<'line'> | null>(null);
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
@@ -74,7 +76,9 @@ export const UserOrdersChart = ({
         });
 
         setChartData({
-          labels: fullWeekDays.map((day) => day.format('ddd DD/MM')),
+          labels: fullWeekDays.map((day) =>
+            day.locale(i18n.language).format('ddd DD/MM')
+          ),
           datasets: [
             {
               fill: true,
@@ -98,7 +102,7 @@ export const UserOrdersChart = ({
     };
 
     fetchUserStats();
-  }, [UserId, startDate, endDate, t]);
+  }, [UserId, startDate, endDate, t, i18n.language]);
 
   return (
     <div
@@ -116,7 +120,7 @@ export const UserOrdersChart = ({
       >
         {t('stats.title')}
       </h3>
-      {chartData && (
+      {chartData ? (
         <Line
           data={chartData}
           options={{
@@ -131,6 +135,8 @@ export const UserOrdersChart = ({
             },
           }}
         />
+      ) : (
+        <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading...</div>
       )}
 
       <Snackbar

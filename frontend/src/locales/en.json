@@ -101,7 +101,12 @@
     "globalTitle": "Global System Statistics",
     "totalSystemOrders": "Total System Orders",
     "userActivityTitle": "User Activity",
-    "myActivityTitle": "Your Activity"
+    "myActivityTitle": "Your Activity",
+    "dateFrom": "Date from",
+    "tillDate": "Till date",
+    "allStatsTitle": "Global System Statistics",
+    "orders": "Total orders",
+    "userChartTitle": "Users Period Orders Statistics"
   },
   "common": {
     "loading": "Loading..."

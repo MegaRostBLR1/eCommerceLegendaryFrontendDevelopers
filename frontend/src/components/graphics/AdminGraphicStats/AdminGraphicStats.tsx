@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { Snackbar } from '@mui/material';
 import { apiService } from '../../../services/api-service.ts';
+import { useTranslation } from 'react-i18next';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -36,6 +37,7 @@ export const AdminOrdersChart = () => {
   const [chartData, setChartData] = useState<ChartData<'bar'> | null>(null);
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const fetchAdminStats = async () => {
@@ -45,20 +47,17 @@ export const AdminOrdersChart = () => {
 
       try {
         const result = await apiService<StatDataItem[]>(endpoint);
-        const cleanResult = result.filter(
-          (date) => date.startDate !== date.endDate
-        );
 
         setChartData({
-          labels: cleanResult.map((date) => {
+          labels: result.map((date) => {
             const start = dayjs(date.startDate).format('DD/MM');
             const end = dayjs(date.endDate).format('DD/MM/YYYY');
             return `${start} - ${end}`;
           }),
           datasets: [
             {
-              label: 'Total System Orders',
-              data: cleanResult.map((d) => d.count),
+              label: t('stats.totalSystemOrders'),
+              data: result.map((d) => d.count),
               backgroundColor: '#1a3e2b',
               borderRadius: 4,
             },
@@ -66,14 +65,14 @@ export const AdminOrdersChart = () => {
         });
       } catch (error) {
         setSnackMessage(
-          error instanceof Error ? error.message : 'Error fetching stats'
+          error instanceof Error ? error.message : t('stats.errorLoad')
         );
         setSnackOpen(true);
       }
     };
 
     fetchAdminStats();
-  }, []);
+  }, [t, i18n.language]);
 
   return (
     <div
@@ -81,8 +80,8 @@ export const AdminOrdersChart = () => {
       style={{
         padding: '10px 20px',
         borderRadius: '12px',
-        height: '400px',
-        width: '600px',
+        height: '600px',
+        width: '1000px',
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -94,19 +93,24 @@ export const AdminOrdersChart = () => {
           fontSize: '18px',
         }}
       >
-        Global System Statistics
+        {t('stats.allStatsTitle')}
       </h3>
 
       {chartData ? (
-        <div style={{ flex: 1, position: 'relative' }}>
+        <div style={{ flex: 1, position: 'relative', width: '100%' }}>
           <Bar
             data={chartData}
             options={{
               responsive: true,
               maintainAspectRatio: false,
-              layout: {
-                padding: {
-                  bottom: 15,
+              plugins: {
+                legend: {
+                  labels: { boxWidth: 12, font: { size: 11 } },
+                },
+                tooltip: {
+                  callbacks: {
+                    label: (context) => `${t('stats.orders')}: ${context.raw}`,
+                  },
                 },
               },
               scales: {
@@ -121,13 +125,12 @@ export const AdminOrdersChart = () => {
                 x: {
                   grid: { display: false },
                   ticks: {
-                    display: false,
+                    display: true,
+                    autoSkip: true,
+                    maxRotation: 45,
+                    minRotation: 45,
+                    font: { size: 10 },
                   },
-                },
-              },
-              plugins: {
-                legend: {
-                  labels: { boxWidth: 12, font: { size: 11 } },
                 },
               },
             }}
@@ -135,7 +138,7 @@ export const AdminOrdersChart = () => {
         </div>
       ) : (
         <div style={{ textAlign: 'center', marginTop: '50px' }}>
-          Loading chart...
+          {t('common.loading')}
         </div>
       )}
 
