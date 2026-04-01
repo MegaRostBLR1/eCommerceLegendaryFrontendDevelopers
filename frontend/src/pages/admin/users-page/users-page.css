@@ -34,8 +34,8 @@
 
 @media (max-width: 405px) {
   .users-page-container {
-    padding: 20px 16px;
-    gap: 20px;
+    padding: var(--space-sm) calc(var(--space-sm) - 4px);
+    gap: var(--space-md);
   }
 
   .MuiPagination-ul {
@@ -43,13 +43,13 @@
   }
 
   .MuiPagination-root .MuiPaginationItem-root {
-    min-width: 20px;
-    height: 26px;
-    font-size: 5px;
+    min-width: var(--space-sm);
+    height: calc(var(--space-sm) + 5px);
+    font-size: calc(var(--space-xs) - 5px);
   }
 
   .users-container {
-    gap: 16px;
+    gap: calc(var(--space-md) - 4px);
     min-height: auto;
     grid-template-columns: 1fr;
     justify-items: center;
