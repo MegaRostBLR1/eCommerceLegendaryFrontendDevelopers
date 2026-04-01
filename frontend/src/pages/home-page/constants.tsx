@@ -1,7 +1,7 @@
 export const HOME_UI = {
-  TITLE: 'Services from AI',
+  TITLE: 'home.title',
   BESTSELLER_BLOCK: {
-    TITLE: 'A HIT OF SALES',
-    LINK_TEXT: 'All services',
+    TITLE: 'home.bestsellerTitle',
+    LINK_TEXT: 'home.allServices',
   },
 };

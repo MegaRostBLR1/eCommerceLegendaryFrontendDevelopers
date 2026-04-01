@@ -1,40 +1,40 @@
 .about-page {
-  background-color: #f4ece1;
+  background-color: var(  --bg-gradient);
   min-height: 100vh;
-  padding: 60px 40px;
+  padding: 60px var(--space-lg);
   font-family: 'Philosopher', sans-serif;
-  color: #2c1e14;
+  color: var(--color-dark);
 }
 
 .about-container {
-  max-width: 1200px;
+  width: 100%;
+  max-width: var(--container-width);
   margin: 0 auto;
+  display: block;
   box-sizing: border-box;
   background-color: #fdf8f0;
   padding: 60px;
-  border: 1px solid #dcc6a0;
+  border: var(--border-light);
 
   box-shadow:
     inset 0 0 0 8px #fdf8f0,
-    inset 0 0 0 10px #074733,
+    inset 0 0 0 10px var(--title-color),
     0 30px 60px rgba(0, 0, 0, 0.3);
 }
 
 .about-title {
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
-    sans-serif;
-  color: #074733;
-  font-size: 46px;
+  font-family: sans-serif;
+  color: var(--title-color);
+  font-size: var(--font-size-h2);
   text-align: center;
-  margin-bottom: 40px;
-  border-bottom: 2px double #074733;
-  padding-bottom: 20px;
+  margin-bottom: var(--space-lg);
+  border-bottom: 2px double var(--title-color);
+  padding-bottom: var(--space-sm);
 }
 
 .about-intro {
   font-size: 22px;
-  line-height: 1.6;
+  line-height: var(--line-height-titles);
   text-align: justify;
   margin-bottom: 50px;
   color: #3e2723;
@@ -42,7 +42,7 @@
 }
 
 .about-intro p {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-sm);
 }
 
 .about-intro p:first-of-type::first-letter {
@@ -50,15 +50,15 @@
   float: left;
   line-height: 1;
   padding-right: 12px;
-  color: #074733;
-  font-weight: bold;
+  color: var(--title-color);
+  font-weight: var(--font-bold);
 }
 
 .about-split {
   display: flex;
   gap: 60px;
-  border-top: 1px solid #dcc6a0;
-  padding-top: 40px;
+  border-top: var(--border-light);
+  padding-top: var(--space-lg);
 }
 
 .about-column {
@@ -66,7 +66,7 @@
 }
 
 .column-header {
-  color: #074733;
+  color: var(--title-color);
   font-size: 32px;
   margin-bottom: 25px;
   text-align: center;
@@ -74,32 +74,32 @@
 }
 
 .about-column p {
-  font-size: 20px;
+  font-size: var(--space-sm); /* 20px */
   line-height: 1.5;
   margin-bottom: 18px;
-  color: #2c1e14;
+  color: var(--color-dark);
 }
 
 .user-side {
-  border-right: 1px dashed #dcc6a0;
-  padding-right: 30px;
+  border-right: 1px dashed var(--divider-color);
+  padding-right: var(--space-md);
 }
 
 .admin-side {
-  padding-left: 10px;
+  padding-left: var(--space-xs);
 }
 
 @media (max-width: 900px) {
   .about-split {
     flex-direction: column;
-    gap: 30px;
+    gap: var(--space-md);
   }
 
   .user-side {
     border-right: none;
-    border-bottom: 1px dashed #dcc6a0;
+    border-bottom: 1px dashed var(--divider-color);
     padding-right: 0;
-    padding-bottom: 30px;
+    padding-bottom: var(--space-md);
   }
 
   .about-title {

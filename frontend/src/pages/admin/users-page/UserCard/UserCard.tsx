@@ -8,6 +8,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import EditUserModal from '../../../../components/modals/EditUserModal/EditUserModal.tsx';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 export const UserCard = ({
   userId,
@@ -26,6 +27,7 @@ export const UserCard = ({
   userPatronymic: string;
   onRefresh?: () => void;
 }) => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -41,10 +43,8 @@ export const UserCard = ({
 
   const handleStatsClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-
     const start = dayjs().startOf('month').format('YYYY-MM-DD');
     const end = dayjs().endOf('month').format('YYYY-MM-DD');
-
     navigate(`/admin/statistics/${userId}?dateStart=${start}&dateEnd=${end}`);
   };
 
@@ -61,8 +61,12 @@ export const UserCard = ({
             <span>{userPatronymic}</span>
           </div>
           <div className={'email-and-role'}>
-            <span>E-mail: {userEmail}</span>
-            <span>Role: {userRole}</span>
+            <span>
+              {t('users.email')}: {userEmail}
+            </span>
+            <span>
+              {t('users.role')}: {userRole}
+            </span>
           </div>
         </div>
 
@@ -70,15 +74,13 @@ export const UserCard = ({
           className="user-card-actions"
           style={{ display: 'flex', gap: '4px' }}
         >
-          {/* Новая кнопка: Статистика */}
-          <Tooltip title="User Statistics">
-            <IconButton onClick={handleStatsClick}>
+          <Tooltip title={t('users.tooltipStats')}>
+            <IconButton onClick={handleStatsClick} className={'stats-btn'}>
               <AssessmentIcon fontSize="small" sx={{ color: '#063526' }} />
             </IconButton>
           </Tooltip>
 
-          {/* Кнопка: Заказы */}
-          <Tooltip title="View User Orders">
+          <Tooltip title={t('users.tooltipOrders')}>
             <IconButton
               className={'orders-card-btn'}
               onClick={handleOrdersClick}
@@ -87,8 +89,7 @@ export const UserCard = ({
             </IconButton>
           </Tooltip>
 
-          {/* Кнопка: Редактирование */}
-          <Tooltip title="Edit User">
+          <Tooltip title={t('users.tooltipEdit')}>
             <IconButton className={'edit-card-btn'} onClick={handleEditClick}>
               <BorderColorIcon fontSize="small" />
             </IconButton>

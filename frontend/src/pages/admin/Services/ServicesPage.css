@@ -23,3 +23,13 @@
 .custom-spinner {
   color: #074733 !important;
 }
+
+@media (max-width: 405px) {
+  .ai-gen-button {
+    width: 100%;
+  }
+
+  .admin-header-block {
+    margin-bottom: var(--space-xs);
+  }
+}

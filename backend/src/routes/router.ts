@@ -15,6 +15,7 @@ import { servicesController } from '../controllers/services.controller';
 import { servicesValidators } from './validators/services.validators';
 import { ordersController } from '../controllers/orders.controller';
 import { ordersValidators } from './validators/orders.validator';
+import { statisticsController } from '../controllers/statistics.controller';
 
 export const router = express.Router();
 const middlewaresRoutes: string[] = [
@@ -28,13 +29,27 @@ const middlewaresRoutes: string[] = [
     '/orders',
     '/orders/:id',
     '/orders/user/:id',
+    '/statistics/total',
+    '/statistics/total/user',
+    '/statistics/users/:id',
 ];
-const middlewaresRoutesAuth: string[] = ['/users', '/users/:id', '/categories/:id', '/orders', '/orders/:id', '/orders/user/:id'];
+const middlewaresRoutesAuth: string[] = [
+    '/users',
+    '/users/:id',
+    '/categories/:id',
+    '/orders',
+    '/orders/:id',
+    '/orders/user/:id',
+    '/statistics/total',
+    '/statistics/total/user',
+    '/statistics/users/:id',
+];
 
 router.all(middlewaresRoutes, loggerMiddleware, disconnectDbMiddleware);
 router.all(middlewaresRoutesAuth, authMiddleware);
 router.patch(['/services/:id'], authMiddleware);
 router.post(['/categories', '/services'], authMiddleware);
+router.delete(['/services/:id'], authMiddleware);
 
 router.get('/', async (_req: Request, res: Response) => {
     res.status(200).send(`<h1 style="text-align: center">Base app route</h1>`);
@@ -85,5 +100,8 @@ router
     .get(ordersValidators.orderId, validateErrors, ordersController.orderById)
     .patch(ordersValidators.orderId, ordersValidators.orderUpdate, validateErrors, ordersController.updateOrder)
     .delete(ordersValidators.orderId, ordersController.removeOrder);
+router.route('/statistics/total').get(validators.dates, validateErrors, statisticsController.totalOrders);
+router.route('/statistics/total/users').get(validators.dates, validateErrors, statisticsController.totalUsersOrders);
+router.route('/statistics/users/:id').get(userValidators.userId, validators.dates, validateErrors, statisticsController.userOrders);
 
 export default router;

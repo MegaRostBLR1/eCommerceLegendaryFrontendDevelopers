@@ -1,11 +1,16 @@
 import './not-found-page.css';
+import { useTranslation } from 'react-i18next';
 
-export const NotFoundPage = () => (
-  <div className={'not-found-page-container'}>
-    <div className={'not-found-message-container'}>
-      <h1>404</h1>
-      <p>Oops! The page you are looking for was not found.</p>
-      <a href="/">Back to main page</a>
+export const NotFoundPage = () => {
+  const { t } = useTranslation();
+
+  return (
+    <div className={'not-found-page-container'}>
+      <div className={'not-found-message-container'}>
+        <h1>{t('notFound.title')}</h1>
+        <p>{t('notFound.message')}</p>
+        <a href="/">{t('notFound.backLink')}</a>
+      </div>
     </div>
-  </div>
-);
+  );
+};

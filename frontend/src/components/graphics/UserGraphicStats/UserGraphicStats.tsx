@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import dayjs from 'dayjs';
+import 'dayjs/locale/ru';
+import 'dayjs/locale/en';
 import { Snackbar } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { authorizationService } from '../../../services/authorization-service.ts';
 import { apiService } from '../../../services/api-service.ts';
 import {
@@ -35,21 +38,28 @@ interface DailyDataItem {
 interface UserChartProps {
   startDate: dayjs.Dayjs;
   endDate: dayjs.Dayjs;
+  userId?: number;
 }
 
-export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
+export const UserOrdersChart = ({
+  startDate,
+  endDate,
+  userId: propsUserId,
+}: UserChartProps) => {
+  const { t, i18n } = useTranslation();
   const [chartData, setChartData] = useState<ChartData<'line'> | null>(null);
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
-  const userId = authorizationService.getUserId();
+
+  const UserId = propsUserId || authorizationService.getUserId();
 
   useEffect(() => {
     const fetchUserStats = async () => {
-      if (!userId) return;
+      if (!UserId) return;
 
       const dateStart = startDate.format('YYYY-MM-DD');
       const dateEnd = endDate.format('YYYY-MM-DD');
-      const endpoint = `/statistics/users/${userId}?dateStart=${dateStart}&dateEnd=${dateEnd}`;
+      const endpoint = `/statistics/users/${UserId}?dateStart=${dateStart}&dateEnd=${dateEnd}`;
 
       try {
         const result = await apiService<DailyDataItem[]>(endpoint);
@@ -66,11 +76,13 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
         });
 
         setChartData({
-          labels: fullWeekDays.map((day) => day.format('ddd DD/MM')),
+          labels: fullWeekDays.map((day) =>
+            day.locale(i18n.language).format('ddd DD/MM')
+          ),
           datasets: [
             {
               fill: true,
-              label: 'Daily Orders',
+              label: t('stats.dailyOrders'),
               data: normalizedCounts,
               borderColor: '#1a3e2b',
               backgroundColor: 'rgba(26, 62, 43, 0.15)',
@@ -83,14 +95,14 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
         });
       } catch (error) {
         setSnackMessage(
-          error instanceof Error ? error.message : 'Error fetching user stats'
+          error instanceof Error ? error.message : t('stats.errorLoad')
         );
         setSnackOpen(true);
       }
     };
 
     fetchUserStats();
-  }, [userId, startDate, endDate]);
+  }, [UserId, startDate, endDate, t, i18n.language]);
 
   return (
     <div
@@ -106,9 +118,9 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
         className="stats-title"
         style={{ marginBottom: '20px', fontFamily: 'Montserrat' }}
       >
-        Weekly Personal Activity
+        {t('stats.title')}
       </h3>
-      {chartData && (
+      {chartData ? (
         <Line
           data={chartData}
           options={{
@@ -123,6 +135,8 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
             },
           }}
         />
+      ) : (
+        <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading...</div>
       )}
 
       <Snackbar

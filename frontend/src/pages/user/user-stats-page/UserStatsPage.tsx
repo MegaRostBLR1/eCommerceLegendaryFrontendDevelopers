@@ -1,47 +1,38 @@
-import { useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
+import 'dayjs/locale/en';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { UserOrdersChart } from '../../../components/graphics/UserGraphicStats/UserGraphicStats.tsx';
 import { IconButton, Typography, Paper } from '@mui/material';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useTranslation } from 'react-i18next';
 import './user-stats-page.css';
 
 dayjs.extend(isoWeek);
 
 export const UserStatsPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { userId } = useParams<{ userId: string }>();
+  const { i18n } = useTranslation();
 
-  const dateStartParam = searchParams.get('dateStart');
-  const dateEndParam = searchParams.get('dateEnd');
+  const currentWeekStart = dayjs().startOf('isoWeek');
+  const [startDate, setStartDate] = useState(currentWeekStart);
 
-  const startDate = dateStartParam
-    ? dayjs(dateStartParam)
-    : dayjs().startOf('month');
+  const handlePrevWeek = () => setStartDate(startDate.subtract(1, 'week'));
+  const handleNextWeek = () => setStartDate(startDate.add(1, 'week'));
 
-  const endDate = dateEndParam ? dayjs(dateEndParam) : dayjs().endOf('month');
-
-  const updatePeriod = (newStart: dayjs.Dayjs) => {
-    setSearchParams({
-      dateStart: newStart.format('YYYY-MM-DD'),
-      dateEnd: newStart.endOf('isoWeek').format('YYYY-MM-DD'),
-    });
-  };
-
-  const handlePrevWeek = () =>
-    updatePeriod(startDate.subtract(1, 'week').startOf('isoWeek'));
-  const handleNextWeek = () =>
-    updatePeriod(startDate.add(1, 'week').startOf('isoWeek'));
-
-  const isLastAvailableWeek =
-    startDate.isAfter(dayjs(), 'week') || startDate.isSame(dayjs(), 'week');
+  const endDate = startDate.endOf('isoWeek');
 
   return (
     <section className="stats-preview">
       <div className="page-container">
         <div className="stats-header">
-          <div className="weekpicker-container">
+          <div
+            className="weekpicker-container"
+            style={{ marginBottom: '20px' }}
+          >
             <Paper
               elevation={0}
               variant="outlined"
@@ -51,6 +42,7 @@ export const UserStatsPage = () => {
                 p: 0.5,
                 borderRadius: 2,
                 bgcolor: 'background.paper',
+                width: 'fit-content',
               }}
             >
               <IconButton onClick={handlePrevWeek} size="small">
@@ -66,20 +58,14 @@ export const UserStatsPage = () => {
                   textTransform: 'capitalize',
                 }}
               >
-                {startDate.format('DD MMM')} — {endDate.format('DD MMM YYYY')}
+                {startDate.locale(i18n.language).format('DD MMM')} — {endDate.locale(i18n.language).format('DD MMM YYYY')}
               </Typography>
 
               <IconButton
                 onClick={handleNextWeek}
                 size="small"
-                disabled={isLastAvailableWeek}
               >
-                <ArrowForwardIosIcon
-                  fontSize="small"
-                  sx={{
-                    color: isLastAvailableWeek ? 'action.disabled' : 'inherit',
-                  }}
-                />
+                <ArrowForwardIosIcon fontSize="small" />
               </IconButton>
             </Paper>
           </div>
@@ -87,9 +73,11 @@ export const UserStatsPage = () => {
 
         <div className="stats-grid">
           <div className="stats-card">
-            <div className="chart-wrapper">
-              <UserOrdersChart startDate={startDate} endDate={endDate} />
-            </div>
+            <UserOrdersChart
+              startDate={startDate}
+              endDate={endDate}
+              userId={userId ? Number(userId) : undefined}
+            />
           </div>
         </div>
       </div>

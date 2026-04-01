@@ -12,8 +12,10 @@ import type { Service } from '../../types';
 import { HOME_UI } from './constants';
 import { authorizationService } from '../../services/authorization-service';
 import { apiService } from '../../services/api-service.ts';
+import { useTranslation } from 'react-i18next';
 
 export function HomePage() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [currentService, setCurrentService] = useState<Service>();
@@ -31,7 +33,7 @@ export function HomePage() {
         setData(result);
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : 'Failed to load services';
+          error instanceof Error ? error.message : t('home.errorLoad');
         setSnackMessage(errorMessage);
         setSnackOpen(true);
       } finally {
@@ -40,7 +42,7 @@ export function HomePage() {
     };
 
     fetchBestSellers();
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     const checkAuth = () => {
@@ -84,7 +86,7 @@ export function HomePage() {
         <div className="page-container">
           <div className="title-wrapper">
             <img src={logoHome} alt="Logo" className="title-logo" />
-            <h2 className="title-section-title">{HOME_UI.TITLE}</h2>
+            <h2 className="title-section-title">{t(HOME_UI.TITLE)}</h2>
           </div>
         </div>
       </section>
@@ -94,10 +96,10 @@ export function HomePage() {
         <div className="page-container">
           <div className="bestseller-header">
             <h2 className="bestseller-title">
-              {HOME_UI.BESTSELLER_BLOCK.TITLE}
+              {t(HOME_UI.BESTSELLER_BLOCK.TITLE)}
             </h2>
             <a className="bestseller-link" href="/catalog">
-              <span>{HOME_UI.BESTSELLER_BLOCK.LINK_TEXT}</span>
+              <span>{t(HOME_UI.BESTSELLER_BLOCK.LINK_TEXT)}</span>
               <ArrowForwardIosIcon className="bestseller-arrow-right" />
             </a>
           </div>

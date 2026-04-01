@@ -1,4 +1,6 @@
 @import '../../App.css';
+@import '../../assets/styles/variables.css';
+
 .page-main {
   display: flex;
   flex: 1;
@@ -11,7 +13,6 @@
   overflow-x: hidden;
 }
 
-/*TITLE */
 .title-wrapper {
   text-align: center;
   min-height: 370px;
@@ -93,7 +94,7 @@
   color: #074733 !important;
 }
 
-/*MEDIA*/
+
 @media (max-width: 1024px) {
   .title-section-title {
     font-size: 72px;
@@ -158,10 +159,10 @@
 
 @media (max-width: 480px) {
   .title-section-title {
-    font-size: 40px;
+    font-size: var(--space-lg);
   }
 
   .title-logo {
-    width: 180px;
+    width: calc(var(--space-xxxl) + 10px);
   }
 }

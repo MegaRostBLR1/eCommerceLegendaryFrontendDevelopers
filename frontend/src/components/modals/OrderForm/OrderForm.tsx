@@ -20,6 +20,8 @@ import type { Service } from '../../../types';
 import { apiService } from '../../../services/api-service.ts';
 import { useAuth } from '../../../context/useAuth.ts';
 import './order-form.css';
+import { useTranslation } from 'react-i18next';
+import { ModalLogo } from '../../../assets/icons/ModalLogo.tsx';
 
 interface OpenOrderFormProps {
   open: boolean;
@@ -40,6 +42,7 @@ export default function OpenOrderForm({
   onRefresh,
   initialDate,
 }: OpenOrderFormProps) {
+  const { t } = useTranslation();
   const { isAuth, setLoginModalOpen } = useAuth();
 
   const defaultDateTime = dayjs()
@@ -60,7 +63,7 @@ export default function OpenOrderForm({
     return 1;
   });
 
-  const descriptionText = service?.description || 'No description provided';
+  const descriptionText = service?.description || t('orderForm.noDescription');
 
   const isExpired = useMemo(() => {
     if (!initialDate) return false;
@@ -100,7 +103,7 @@ export default function OpenOrderForm({
       onClose();
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : 'Error creating order';
+        error instanceof Error ? error.message : t('orderForm.error');
       setSnackMessage(errorMessage);
       setSnackOpen(true);
     }
@@ -130,7 +133,7 @@ export default function OpenOrderForm({
       >
         <DialogTitle className="order-form-title">
           <div className="order-form-logo">
-            <img src="/page-logo.svg" alt="logo" />
+            <ModalLogo/>
             <span className="team-name-order">
               Legendary <br /> Frontend
             </span>
@@ -144,11 +147,13 @@ export default function OpenOrderForm({
 
         <DialogContent className="dialog-content">
           <div className="order-title-container">
-            <span>{isEdit ? 'edit order' : 'to order'}</span>
+            <span>
+              {isEdit ? t('orderForm.editOrder') : t('orderForm.toOrder')}
+            </span>
           </div>
 
           <TextField
-            label="Service"
+            label={t('orderForm.service')}
             variant="standard"
             value={service?.name || ''}
             fullWidth
@@ -165,7 +170,7 @@ export default function OpenOrderForm({
           {!isExpired ? (
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                label="Date"
+                label={t('orderForm.date')}
                 value={date}
                 disablePast
                 onChange={(newValue) => setDate(newValue)}
@@ -179,7 +184,7 @@ export default function OpenOrderForm({
                 }}
               />
               <TimePicker
-                label="Time"
+                label={t('orderForm.time')}
                 value={date}
                 onChange={(newValue) => setDate(newValue)}
                 slotProps={{
@@ -201,12 +206,12 @@ export default function OpenOrderForm({
                 fontWeight: 'bold',
               }}
             >
-              Order date has arrived.
+              {t('orderForm.expired')}
             </div>
           )}
 
           <TextField
-            label="Quantity"
+            label={t('orderForm.quantity')}
             type="number"
             variant="standard"
             value={quantity}
@@ -217,7 +222,7 @@ export default function OpenOrderForm({
           />
 
           <TextField
-            label="Description"
+            label={t('orderForm.description')}
             variant="standard"
             multiline
             rows={2}
@@ -237,9 +242,7 @@ export default function OpenOrderForm({
             className="order-form-message"
             style={{ display: 'block', fontSize: '12px' }}
           >
-            {isEdit
-              ? 'You can only change the date and time.'
-              : 'Order created.'}
+            {isEdit ? t('orderForm.editHint') : t('orderForm.createHint')}
           </span>
         </DialogContent>
 
@@ -250,11 +253,11 @@ export default function OpenOrderForm({
               variant="contained"
               className="confirm-order-btn"
             >
-              confirm
+              {t('orderForm.confirm')}
             </Button>
           )}
           <Button onClick={onClose} className="cancel-order-btn">
-            {isExpired ? 'close' : 'cancel'}
+            {isExpired ? t('orderForm.close') : t('orderForm.cancel')}
           </Button>
         </DialogActions>
       </Dialog>
