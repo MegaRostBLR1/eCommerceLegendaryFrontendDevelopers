@@ -175,10 +175,6 @@
     padding: 10px 15px;
     border-bottom: 1px solid #d1c7bc;
   }
-  .actions {
-    margin-left: 0;
-    justify-content: center;
-  }
 }
 
 @media (max-width: 405px) {
@@ -230,4 +226,10 @@
   font-size: 10px;
   color: #063526;
   text-transform: uppercase;
+}
+
+@media (max-width: 400px) {
+  .brandName {
+    display: none;
+  }
 }

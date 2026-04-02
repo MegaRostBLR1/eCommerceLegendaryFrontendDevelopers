@@ -107,48 +107,11 @@
   }
 }
 
-@media (max-width: 600px) {
-  .page-container {
-    padding: 0 12px;
-  }
-
-  .about-container {
-    padding: var(--space-sm);
-    max-width: 100%;
-  }
-
+@media (max-width: 480px) {
   .about-page {
-    padding: var(--space-xs) 1px;
+    padding: 20px;
   }
-
-  .about-title {
-    font-size: 26px;
-    margin-bottom: 15px;
-    padding-bottom: var(--space-xs);
-  }
-
-  .about-intro {
-    font-size: var(--text-base);
-    margin-bottom: 25px;
-  }
-
-  .about-intro p:first-of-type::first-letter {
-    font-size: 36px;
-    padding-right: 6px;
-  }
-
-  .about-column p {
-    font-size: var(--text-base);
-    margin-bottom: 12px;
-  }
-
-  .column-header {
-    font-size: 22px;
-    margin-bottom: 15px;
-  }
-
-  .about-split {
-    gap: var(--space-sm);
-    padding-top: var(--space-sm);
+  .about-container {
+    padding: 30px;
   }
 }
