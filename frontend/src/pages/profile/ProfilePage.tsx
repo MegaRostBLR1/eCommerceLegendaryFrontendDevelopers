@@ -5,6 +5,7 @@ import { authorizationService } from '../../services/authorization-service';
 import { userService } from '../../services/user.service';
 import type { User, UpdateUserDto } from '../../types';
 import { Message } from '../../components/message/Message';
+import { useTranslation } from 'react-i18next';
 
 type MessageState = {
   type: 'success' | 'error';
@@ -12,6 +13,7 @@ type MessageState = {
 };
 
 export const ProfilePage = () => {
+  const { t } = useTranslation();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -45,14 +47,14 @@ export const ProfilePage = () => {
         setUser(data);
       } catch (error) {
         console.error(error);
-        setMessage({ type: 'error', text: 'Error loading profile' });
+        setMessage({ type: 'error', text: t('profile.errors.load') });
       } finally {
         setLoading(false);
       }
     };
 
     loadProfile();
-  }, [targetUserId]);
+  }, [targetUserId, t]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -71,7 +73,7 @@ export const ProfilePage = () => {
     setErrors(newErrors);
 
     if (newErrors.length > 0) {
-      setMessage({ type: 'error', text: 'Fill in the red fields!' });
+      setMessage({ type: 'error', text: t('profile.errors.fields') });
       return;
     }
 
@@ -94,23 +96,25 @@ export const ProfilePage = () => {
       const updated = await userService.updateProfile(targetUserId, updateData);
 
       setUser(updated);
-      setMessage({ type: 'success', text: 'Data updated successfully' });
+      setMessage({ type: 'success', text: t('profile.success.update') });
     } catch {
-      setMessage({ type: 'error', text: 'Failed to save changes' });
+      setMessage({ type: 'error', text: t('profile.errors.save') });
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) return <div className="loader">Loading...</div>;
-  if (!user) return <div>User not found</div>;
+  if (loading) return <div className="loader">{t('common.loading')}</div>;
+  if (!user) return <div>{t('profile.userNotFound')}</div>;
 
   return (
     <main className="profile-page">
       <div className="profile-container">
         <h1 className="profile-title">
           {' '}
-          {isEditingSomeoneElse ? `EDIT USER #${id}` : 'PERSONAL DATA'}{' '}
+          {isEditingSomeoneElse
+            ? `${t('profile.editUser')} #${id}`
+            : t('profile.personalData')}{' '}
         </h1>
 
         {message && (
@@ -124,7 +128,7 @@ export const ProfilePage = () => {
         <div className="profile-form">
           <div className="profile-grid">
             <div className="input-field">
-              <label>Name</label>
+              <label>{t('profile.firstName')}</label>
               <input
                 name="firstName"
                 value={user.firstName || ''}
@@ -139,7 +143,7 @@ export const ProfilePage = () => {
             </div>
 
             <div className="input-field">
-              <label>Last name</label>
+              <label>{t('profile.lastName')}</label>
               <input
                 name="lastName"
                 value={user.lastName || ''}
@@ -154,7 +158,7 @@ export const ProfilePage = () => {
             </div>
 
             <div className="input-field">
-              <label>Patronymic</label>
+              <label>{t('profile.patronymic')}</label>
               <input
                 name="patronymic"
                 value={user.patronymic || ''}
@@ -163,7 +167,7 @@ export const ProfilePage = () => {
             </div>
 
             <div className="input-field">
-              <label>E-mail</label>
+              <label>{t('profile.email')}</label>
               <input
                 type="email"
                 name="email"
@@ -180,19 +184,19 @@ export const ProfilePage = () => {
 
           <div className="role-field">
             <div className="input-field">
-              <label>Role</label>
+              <label>{t('profile.roleLabel')}</label>
 
               {isAdmin ? (
                 <input
                   name="role"
-                  value={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                  value={t(`profile.roles.${user.role}`)}
                   onChange={handleChange}
                   className="profile-select"
                   readOnly={true}
                 />
               ) : (
                 <input
-                  value={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                  value={t(`profile.roles.${user.role}`)}
                   readOnly={true}
                   className="profile-select"
                 />
@@ -201,7 +205,7 @@ export const ProfilePage = () => {
           </div>
 
           <button className="edit-btn" onClick={handleUpdate} disabled={saving}>
-            {saving ? 'Saving...' : 'SAVE CHANGES'}
+            {saving ? t('profile.saving') : t('profile.saveChanges')}
           </button>
         </div>
       </div>

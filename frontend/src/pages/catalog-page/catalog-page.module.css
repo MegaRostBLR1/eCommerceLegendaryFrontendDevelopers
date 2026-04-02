@@ -88,3 +88,41 @@
 .spinner {
   color: #074733 !important;
 }
+
+@media (max-width: 1024px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .filters {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 0;
+  }
+
+  .search {
+    grid-row-start: 0;
+    grid-row-end: 1;
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 550px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 360px) {
+  .title {
+    font-size: 30px;
+  }
+}

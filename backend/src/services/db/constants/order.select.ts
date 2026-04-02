@@ -6,6 +6,6 @@ export const ORDER_SELECT = {
     status: true,
     price: true,
     quantity: true,
-    service: { select: { id: true, name: true, discount: true } },
+    service: { select: { id: true, name: true, discount: true, duration: true } },
     user: { select: { id: true, email: true, role: true, lastName: true, firstName: true, patronymic: true } },
 };

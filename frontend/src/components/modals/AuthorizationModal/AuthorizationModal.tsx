@@ -18,11 +18,19 @@ import { authorizationService } from '../../../services/authorization-service';
 import { apiService } from '../../../services/api-service.ts';
 import { errorMessages } from '../../../../constants/errors';
 import type { IUserToken } from '../../../types';
+import { useAuth } from '../../../context/useAuth';
+import { useTranslation } from 'react-i18next';
+import { ModalLogo } from '../../../assets/icons/ModalLogo.tsx';
 
-export default function AuthorizationModal({ open, onClose }: {
+export default function AuthorizationModal({
+  open,
+  onClose,
+}: {
   open: boolean;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
+  const { updateAuth } = useAuth();
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -49,10 +57,15 @@ export default function AuthorizationModal({ open, onClose }: {
         });
 
         authorizationService.setUserInLocalStorage(result);
-        window.dispatchEvent(new CustomEvent('auth-change'));
+
+        updateAuth();
+
         onClose();
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : errorMessages.errorFromServer;
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : errorMessages.errorFromServer;
 
         if (errorMessage.includes('401')) {
           setSnackMessage(errorMessages.wrongPasswordOrEmail);
@@ -99,7 +112,7 @@ export default function AuthorizationModal({ open, onClose }: {
       >
         <DialogTitle className={'create-acc-form-title'}>
           <div className={'order-form-logo'}>
-            <img src={'/page-logo.svg'} alt="logo" />
+            <ModalLogo/>
             <span className={'team-name-order'}>
               Legendary <br /> Frontend
             </span>
@@ -115,11 +128,11 @@ export default function AuthorizationModal({ open, onClose }: {
         </DialogTitle>
         <DialogContent className={'create-acc-form-dialog-content'}>
           <div className={'create-acc-title-container'}>
-            <span>Authorization</span>
+            <span> {t('auth.title')} </span>
           </div>
           <TextField
             name="userEmail"
-            label={'Email'}
+            label={t('auth.email')}
             variant={'standard'}
             required={true}
             type={'email'}
@@ -127,7 +140,7 @@ export default function AuthorizationModal({ open, onClose }: {
           />
           <TextField
             name="password"
-            label={'Password'}
+            label={t('auth.password')}
             variant={'standard'}
             type={showPassword ? 'text' : 'password'}
             InputProps={{
@@ -154,7 +167,7 @@ export default function AuthorizationModal({ open, onClose }: {
             variant="contained"
             className={'confirm-send-btn'}
           >
-            Send
+            {t('auth.send')}
           </Button>
         </DialogActions>
       </Dialog>

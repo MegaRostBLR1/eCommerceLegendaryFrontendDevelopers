@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import dayjs from 'dayjs';
+import 'dayjs/locale/ru';
+import 'dayjs/locale/en';
 import { Snackbar } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { authorizationService } from '../../../services/authorization-service.ts';
 import { apiService } from '../../../services/api-service.ts';
 import {
@@ -16,7 +19,15 @@ import {
   type ChartData,
 } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Filler, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Tooltip,
+  Filler,
+  Legend
+);
 
 interface DailyDataItem {
   date?: string;
@@ -27,38 +38,51 @@ interface DailyDataItem {
 interface UserChartProps {
   startDate: dayjs.Dayjs;
   endDate: dayjs.Dayjs;
+  userId?: number;
 }
 
-export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
+export const UserOrdersChart = ({
+  startDate,
+  endDate,
+  userId: propsUserId,
+}: UserChartProps) => {
+  const { t, i18n } = useTranslation();
   const [chartData, setChartData] = useState<ChartData<'line'> | null>(null);
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
-  const userId = authorizationService.getUserId();
+
+  const UserId = propsUserId || authorizationService.getUserId();
 
   useEffect(() => {
     const fetchUserStats = async () => {
-      if (!userId) return;
+      if (!UserId) return;
 
       const dateStart = startDate.format('YYYY-MM-DD');
       const dateEnd = endDate.format('YYYY-MM-DD');
-      const endpoint = `/statistics/users/${userId}?dateStart=${dateStart}&dateEnd=${dateEnd}`;
+      const endpoint = `/statistics/users/${UserId}?dateStart=${dateStart}&dateEnd=${dateEnd}`;
 
       try {
         const result = await apiService<DailyDataItem[]>(endpoint);
 
-        const fullWeekDays = Array.from({ length: 7 }).map((_, i) => startDate.add(i, 'day'));
+        const fullWeekDays = Array.from({ length: 7 }).map((_, i) =>
+          startDate.add(i, 'day')
+        );
 
-        const normalizedCounts = fullWeekDays.map(day => {
-          const found = result.find(d => dayjs(d.date || d.startDate).isSame(day, 'day'));
+        const normalizedCounts = fullWeekDays.map((day) => {
+          const found = result.find((d) =>
+            dayjs(d.date || d.startDate).isSame(day, 'day')
+          );
           return found ? found.count : 0;
         });
 
         setChartData({
-          labels: fullWeekDays.map(day => day.format('ddd DD/MM')),
+          labels: fullWeekDays.map((day) =>
+            day.locale(i18n.language).format('ddd DD/MM')
+          ),
           datasets: [
             {
               fill: true,
-              label: 'Daily Orders',
+              label: t('stats.dailyOrders'),
               data: normalizedCounts,
               borderColor: '#1a3e2b',
               backgroundColor: 'rgba(26, 62, 43, 0.15)',
@@ -70,18 +94,33 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
           ],
         });
       } catch (error) {
-        setSnackMessage(error instanceof Error ? error.message : 'Error fetching user stats');
+        setSnackMessage(
+          error instanceof Error ? error.message : t('stats.errorLoad')
+        );
         setSnackOpen(true);
       }
     };
 
     fetchUserStats();
-  }, [userId, startDate, endDate]);
+  }, [UserId, startDate, endDate, t, i18n.language]);
 
   return (
-    <div className="chart-container" style={{ padding: '20px', borderRadius: '12px', height: '300px', width: '500px' }}>
-      <h3 className="stats-title" style={{ marginBottom: '20px', fontFamily: 'Montserrat' }}>Weekly Personal Activity</h3>
-      {chartData && (
+    <div
+      className="chart-container"
+      style={{
+        padding: '20px',
+        borderRadius: '12px',
+        height: '300px',
+        width: '500px',
+      }}
+    >
+      <h3
+        className="stats-title"
+        style={{ marginBottom: '20px', fontFamily: 'Montserrat' }}
+      >
+        {t('stats.title')}
+      </h3>
+      {chartData ? (
         <Line
           data={chartData}
           options={{
@@ -91,11 +130,13 @@ export const UserOrdersChart = ({ startDate, endDate }: UserChartProps) => {
               y: {
                 beginAtZero: true,
                 ticks: { stepSize: 1, precision: 0 },
-                suggestedMax: 5
-              }
-            }
+                suggestedMax: 5,
+              },
+            },
           }}
         />
+      ) : (
+        <div style={{ textAlign: 'center', marginTop: '50px' }}>Loading...</div>
       )}
 
       <Snackbar

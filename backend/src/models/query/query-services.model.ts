@@ -1,5 +1,5 @@
+import { PageCountQuery } from '../common/page-count-query.model';
 import { SearchQuery } from '../common/search-query.model';
-import { PageCountQuery } from './user-query.model';
 
 export type QueryServices = PageCountQuery &
     SearchQuery & {

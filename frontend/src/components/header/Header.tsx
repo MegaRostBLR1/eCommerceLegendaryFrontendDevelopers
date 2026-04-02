@@ -1,72 +1,63 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import { IconButton, Menu, MenuItem, useMediaQuery } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import logo from '../../assets/icons/logo.svg';
 import './header.css';
 import AuthorizationModal from '../../components/modals/AuthorizationModal/AuthorizationModal';
-import { authorizationService } from '../../services/authorization-service';
+import { useAuth } from '../../context/useAuth';
+import LanguageIcon from '@mui/icons-material/Language';
+import { useTranslation } from 'react-i18next';
 
 type Role = 'admin' | 'user';
 type MenuItemType =
   | { title: string; path: string; isExit?: false }
-  | { title: 'Logout'; isExit: true };
+  | { title: string; isExit: true };
 
 const NAV_LINKS = [
-  { id: 'catalog', title: 'Catalog', path: '/catalog' },
-  { id: 'about', title: 'About', path: '/about' },
+  { id: 'catalog', title: 'nav.catalog', path: '/catalog' },
+  { id: 'about', title: 'nav.about', path: '/about' },
 ];
 
 const MENU_ITEMS: Record<Role, MenuItemType[]> = {
   admin: [
-    { title: 'Profile', path: '/profile' },
-    { title: 'Users', path: '/admin/users' },
-    { title: 'Statistics', path: '/admin/statistics' },
-    { title: 'Services', path: '/admin/services' },
-    { title: 'Orders', path: '/admin/orders' },
-    { title: 'Logout', isExit: true },
+    { title: 'menu.profile', path: '/profile' },
+    { title: 'menu.users', path: '/admin/users' },
+    { title: 'menu.statistics', path: '/admin/statistics' },
+    { title: 'menu.services', path: '/admin/services' },
+    { title: 'menu.orders', path: '/admin/orders' },
+    { title: 'menu.logout', isExit: true },
   ],
   user: [
-    { title: 'Profile', path: '/profile' },
-    { title: 'Statistics', path: '/statistics' },
-    { title: 'Orders', path: '/orders' },
-    { title: 'Logout', isExit: true },
+    { title: 'menu.profile', path: '/profile' },
+    { title: 'menu.statistics', path: '/statistics' },
+    { title: 'menu.orders', path: '/orders' },
+    { title: 'menu.logout', isExit: true },
   ],
 };
 
 const Header = () => {
   const navigate = useNavigate();
-  const [isAuth, setIsAuth] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { t, i18n } = useTranslation();
+  const isMobile = useMediaQuery('(max-width:405px)');
+
+  const {
+    isAuth,
+    isAdmin,
+    userEmail,
+    logout,
+    isLoginModalOpen,
+    setLoginModalOpen,
+  } = useAuth();
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const isMenuOpen = Boolean(anchorEl);
 
-  const checkAuth = () => {
-    const auth = authorizationService.isAuthUser();
-    const admin = authorizationService.userIsAdmin();
-    const user = authorizationService.getUser();
-
-    setIsAuth(auth);
-    setIsAdmin(admin);
-    setUserEmail(user?.email || null);
+  const toggleLanguage = () => {
+    const nextLang = i18n.language === 'ru' ? 'en' : 'ru';
+    i18n.changeLanguage(nextLang);
   };
-
-  useEffect(() => {
-    checkAuth();
-
-    const handleAuthChange = () => {
-      checkAuth();
-    };
-
-    window.addEventListener('auth-change', handleAuthChange);
-
-    return () => {
-      window.removeEventListener('auth-change', handleAuthChange);
-    };
-  }, []);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -80,7 +71,7 @@ const Header = () => {
     handleCloseMenu();
 
     if (item.isExit) {
-      authorizationService.logoutUser();
+      logout();
       const privateRoutes = ['/profile', '/admin', '/orders', '/statistics'];
       const isPrivatePage = privateRoutes.some((path) =>
         location.pathname.startsWith(path)
@@ -96,7 +87,13 @@ const Header = () => {
   };
 
   const role: Role = isAdmin ? 'admin' : 'user';
-  const currentMenuItems = MENU_ITEMS[role];
+
+  const currentMenuItems = MENU_ITEMS[role].filter((item) => {
+    if (isMobile && !item.isExit && item.path.includes('statistics')) {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <>
@@ -114,7 +111,7 @@ const Header = () => {
           <nav className="nav">
             {NAV_LINKS.map((link) => (
               <Link key={link.id} to={link.path} className="navLink">
-                {link.title}
+                {t(link.title)}
               </Link>
             ))}
           </nav>
@@ -123,7 +120,7 @@ const Header = () => {
             {!isAuth ? (
               <IconButton
                 aria-label="Login"
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => setLoginModalOpen(true)}
                 className="profileIconButton"
               >
                 <LoginIcon />
@@ -132,20 +129,13 @@ const Header = () => {
               <>
                 <div className="profile-wrapper" onClick={handleOpenMenu}>
                   <IconButton
-                    aria-label="Profile"
-                    aria-controls={isMenuOpen ? 'profile-menu' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={isMenuOpen ? 'true' : undefined}
                     className="profileIconButton"
                     sx={{ padding: 0, minWidth: 'auto' }}
                   >
                     <PersonOutlineIcon />
                   </IconButton>
-
                   {userEmail && (
-                    <span className="profile-email">
-                      {userEmail}
-                    </span>
+                    <span className="profile-email">{userEmail}</span>
                   )}
                 </div>
 
@@ -156,24 +146,31 @@ const Header = () => {
                   onClose={handleCloseMenu}
                   PaperProps={{ className: 'profileMenu' }}
                 >
-                  {currentMenuItems.map((item) => (
+                  {currentMenuItems.map((item, index) => (
                     <MenuItem
-                      key={item.isExit ? 'logout' : item.path}
+                      key={item.isExit ? 'logout' : `${item.path}-${index}`}
                       onClick={() => handleMenuItemClick(item)}
                       className={`profileMenuItem ${item.isExit ? 'profileMenuItemExit' : ''}`}
                     >
-                      {item.title}
+                      {t(item.title)}
                     </MenuItem>
                   ))}
                 </Menu>
               </>
             )}
+
+            <div className="lang-switcher" onClick={toggleLanguage}>
+              <IconButton className="lang-icon-btn" color="inherit">
+                <LanguageIcon className="lang-icon" />
+              </IconButton>
+              <span className="lang-text">{i18n.language}</span>
+            </div>
           </div>
         </div>
       </header>
       <AuthorizationModal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        open={isLoginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
       />
     </>
   );

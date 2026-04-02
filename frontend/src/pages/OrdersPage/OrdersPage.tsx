@@ -7,8 +7,10 @@ import type { Order, OrdersResponse, Service } from '../../types';
 import { Pagination, CircularProgress } from '@mui/material';
 import OpenOrderForm from '../../components/modals/OrderForm/OrderForm';
 import './OrdersPage.css';
+import { useTranslation } from 'react-i18next';
 
 export const OrdersPage = () => {
+  const { t, i18n } = useTranslation();
   const { userId: paramUserId } = useParams<{ userId: string }>();
   const [orders, setOrders] = useState<Order[]>([]);
   const [page, setPage] = useState(1);
@@ -51,9 +53,9 @@ export const OrdersPage = () => {
     name: order.name,
     amount: order.price,
     discount: order.discount,
-    description: order.description || 'No description provided',
+    description: order.description || t('orders.noDescription'),
     workersCount: order.quantity,
-    duration: 0,
+    duration: order.duration || 0,
     categories: [],
   });
 
@@ -68,7 +70,9 @@ export const OrdersPage = () => {
   return (
     <div className="catalog-container orders-page-container">
       <h2 className="title">
-        {paramUserId ? `User Orders #${paramUserId}` : 'My Orders'}
+        {paramUserId
+          ? `${t('orders.userOrders')} #${paramUserId}`
+          : t('orders.myOrders')}
       </h2>
 
       {orders.length === 0 ? (
@@ -76,7 +80,7 @@ export const OrdersPage = () => {
           className="no-data"
           style={{ textAlign: 'center', marginTop: '50px' }}
         >
-          <p>No orders found for this user.</p>
+          <p>{t('orders.noOrders')}</p>
         </div>
       ) : (
         <>
@@ -89,7 +93,7 @@ export const OrdersPage = () => {
                 style={{ cursor: 'pointer' }}
               >
                 <div className="order-date-text" style={{ textAlign: 'right' }}>
-                  {new Date(order.startDate).toLocaleDateString()}
+                  {new Date(order.startDate).toLocaleDateString(i18n.language)}
                 </div>
 
                 <Card
@@ -122,6 +126,7 @@ export const OrdersPage = () => {
 
       {selectedOrder && (
         <OpenOrderForm
+          key={selectedOrder ? `edit-${selectedOrder.id}` : 'new-order'}
           open={isModalOpen}
           onClose={() => {
             setIsModalOpen(false);

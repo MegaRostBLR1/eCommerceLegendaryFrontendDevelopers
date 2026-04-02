@@ -2,7 +2,6 @@
   border: 1px solid #e0e0e0;
   padding: 24px;
   background-color: #ffffff;
-  min-height: 120px;
   display: flex;
   align-items: center;
 }
@@ -39,7 +38,6 @@
   margin-bottom: 8px;
   display: flex;
   gap: 6px;
-  height: 28px;
   line-height: 20px;
   white-space: nowrap;
   overflow: hidden;
@@ -59,4 +57,37 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+@media (max-width: 620px) {
+  .users-card {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .user-information {
+    width: 100%;
+  }
+
+  .user-full-name {
+    justify-content: center;
+  }
+
+  .email-and-role span {
+    text-align: center;
+  }
+
+  .users-page-container {
+    padding: 20px 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .users-page-container {
+    padding: 20px 0;
+  }
+
+  .user-card-container {
+    padding: 24px 10px;
+  }
 }

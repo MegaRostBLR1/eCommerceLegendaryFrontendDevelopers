@@ -66,7 +66,11 @@ describe('UserService', () => {
     const serviceUpdate: UpdateServiceDto = {
       name: 'Updated Service',
       amount: 1500,
-      duration: '2 hours',
+      duration: 2,
+      discount: 0,
+      workersCount: 1,
+      description: '',
+      categories: [],
     };
 
     const mockUpdatedService = {

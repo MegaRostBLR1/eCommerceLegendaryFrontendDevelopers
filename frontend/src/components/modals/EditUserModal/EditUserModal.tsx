@@ -17,6 +17,8 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import React, { useState, useEffect } from 'react';
 import { userService } from '../../../services/user.service.ts';
 import type { UpdateUserDto } from '../../../types';
+import { useTranslation } from 'react-i18next';
+import { ModalLogo } from '../../../assets/icons/ModalLogo.tsx';
 
 type UserRole = 'user' | 'admin';
 
@@ -34,7 +36,13 @@ interface EditUserModalProps {
   onUpdateSuccess?: () => void;
 }
 
-export default function EditUserModal({open, onClose, user, onUpdateSuccess, }: EditUserModalProps) {
+export default function EditUserModal({
+  open,
+  onClose,
+  user,
+  onUpdateSuccess,
+}: EditUserModalProps) {
+  const { t } = useTranslation();
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -71,8 +79,13 @@ export default function EditUserModal({open, onClose, user, onUpdateSuccess, }: 
   const handleConfirm = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!values.firstName || !values.lastName || !values.email || !values.role) {
-      setSnackMessage('Please fill all required fields');
+    if (
+      !values.firstName ||
+      !values.lastName ||
+      !values.email ||
+      !values.role
+    ) {
+      setSnackMessage(t('editModal.fillRequired'));
       setSnackOpen(true);
       return;
     }
@@ -89,18 +102,14 @@ export default function EditUserModal({open, onClose, user, onUpdateSuccess, }: 
 
     try {
       await userService.updateProfile(user.id, updateData);
-      setSnackMessage('Data updated successfully');
+      setSnackMessage(t('editModal.success'));
       setSnackOpen(true);
       setTimeout(() => {
         onClose();
         if (onUpdateSuccess) onUpdateSuccess();
       }, 600);
     } catch (error) {
-      if (error instanceof Error) {
-        setSnackMessage(error.message);
-      } else {
-        setSnackMessage(String(error));
-      }
+      setSnackMessage(error instanceof Error ? error.message : String(error));
       setSnackOpen(true);
     } finally {
       setIsSubmitting(false);
@@ -133,7 +142,7 @@ export default function EditUserModal({open, onClose, user, onUpdateSuccess, }: 
       >
         <DialogTitle className="edit-card-modal-title" sx={{ p: 0, mb: 3 }}>
           <div className="order-form-logo">
-            <img src="/page-logo.svg" alt="logo" />
+            <ModalLogo/>
             <span className="team-name-order">
               Legendary <br /> Frontend
             </span>
@@ -151,7 +160,7 @@ export default function EditUserModal({open, onClose, user, onUpdateSuccess, }: 
         >
           <TextField
             name="firstName"
-            label="Name"
+            label={t('editModal.firstName')}
             variant="standard"
             fullWidth
             value={values.firstName}
@@ -159,7 +168,7 @@ export default function EditUserModal({open, onClose, user, onUpdateSuccess, }: 
           />
           <TextField
             name="lastName"
-            label="Last name"
+            label={t('editModal.lastName')}
             variant="standard"
             fullWidth
             value={values.lastName}
@@ -167,7 +176,7 @@ export default function EditUserModal({open, onClose, user, onUpdateSuccess, }: 
           />
           <TextField
             name="patronymic"
-            label="Patronymic"
+            label={t('editModal.patronymic')}
             variant="standard"
             fullWidth
             value={values.patronymic}
@@ -175,23 +184,23 @@ export default function EditUserModal({open, onClose, user, onUpdateSuccess, }: 
           />
           <TextField
             name="email"
-            label="E-mail"
+            label={t('users.email')}
             variant="standard"
             fullWidth
             value={values.email}
             onChange={handleChange}
           />
           <FormControl variant="standard" fullWidth>
-            <InputLabel id="role-select-label">Role</InputLabel>
+            <InputLabel id="role-select-label">{t('users.role')}</InputLabel>
             <Select
               labelId="role-select-label"
               name="role"
               value={values.role}
               onChange={handleRoleChange}
-              label="Role"
+              label={t('users.role')}
             >
-              <MenuItem value="user">User</MenuItem>
-              <MenuItem value="admin">Admin</MenuItem>
+              <MenuItem value="user">{t('editModal.roleUser')}</MenuItem>
+              <MenuItem value="admin">{t('editModal.roleAdmin')}</MenuItem>
             </Select>
           </FormControl>
         </DialogContent>
@@ -203,7 +212,7 @@ export default function EditUserModal({open, onClose, user, onUpdateSuccess, }: 
             className="confirm-order-btn"
             sx={{ width: '100%', py: 1.5 }}
           >
-            {isSubmitting ? 'Saving...' : 'SAVE CHANGES'}
+            {isSubmitting ? t('editModal.saving') : t('editModal.saveBtn')}
           </Button>
         </DialogActions>
       </Dialog>

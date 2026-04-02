@@ -11,6 +11,7 @@ import { queryServices } from './utils/query-services';
 import { OrderData } from '../../models/orders/order-data.model';
 import { ordersQuery } from './utils/orders-query';
 import { ORDER_SELECT } from './constants/order.select';
+import { isBoolean } from 'lodash';
 
 const db = new PrismaClient();
 
@@ -31,11 +32,38 @@ export const dbService = {
     getUserByEmail: async (email: string, visible?: boolean, select?: Prisma.UserSelect): Promise<UserResponse | null> => {
         return await db.user.findFirst({ where: { email, visible }, select });
     },
-    allUsers: async (page: number, take: number): Promise<UserResponse[]> => {
-        return await db.user.findMany({ where: { visible: true }, select: USER_SELECT, take, skip: (page - 1) * take });
+    allUsers: async (page: number, take: number, search?: string): Promise<UserResponse[]> => {
+        return await db.user.findMany({
+            where: {
+                visible: true,
+                OR: search
+                    ? [
+                          { lastName: { contains: search } },
+                          { firstName: { contains: search } },
+                          { patronymic: { contains: search } },
+                          { email: { contains: search } },
+                      ]
+                    : undefined,
+            },
+            select: USER_SELECT,
+            take,
+            skip: (page - 1) * take,
+        });
     },
-    usersCount: async (): Promise<number> => {
-        return await db.user.count({ where: { visible: true } });
+    usersCount: async (search?: string): Promise<number> => {
+        return await db.user.count({
+            where: {
+                visible: true,
+                OR: search
+                    ? [
+                          { lastName: { contains: search } },
+                          { firstName: { contains: search } },
+                          { patronymic: { contains: search } },
+                          { email: { contains: search } },
+                      ]
+                    : undefined,
+            },
+        });
     },
     getUserById: async (id: number, visible?: boolean): Promise<UserResponse | null> => {
         return await db.user.findFirst({ where: { id, visible }, select: USER_SELECT });
@@ -61,8 +89,13 @@ export const dbService = {
     getServicesCount: async (categories?: number[], search?: string, visible?: boolean): Promise<number> => {
         return await db.service.count({ where: queryServices(categories, search, visible) });
     },
-    getServices: async (categories?: number[], search?: string, visible?: boolean): Promise<ServiceData[]> => {
-        return await db.service.findMany({ where: queryServices(categories, search, visible), select: SERVICE_SELECT });
+    getServices: async (page: number, take: number, categories?: number[], search?: string, visible?: boolean): Promise<ServiceData[]> => {
+        return await db.service.findMany({
+            where: queryServices(categories, search, visible),
+            select: SERVICE_SELECT,
+            take,
+            skip: (page - 1) * take,
+        });
     },
     getServiceById: async (id: number, visible?: boolean): Promise<ServiceData | null> => {
         return await db.service.findFirst({ where: { id, visible }, select: SERVICE_SELECT });
@@ -73,8 +106,9 @@ export const dbService = {
     updateService: async (id: number, data: Prisma.ServiceUncheckedUpdateInput): Promise<ServiceData> => {
         return await db.service.update({ where: { id }, data, select: SERVICE_SELECT });
     },
-    servicesOrderByPostsCount: async (take: number) => {
+    servicesOrderByPostsCount: async (take: number, visible?: boolean) => {
         return await db.service.findMany({
+            where: isBoolean(visible) ? { visible } : undefined,
             orderBy: {
                 orders: {
                     _count: 'desc',
@@ -98,5 +132,25 @@ export const dbService = {
     },
     updateOrder: async (id: number, data: Prisma.OrderUncheckedUpdateInput) => {
         return await db.order.update({ where: { id }, data, select: ORDER_SELECT });
+    },
+    totalOrdersByDates: async (dateStart: Date, dateEnd: Date, userId?: number): Promise<number> => {
+        return db.order.count({
+            where: { startDate: { gte: dateStart, lte: dateEnd }, userId },
+        });
+    },
+    totalUsersOrdersByDates: async (dateStart: Date, dateEnd: Date) => {
+        return await db.user.findMany({
+            where: {
+                orders: { some: { startDate: { gte: dateStart, lte: dateEnd } } },
+            },
+            select: {
+                ...USER_SELECT,
+                _count: {
+                    select: {
+                        orders: true,
+                    },
+                },
+            },
+        });
     },
 };

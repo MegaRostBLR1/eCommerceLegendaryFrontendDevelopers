@@ -1,10 +1,10 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './card.css';
 import type { Service } from '../../types';
-import { CARD_TEXT } from './constants';
 import { IconButton } from '@mui/material';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useTranslation } from 'react-i18next';
 
 interface CardProps {
   data: Service;
@@ -22,6 +22,7 @@ export const Card = ({
   isOrderCard = false,
   onDelete,
 }: CardProps) => {
+  const { t } = useTranslation();
   const formatValue = (num: number) => num.toFixed(2);
 
   const {
@@ -93,7 +94,7 @@ export const Card = ({
               {price && (
                 <div className="bestseller-current-price">
                   <span className="price-value">{formatValue(price)}</span>
-                  <span className="price-currency">{CARD_TEXT.CURRENCY}</span>
+                  <span className="price-currency">{t('card.currency')}</span>
                 </div>
               )}
             </div>
@@ -107,13 +108,13 @@ export const Card = ({
         </div>
         <div className="bestseller-card-details">
           <div className="details-item">
-            <span className="details-label">{CARD_TEXT.EMPLOYEES_LABEL}</span>
+            <span className="details-label">{t('card.employees')}</span>
             <span className="details-value">
-              {employeesCount} {CARD_TEXT.SPECIALISTS_SUFFIX}
+              {employeesCount} {t('card.specialists')}
             </span>
           </div>
           <div className="details-item">
-            <span className="details-label">{CARD_TEXT.DURATION_LABEL}</span>
+            <span className="details-label">{t('card.duration')}</span>
             <span className="details-value">{duration}</span>
           </div>
         </div>
@@ -124,7 +125,7 @@ export const Card = ({
             onClick={() => handleClick(data)}
           >
             <span className="bestseller-card-button-text">
-              {CARD_TEXT.BUTTON_TEXT}
+              {t('card.orderNow')}
             </span>
             <ArrowForwardIosIcon className="bestseller-arrow-right" />
           </button>

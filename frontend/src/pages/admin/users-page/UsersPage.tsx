@@ -1,5 +1,11 @@
 import './users-page.css';
-import { TextField, IconButton, InputAdornment, Pagination, Snackbar } from '@mui/material';
+import {
+  TextField,
+  IconButton,
+  InputAdornment,
+  Pagination,
+  Snackbar,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { UserCard } from './UserCard/UserCard.tsx';
 import { PAGINATION_STYLE } from '../../catalog-page/constants.tsx';
@@ -8,6 +14,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserNotFound } from './UserNorFound/UserNotFound.tsx';
 import { apiService } from '../../../services/api-service.ts';
+import { useTranslation } from 'react-i18next';
 
 interface User {
   id: number;
@@ -25,6 +32,7 @@ interface UsersResponse {
 }
 
 export const UsersPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,21 +48,27 @@ export const UsersPage = () => {
     setIsLoading(true);
     try {
       const searchParam = debouncedValue ? `&search=${debouncedValue}` : '';
-      const result = await apiService<UsersResponse>(`/users?page=${page}&count=8${searchParam}`);
+      const result = await apiService<UsersResponse>(
+        `/users?page=${page}&count=8${searchParam}`
+      );
 
       setUsers(result.data);
       setTotalPages(result.pages);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to load users';
+      const errorMessage =
+        error instanceof Error ? error.message : t('users.loadError');
       setSnackMessage(errorMessage);
       setSnackOpen(true);
     } finally {
       setIsLoading(false);
     }
-  }, [page, debouncedValue]);
+  }, [page, debouncedValue, t]);
 
   useEffect(() => {
-    if (!authorizationService.isAuthUser() || !authorizationService.userIsAdmin()) {
+    if (
+      !authorizationService.isAuthUser() ||
+      !authorizationService.userIsAdmin()
+    ) {
       navigate('/', { replace: true });
       return;
     }
@@ -83,7 +97,7 @@ export const UsersPage = () => {
       <div className={'search-input'}>
         <TextField
           value={inputValue}
-          label="Enter user e-mail"
+          label={t('users.searchLabel')}
           variant="outlined"
           onChange={(e) => setInputValue(e.target.value)}
           sx={{
@@ -112,7 +126,7 @@ export const UsersPage = () => {
 
       <div className={'users-container'} data-testid="users-container">
         {isLoading ? (
-          <div className="loader-wrapper">Loading...</div>
+          <div className="loader-wrapper">{t('common.loading')}</div>
         ) : users.length > 0 ? (
           users.map((user) => (
             <UserCard
@@ -127,7 +141,14 @@ export const UsersPage = () => {
             />
           ))
         ) : (
-          <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div
+            style={{
+              gridColumn: '1 / -1',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
             <UserNotFound />
           </div>
         )}

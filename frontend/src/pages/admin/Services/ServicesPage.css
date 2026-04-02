@@ -1,7 +1,3 @@
-.admin-header-block {
-  margin-bottom: 30px;
-}
-
 .ai-gen-button {
   background-color: #074733 !important;
   margin-top: 16px !important;
@@ -26,4 +22,14 @@
 
 .custom-spinner {
   color: #074733 !important;
+}
+
+@media (max-width: 405px) {
+  .ai-gen-button {
+    width: 100%;
+  }
+
+  .admin-header-block {
+    margin-bottom: var(--space-xs);
+  }
 }
