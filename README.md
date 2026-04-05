@@ -33,6 +33,8 @@ An application that allows users to order services, as well as view statistics a
   We also paid close attention to the interface: the application is fully responsive and supports internationalization.
   This demonstrates our expertise in working with modern APIs, complex states, and creating scalable interfaces.
 
+[Screenshot](https://github.com/user-attachments/assets/10f711c6-f9cc-4538-98f7-027c9333a43f)
+
 ### Key Features
 - Service ordering system
 - Order history and analytics dashboard
@@ -60,8 +62,12 @@ An application that allows users to order services, as well as view statistics a
 
 | Name      | GitHub                                               |                                                          Diary Links                                                           |                                      Self-assessment PR                                      |
 |-----------|------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------:|
-| Andrey    | [@andrski](https://github.com/andrski)               |                                                               -                                                                |                                              -                                               |
+| Andrei    | [@andrski](https://github.com/andrski)               |                                                               -                                                                |                                              -                                               |
 | Maria     | [@Morevna](https://github.com/Morevna)               |    [link](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/tree/development/development-notes/morevna)     | [link](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/pull/98/changes) |
 | Mikhail   | [@bssier](https://github.com/bssier)                 |     [link](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/tree/development/development-notes/bssier)     |    [link](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/pull/101)     |
 | Roman     | [@Rorodeathless1](https://github.com/Rorodeathless1) | [link](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/tree/development/development-notes/rorodeathless1) |                                              -                                               |
 | Rostislav | [@MegaRostBLR1](https://github.com/MegaRostBLR1)     |  [link](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/tree/development/development-notes/megarostblr1)  |                                                                                              |
+
+
+<img width="1884" height="1092" alt="image" src="https://github.com/user-attachments/assets/282fb60f-856d-4b8c-a50a-ed7ccaebf3d0" />
+

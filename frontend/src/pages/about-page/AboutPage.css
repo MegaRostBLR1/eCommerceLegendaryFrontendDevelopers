@@ -74,7 +74,7 @@
 }
 
 .about-column p {
-  font-size: var(--space-sm); /* 20px */
+  font-size: var(--space-sm);
   line-height: 1.5;
   margin-bottom: 18px;
   color: var(--color-dark);
