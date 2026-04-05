@@ -40,7 +40,7 @@ const MENU_ITEMS: Record<Role, MenuItemType[]> = {
 const Header = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const isMobile = useMediaQuery('(max-width:405px)');
+  const isMobile = useMediaQuery('(max-width:768px)');
 
   const {
     isAuth,
