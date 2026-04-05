@@ -149,6 +149,10 @@
     justify-content: center;
     gap: var(--space-md);
   }
+
+  .cube-right, .cube-left {
+    display: none;
+  }
 }
 
 @media (max-width: 550px) {
