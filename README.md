@@ -66,7 +66,7 @@ An application that allows users to order services, as well as view statistics a
 | Maria     | [@Morevna](https://github.com/Morevna)               |    [link](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/tree/development/development-notes/morevna)     | [link](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/pull/98/changes) |
 | Mikhail   | [@bssier](https://github.com/bssier)                 |     [link](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/tree/development/development-notes/bssier)     |    [link](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/pull/101)     |
 | Roman     | [@Rorodeathless1](https://github.com/Rorodeathless1) | [link](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/tree/development/development-notes/rorodeathless1) |                                              -                                               |
-| Rostislav | [@MegaRostBLR1](https://github.com/MegaRostBLR1)     |  [link](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/tree/development/development-notes/megarostblr1)  |                                                                                              |
+| Rostislav | [@MegaRostBLR1](https://github.com/MegaRostBLR1)     |  [link](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/tree/development/development-notes/megarostblr1)  |          [link](https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers/pull/107/changes)                                                                                    |
 
 
 <img width="1884" height="1092" alt="image" src="https://github.com/user-attachments/assets/282fb60f-856d-4b8c-a50a-ed7ccaebf3d0" />
