@@ -17,6 +17,14 @@ In this video, we demonstrate the handling of 404 pages, loading states, and API
 
 [Deployed Application](http://188.127.251.19:5000/)
 
+## Running the application locally:
+1) Clone our repository (use ```git clone https://github.com/MegaRostBLR1/eCommerceLegendaryFrontendDevelopers.git```)
+2) Go to the frontend folder (```cd frontend```)  
+3) Use ```npm install``` for install dependencies
+4) Use ```npm run dev``` to start local development server 
+
+The backend is already deployed on a remote server, so you don't need to run it locally.
+
 ---
 
 ## Project Overview
