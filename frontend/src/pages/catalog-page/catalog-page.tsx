@@ -55,6 +55,10 @@ export const CatalogPage = () => {
     }
   }, [page, selectedCategories, search]);
 
+  useEffect(()=>{
+    setPage(1)
+  }, [selectedCategories, search])
+
   useEffect(() => {
     getData();
   }, [getData]);
